@@ -87,6 +87,7 @@ GEM
     debug (1.8.0)
       irb (>= 1.5.0)
       reline (>= 0.3.1)
+    dotenv (3.1.7)
     erubi (1.13.0)
     globalid (1.2.1)
       activesupport (>= 6.1)
@@ -179,6 +180,13 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
+    slim (5.2.1)
+      temple (~> 0.10.0)
+      tilt (>= 2.1.0)
+    slim-rails (3.7.0)
+      actionpack (>= 3.1)
+      railties (>= 3.1)
+      slim (>= 3.0, < 6.0, != 5.0.0)
     sprockets (4.2.1)
       concurrent-ruby (~> 1.0)
       rack (>= 2.2.4, < 4)
@@ -189,7 +197,9 @@ GEM
     stimulus-rails (1.2.2)
       railties (>= 6.0.0)
     stringio (3.0.8)
+    temple (0.10.3)
     thor (1.3.2)
+    tilt (2.6.0)
     timeout (0.4.0)
     turbo-rails (1.4.0)
       actionpack (>= 6.0.0)
@@ -221,6 +231,7 @@ DEPENDENCIES
   bootsnap
   capybara
   debug
+  dotenv
   importmap-rails
   jbuilder
   mysql2 (~> 0.5)
@@ -228,6 +239,8 @@ DEPENDENCIES
   rails (~> 7.0.7, >= 7.0.7.2)
   redis (~> 4.0)
   selenium-webdriver
+  slim
+  slim-rails (~> 3.1, >= 3.1.1)
   sprockets-rails
   stimulus-rails
   turbo-rails
