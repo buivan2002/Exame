@@ -1,13 +1,9 @@
-@import "navs/global";
-@import "navs/sidebar";
-@import "navs/topbar";
-@import "utilities/animation";
-@import "utilities/background";
-@import "utilities/border";
-@import "utilities/display";
-@import "utilities/progress";
-@import "utilities/rotate";
-@import "utilities/text";
+@import "../../../../vendor/bootstrap/scss/vendor/rfs";
+@import "../../../../vendor/bootstrap/scss/functions";
+@import "./variables";
+@import "../../../../vendor/bootstrap/scss/variables";
+@import "../../../../vendor/bootstrap/scss/mixins";
+
 @import "./buttons";
 @import "./cards";
 @import "./charts";
@@ -19,8 +15,17 @@
 @import "./mixins";
 @import "./navs";
 @import "./utilities";
-@import "./variables";
 @import "./sb-admin-2.scss";
+@import "navs/global";
+@import "navs/sidebar";
+@import "navs/topbar";
+@import "utilities/animation";
+@import "utilities/background";
+@import "utilities/border";
+@import "utilities/display";
+@import "utilities/progress";
+@import "utilities/rotate";
+@import "utilities/text";
 
 
 
