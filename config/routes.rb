@@ -4,7 +4,7 @@ Rails.application.routes.draw do
     sessions: "users/sessions",
     registrations: "users/registrations",
     passwords: "users/passwords",
-    omniauth_callbacks: 'users/omniauth_callbacks' ,
+    omniauth_callbacks: 'users/omniauth_callbacks',
   }
     get 'pages/custom'
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
