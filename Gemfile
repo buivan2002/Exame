@@ -77,3 +77,6 @@ group :test do
 end
 
 gem "faker"
+
+# Gemfile
+gem 'devise'
