@@ -89,6 +89,8 @@ GEM
       reline (>= 0.3.1)
     dotenv (3.1.7)
     erubi (1.13.0)
+    faker (3.5.1)
+      i18n (>= 1.8.11, < 2)
     globalid (1.2.1)
       activesupport (>= 6.1)
     i18n (1.14.6)
@@ -232,6 +234,7 @@ DEPENDENCIES
   capybara
   debug
   dotenv
+  faker
   importmap-rails
   jbuilder
   mysql2 (~> 0.5)
