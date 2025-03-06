@@ -8,7 +8,6 @@ gem "rails", "~> 7.0.7", ">= 7.0.7.2"
 
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "sprockets-rails"
-gem 'bootstrap', '~> 5.2', '>= 5.2.3'
 gem 'sassc-rails'
 
 # Use mysql as the database for Active Record
@@ -18,6 +17,7 @@ gem "puma", "~> 5.0"
 
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem "importmap-rails"
+gem 'omniauth-google-oauth2'  # Thêm Google OAuth
 
 # Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
 gem "turbo-rails"
@@ -50,6 +50,7 @@ gem "bootsnap", require: false
 # gem "image_processing", "~> 1.2"
 
 gem 'dotenv', groups: [:development, :test]
+gem 'pry-rails', :group => :development
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -75,3 +76,5 @@ group :test do
 end
 
 gem "dartsass-rails", "~> 0.5.1"
+
+gem "devise", "~> 4.9"
