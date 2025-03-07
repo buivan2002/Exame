@@ -1,5 +1,4 @@
 class DeviseMailer < Devise::Mailer
-  default from: 'no-reply@yourapp.com'
+  default template_path: 'devise/mailer'
   layout 'mailer'
 end
-
