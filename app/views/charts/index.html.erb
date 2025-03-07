@@ -3,3 +3,8 @@
 <div class="opacity-50">...</div>
 <div class="opacity-25">aaaaaaaa.</div>
 <div class="opacity-0">aaaaaaa</div>
+<% if flash[:alert] %>
+    <div class="alert alert-danger">
+      <%= flash[:alert] %>
+    </div>
+  <% end %>

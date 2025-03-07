@@ -8,4 +8,5 @@ class Users::SessionsController < Devise::SessionsController
       redirect_to new_user_session_path,  alert: I18n.t("devise.errors.sessions.user.signed_in")
     end
   end
+  
 end

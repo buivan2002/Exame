@@ -6,11 +6,12 @@ Rails.application.routes.draw do
     passwords: "users/passwords",
     omniauth_callbacks: 'users/omniauth_callbacks',
   }
-    get 'pages/custom'
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  get 'pages/custom'
+  namespace :admin do
+    get 'dashboard', to: 'dashboard#index' # Điều hướng đến Admin::DashboardController#index
+  end
+  resources :charts
   resources :charts 
-  # Defines the root path route ("/")
-  # root "articles#index"
   get "/custom_page", to: "pages#custom"
   
 end
