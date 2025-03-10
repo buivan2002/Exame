@@ -1,0 +1,21 @@
+<div class="container mt-4">
+  <h1 class="text-center"><%= @category.name %></h1>
+  <h3 class="text-center mb-4">Chọn mức độ kỹ năng</h3>
+
+  <div class="row justify-content-center">
+    <% @difficulties.each do |difficulty| %>
+      <div class="col-md-3">
+        <div class="card text-center shadow-sm mb-3">
+          <div class="card-body">
+            <h5 class="card-title"><%= difficulty %></h5>
+            <%# <%= link_to "Bắt đầu", users_category_questions_path(@category, difficulty: difficulty), class: "btn btn-primary" %> 
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="text-center mt-3">
+    <%= link_to "Quay lại", users_categories_path, class: "btn btn-secondary" %>
+  </div>
+</div>

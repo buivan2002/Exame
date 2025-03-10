@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Custom Page</title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+
+  <%= stylesheet_link_tag "application", media: "all" %>
+  <%= javascript_importmap_tags %>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">My Bootstrap Page</a>
+  </nav>
+
+  <div class="container mt-4">
+    <h1 class="text-primary">Hello Bootstrap in Rails!</h1>
+    <button class="btn btn-success">Click me</button>
+  </div>
+</body>
+</html>

@@ -17,8 +17,7 @@
       <h1 class="display-4 fw-bold">Chào mừng đến với Quiz Master!</h1>
       <p class="lead">Thử thách kiến thức của bạn với hàng ngàn câu đố hấp dẫn</p>
       <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mt-4">
-        <button type="button" class="btn btn-light btn-lg px-4 gap-3">Đăng nhập</button>
-        <button type="button" class="btn btn-outline-light btn-lg px-4">Đăng ký</button>
+<button type="button" class="btn btn-light btn-lg px-4 gap-3" onclick="window.location.href='<%= new_user_session_path %>'">Đăng nhập</button>
       </div>
     </div>
 
@@ -64,7 +63,7 @@
       <div class="container-fluid py-3">
         <h3>Bắt đầu ngay hôm nay!</h3>
         <p class="col-md-8 mx-auto fs-5">Tham gia cộng đồng yêu thích kiến thức của chúng tôi và khám phá những điều mới mẻ mỗi ngày.</p>
-        <button class="btn btn-primary btn-lg px-5">Bắt đầu làm bài</button>
+<button class="btn btn-primary btn-lg px-5" onclick="window.location.href='<%= users_categories_path %>'">Bắt đầu làm bài</button>
       </div>
     </div>
 

@@ -14,17 +14,20 @@ Devise.setup do |config|
   # confirmation, reset password and unlock tokens in the database.
   # Devise will use the `secret_key_base` as its `secret_key`
   # by default. You can change it below and use your own secret key.
-  # config.secret_key = '14e6dd55f93e41e9a001f15cfc3c469fb14ae0a7a112a773ec039a6dbe040f1f1a9f4efe4df88764aa22d0c2bd87e349acaf0974b10f880278c25eadbe55a6e6'
-
+  # config.secret_key = '308f9273c1b2adcdb105ecbdad71fe64f909b45fbfaadebfbde540daedbbbeb4c884be64c7415cea9ec3d29f81adf9674132b593cbc9f0501e42384026452236'
   # ==> Controller configuration
   # Configure the parent class to the devise controllers.
   # config.parent_controller = 'DeviseController'
 
+  config.omniauth :google_oauth2, ENV["GOOGLE_CLIENT_ID"], ENV["GOOGLE_CLIENT_SECRET"], {prompt: 'select_account'}
   # ==> Mailer Configuration
   # Configure the e-mail address which will be shown in Devise::Mailer,
-  # note that it will be overwritten if you use your own mailer class
+  # note that it will be overwritten if you use your own mailer class 
   # with default "from" parameter.
-  config.mailer_sender = 'please-change-me-at-config-initializers-devise@example.com'
+  
+  config.navigational_formats = ['*/*', :html, :turbo_stream] 
+  config.mailer_sender = ENV['EMAIL_SENDER'] 
+  config.mailer = 'DeviseMailer'
 
   # Configure the class responsible to send e-mails.
   # config.mailer = 'Devise::Mailer'
@@ -126,7 +129,7 @@ Devise.setup do |config|
   config.stretches = Rails.env.test? ? 1 : 12
 
   # Set up a pepper to generate the hashed password.
-  # config.pepper = 'c951088cbb437172bdb81a4fc407d2db08b5017feb3a5d6d18f5b5d64cf5a6bfb6fd9610c6b14b7e82667ba4ac5a52ac90b0004e716a11a12c95bb79138ed775'
+  # config.pepper = 'ddfdf01f2d40b8adc3ac844dfeff8c927a37eefa608816ff320c125cc9826e103aedb06abddc5c5d46f76fdc47e8ae695b34a9e9b8f7297cd93d960d51283d99'
 
   # Send a notification to the original email when the user's email is changed.
   # config.send_email_changed_notification = false
@@ -304,6 +307,7 @@ Devise.setup do |config|
   # Note: These might become the new default in future versions of Devise.
   config.responder.error_status = :unprocessable_entity
   config.responder.redirect_status = :see_other
+  config.navigational_formats = ['*/*', :html, :json]
 
   # ==> Configuration for :registerable
 

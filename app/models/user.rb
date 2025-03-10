@@ -14,4 +14,24 @@ class User < ApplicationRecord
   has_many :statistics
   has_many :unlocked_levels
   has_many :user_answers
-end
+
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :validatable,
+         :omniauthable, omniauth_providers: [:google_oauth2]
+
+  def self.from_omniauth(access_token)
+    where(provider: access_token.provider, uid: access_token.uid).first_or_create do |user|
+      user.email = access_token.info.email
+      user.password = Devise.friendly_token[0, 20]
+    end
+  end
+   enum role: { user: "user", admin: "admin" }, _default: "user"
+
+  after_initialize :set_default_role, if: :new_record?
+
+  private
+
+  def set_default_role
+    self.role ||= "user" # Mặc định là "user"
+  end
+end 
