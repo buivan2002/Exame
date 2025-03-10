@@ -23,41 +23,43 @@ class Users::CategoriesController < ApplicationController
     # Lấy câu hỏi theo index
     @questions = Question.where(id: session[:question_ids])
     @question = @questions[@question_index]
-    
     if @question.nil?
       redirect_to root_path, alert: "Không có câu hỏi nào!" and return
     end
-
+  
     # Lấy danh sách câu trả lời của câu hỏi hiện tại
     @answers = Answer.where(question_id: @question.id)
-    session[:user_answers] ||= {} # Khởi tạo session[:user_answers] nếu nó chưa có
+    # session[:user_answers] ||= {} # Khởi tạo session[:user_answers] nếu nó chưa có
+    session[:user_answers] ||= {}
 
-   
-  end 
+  end
+  
+  
+  
+  
+  
   def submit_answer
     @category = Category.find(params[:id])
     @difficulty = params[:difficulty]
     @question_index = params[:question_index].to_i
-  
-    # Kiểm tra session user_answers, nếu chưa có thì tạo
+    @questions = Question.where(id: session[:question_ids])
+    @question = @questions[@question_index]
+    session[:user_answers] ||= {} 
+    # Xóa câu trả lời cũ (nếu có) trước khi lưu cái mới
+    session[:user_answers].delete(@question.id.to_s)
     
-    # Lấy câu hỏi hiện tại từ danh sách trong session
-    question_id = session[:question_ids][@question_index]
-    @question = Question.find_by(id: question_id)
-    
-    if @question.nil?
-      redirect_to root_path, alert: "Không tìm thấy câu hỏi!" and return
-    end
-    
-    # Xử lý lưu đáp án
-    if @question.question_type == "multiple_choice"
-      session[:user_answers][@question.id.to_s] = params[:answers] || []
+    # Kiểm tra loại câu hỏi để lưu đúng định dạng
+    answer_values = case @question.question_type
+    when "multiple_choice"
+      params[:answers] || [] # Chọn nhiều đáp án -> mảng
     else
-      session[:user_answers][@question.id.to_s] = params[:answer_id]
+      [params[:answer_id]] || [] # Chọn 1 đáp án -> mảng có 1 phần tử
     end
+    
+    session[:user_answers][@question.id.to_s] = answer_values
     # binding.pry
-  
-    # Chuyển sang câu tiếp theo hoặc quay lại
+                  
+    # Chuyển hướng đến câu tiếp theo hoặc trang kết quả
     if params[:next]
       redirect_to users_question_path(@category.id, @difficulty, @question_index + 1)
     elsif params[:prev]
@@ -66,6 +68,7 @@ class Users::CategoriesController < ApplicationController
       redirect_to root_path
     end
   end
+  
   
   private
 

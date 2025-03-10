@@ -6,32 +6,32 @@
     <% when "true_false" %>
       <div class="options">
         <label class="option-label">
-          <input type="radio" name="answer_id" value="yes" <%= "checked" if session[:user_answers][@question.id.to_s] == "yes" %>> Yes
+          <input type="radio" name="answer_id" value= 1 <%= "checked" if session[:user_answers][@question.id.to_s][0] == "1"%>> Yes
         </label>
         <label class="option-label">
-          <input type="radio" name="answer_id" value="no" <%= "checked" if session[:user_answers][@question.id.to_s] == "no" %>> No
+          <input type="radio" name="answer_id" value=0 <%= "checked" if session[:user_answers][@question.id.to_s][0] == "0" %>> No
         </label>
       </div>
     <% when "short_answer" %>
-      <div class="options">
-        <% @answers.each do |answer| %>
-          <label class="option-label">
-            <input type="radio" name="answer_id" value="<%= answer.id %>" <%= "checked" if session[:user_answers][@question.id.to_s] == answer.id.to_s %>>
-            <%= answer.body %>
-          </label>
-        <% end %>
-      </div>
+    <div class="options">
+      <% @answers.each do |answer| %>
+      <%# <%    binding.pry%> %>
+        <label class="option-label">
+          <input type="radio" name="answer_id" value="<%= answer.id %>" <%= "checked" if session[:user_answers][@question.id.to_s]&.include?(answer.id.to_s) %>>
+          <%= answer.body %>
+        </label>
+      <% end %>
+    </div>
 
-    <% when "multiple_choice" %>
-      <div class="options">
-        <% @answers.each do |answer| %>
-        <%# <%binding.pry%> %>
-          <label class="option-label">
-            <input type="checkbox" name="answers[]" value="<%= answer.id %>" <%= "checked" if session[:user_answers][@question.id.to_s]&.include?(answer.id.to_s) %>>
-            <%= answer.body %>
-          </label>
-        <% end %>
-      </div>
+  <% when "multiple_choice" %>
+    <div class="options">
+      <% @answers.each do |answer| %>
+        <label class="option-label">
+          <input type="checkbox" name="answers[]" value="<%= answer.id %>" <%= "checked" if session[:user_answers][@question.id.to_s]&.include?(answer.id.to_s) %>>
+          <%= answer.body %>
+        </label>
+      <% end %>
+    </div>
   <% end %>
 
   <div class="mt-3">

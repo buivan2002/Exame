@@ -6,7 +6,8 @@ Rails.application.routes.draw do
       get 'questions', on: :member # Lấy câu hỏi theo mức độ
 
     end
-  end
+  end# trong config/routes.rb
+post 'users/save_answer/:id', to: 'users/exams#save_answer', as: 'save_answer'
   get 'users/categories/:id/:difficulty/questions/:question_index', to: 'users/categories#question', as: 'users_question'
   post 'users/categories/:id/:difficulty/questions/:question_index', to: 'users/categories#submit_answer'
 
