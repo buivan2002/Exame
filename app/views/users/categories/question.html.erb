@@ -1,0 +1,104 @@
+<h2>Câu hỏi <%= @question_index + 1 %> / <%= @questions.count %></h2>
+<h3><%= @question.content %></h3>
+
+<%= form_with url: users_question_path(@category.id, @difficulty, @question_index), method: :post do %>
+  <% case @question.question_type %>
+    <% when "true_false" %>
+      <div class="options">
+        <label class="option-label">
+          <input type="radio" name="answer_id" value="yes" <%= "checked" if session[:user_answers][@question.id.to_s] == "yes" %>> Yes
+        </label>
+        <label class="option-label">
+          <input type="radio" name="answer_id" value="no" <%= "checked" if session[:user_answers][@question.id.to_s] == "no" %>> No
+        </label>
+      </div>
+    <% when "short_answer" %>
+      <div class="options">
+        <% @answers.each do |answer| %>
+          <label class="option-label">
+            <input type="radio" name="answer_id" value="<%= answer.id %>" <%= "checked" if session[:user_answers][@question.id.to_s] == answer.id.to_s %>>
+            <%= answer.body %>
+          </label>
+        <% end %>
+      </div>
+
+    <% when "multiple_choice" %>
+      <div class="options">
+        <% @answers.each do |answer| %>
+        <%# <%binding.pry%> %>
+          <label class="option-label">
+            <input type="checkbox" name="answers[]" value="<%= answer.id %>" <%= "checked" if session[:user_answers][@question.id.to_s]&.include?(answer.id.to_s) %>>
+            <%= answer.body %>
+          </label>
+        <% end %>
+      </div>
+  <% end %>
+
+  <div class="mt-3">
+    <% if @question_index > 0 %>
+      <%= submit_tag "Quay lại", name: "prev", class: "btn btn-secondary" %>
+    <% end %>
+    <% if @question_index < @questions.count - 1 %>
+      <%= submit_tag "Tiếp theo", name: "next", class: "btn btn-primary" %>
+    <% else %>
+      <%= submit_tag "Nộp bài", class: "btn btn-success" %>
+    <% end %>
+  </div>
+<% end %>
+
+
+<style>
+  .options {
+    margin: 20px 0;
+  }
+  
+  .option-label {
+    display: block;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .option-label:hover {
+    background-color: #f5f5f5;
+  }
+  
+  input[type="radio"]:checked + .option-label,
+  input[type="checkbox"]:checked + .option-label {
+    background-color: #e6f7ff;
+    border-color: #1890ff;
+  }
+  
+  .navigation-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  .btn {
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .btn-primary {
+    background-color: #1890ff;
+    color: white;
+    border: none;
+  }
+  
+  .btn-secondary {
+    background-color: #f0f0f0;
+    color: #333;
+    border: 1px solid #d9d9d9;
+  }
+  
+  .btn-success {
+    background-color: #52c41a;
+    color: white;
+    border: none;
+  }
+</style>

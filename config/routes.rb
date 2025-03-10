@@ -7,7 +7,9 @@ Rails.application.routes.draw do
 
     end
   end
-  
+  get 'users/categories/:id/:difficulty/questions/:question_index', to: 'users/categories#question', as: 'users_question'
+  post 'users/categories/:id/:difficulty/questions/:question_index', to: 'users/categories#submit_answer'
+
   
   # get 'home/index'
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

@@ -8,7 +8,7 @@
         <div class="card text-center shadow-sm mb-3">
           <div class="card-body">
             <h5 class="card-title"><%= difficulty %></h5>
-            <%# <%= link_to "Bắt đầu", users_category_questions_path(@category, difficulty: difficulty), class: "btn btn-primary" %> 
+          <%= link_to "Bắt đầu làm bài", users_question_path(id: @category.id, difficulty: difficulty, question_index: 0), class: "btn btn-primary btn-lg px-5 mt-2" %>
           </div>
         </div>
       </div>
