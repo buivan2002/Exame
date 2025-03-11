@@ -8,17 +8,18 @@ gem "rails", "~> 7.0.7", ">= 7.0.7.2"
 
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "sprockets-rails"
+gem 'sassc-rails'
 
 # Use mysql as the database for Active Record
 gem "mysql2", "~> 0.5"
-
-# Use the Puma web server [https://github.com/puma/puma]
+gem 'jquery-rails', '~> 4.4'# Use the Puma web server [https://github.com/puma/puma]
 gem "puma", "~> 5.0"
 
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem "importmap-rails"
-
-# Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
+gem 'omniauth-google-oauth2'  # Thêm Google OAuth
+gem 'omniauth'
+gem "omniauth-rails_csrf_protection"
 gem "turbo-rails"
 
 # Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
@@ -51,7 +52,14 @@ gem "bootsnap", require: false
 gem "slim"
 gem 'slim-rails', '~> 3.1', '>= 3.1.1'
 
+gem "faker"
+
+# gem "dartsass-rails", "~> 0.5.1"
+
+gem "devise", "~> 4.9"
+
 gem 'dotenv', groups: [:development, :test]
+gem 'pry-rails', :group => :development
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -75,5 +83,3 @@ group :test do
   gem "selenium-webdriver"
   gem "webdrivers"
 end
-
-gem "faker"
