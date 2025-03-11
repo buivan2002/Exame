@@ -1,0 +1,532 @@
+<!-- admin/users/index.html.erb -->
+<div class="container-fluid p-0">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Quản lý Users</h2>
+    <%= link_to new_admin_user_path, class: "btn btn-primary" do %>
+      <i class="fas fa-plus"></i> Thêm mới user
+    <% end %>
+  </div>
+
+  <!-- Search and filter bar -->
+  <div class="card mb-4">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Tìm kiếm theo tên, email..." id="searchInput">
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary" type="button">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 d-flex justify-content-end">
+          <select class="form-control w-auto mr-2" id="statusFilter">
+            <option value="all">Tất cả trạng thái</option>
+            <option value="active">Đang hoạt động</option>
+            <option value="inactive">Không hoạt động</option>
+          </select>
+          <select class="form-control w-auto" id="sortBy">
+            <option value="newest">Mới nhất</option>
+            <option value="oldest">Cũ nhất</option>
+            <option value="name">Theo tên</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Users table -->
+  <div class="card">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead class="thead-light">
+            <tr>
+              <th>#</th>
+              <th>Tên</th>
+              <th>Email</th>
+              <th>Ngày tạo</th>
+              <th>Lần đăng nhập cuối</th>
+              <th>Trạng thái</th>
+              <th>Bài test đã làm</th>
+              <th>Điểm cao nhất</th>
+              <th class="text-center">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>
+                <div class="d-flex align-items-center">
+                  <div class="avatar avatar-sm mr-2 bg-primary text-white rounded-circle text-center">ER</div>
+                  <div>Elizabet Reinger</div>
+                </div>
+              </td>
+              <td>elizabet@example.com</td>
+              <td>01/03/2025</td>
+              <td>05/03/2025 02:10</td>
+              <td><span class="badge badge-primary">Đang hoạt động</span></td>
+              <td>12</td>
+              <td>99</td>
+              <td class="text-center">
+                <div class="btn-group">
+                  <button class="btn btn-sm btn-info" data-toggle="tooltip" title="Xem chi tiết">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button class="btn btn-sm btn-warning" data-toggle="tooltip" title="Chỉnh sửa">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="btn btn-sm btn-danger" data-toggle="tooltip" title="Xóa">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                  <button class="btn btn-sm btn-secondary" data-toggle="tooltip" title="Reset mật khẩu">
+                    <i class="fas fa-key"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>
+                <div class="d-flex align-items-center">
+                  <div class="avatar avatar-sm mr-2 bg-success text-white rounded-circle text-center">TB</div>
+                  <div>Truman Bartell</div>
+                </div>
+              </td>
+              <td>truman@example.com</td>
+              <td>28/02/2025</td>
+              <td>05/03/2025 00:57</td>
+              <td><span class="badge badge-success">Đang hoạt động</span></td>
+              <td>8</td>
+              <td>65</td>
+              <td class="text-center">
+                <div class="btn-group">
+                  <button class="btn btn-sm btn-info" data-toggle="tooltip" title="Xem chi tiết">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button class="btn btn-sm btn-warning" data-toggle="tooltip" title="Chỉnh sửa">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="btn btn-sm btn-danger" data-toggle="tooltip" title="Xóa">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                  <button class="btn btn-sm btn-secondary" data-toggle="tooltip" title="Reset mật khẩu">
+                    <i class="fas fa-key"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>
+                <div class="d-flex align-items-center">
+                  <div class="avatar avatar-sm mr-2 bg-info text-white rounded-circle text-center">RC</div>
+                  <div>Refugio Cruickshank</div>
+                </div>
+              </td>
+              <td>refugio@example.com</td>
+              <td>25/02/2025</td>
+              <td>03/03/2025 20:49</td>
+              <td><span class="badge badge-success">Đang hoạt động</span></td>
+              <td>15</td>
+              <td>99</td>
+              <td class="text-center">
+                <div class="btn-group">
+                  <button class="btn btn-sm btn-info" data-toggle="tooltip" title="Xem chi tiết">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button class="btn btn-sm btn-warning" data-toggle="tooltip" title="Chỉnh sửa">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="btn btn-sm btn-danger" data-toggle="tooltip" title="Xóa">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                  <button class="btn btn-sm btn-secondary" data-toggle="tooltip" title="Reset mật khẩu">
+                    <i class="fas fa-key"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td>
+                <div class="d-flex align-items-center">
+                  <div class="avatar avatar-sm mr-2 bg-warning text-white rounded-circle text-center">JF</div>
+                  <div>Jamar Fay</div>
+                </div>
+              </td>
+              <td>jamar@example.com</td>
+              <td>20/02/2025</td>
+              <td>03/03/2025 20:26</td>
+              <td><span class="badge badge-success">Đang hoạt động</span></td>
+              <td>10</td>
+              <td>90</td>
+              <td class="text-center">
+                <div class="btn-group">
+                  <button class="btn btn-sm btn-info" data-toggle="tooltip" title="Xem chi tiết">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button class="btn btn-sm btn-warning" data-toggle="tooltip" title="Chỉnh sửa">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="btn btn-sm btn-danger" data-toggle="tooltip" title="Xóa">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                  <button class="btn btn-sm btn-secondary" data-toggle="tooltip" title="Reset mật khẩu">
+                    <i class="fas fa-key"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td>
+                <div class="d-flex align-items-center">
+                  <div class="avatar avatar-sm mr-2 bg-danger text-white rounded-circle text-center">LN</div>
+                  <div>Lê Nguyễn</div>
+                </div>
+              </td>
+              <td>lenguyen@example.com</td>
+              <td>15/02/2025</td>
+              <td>01/03/2025 14:35</td>
+              <td><span class="badge badge-danger">Không hoạt động</span></td>
+              <td>5</td>
+              <td>75</td>
+              <td class="text-center">
+                <div class="btn-group">
+                  <button class="btn btn-sm btn-info" data-toggle="tooltip" title="Xem chi tiết">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button class="btn btn-sm btn-warning" data-toggle="tooltip" title="Chỉnh sửa">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="btn btn-sm btn-danger" data-toggle="tooltip" title="Xóa">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                  <button class="btn btn-sm btn-secondary" data-toggle="tooltip" title="Reset mật khẩu">
+                    <i class="fas fa-key"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="d-flex justify-content-between align-items-center mt-4">
+        <div>Hiển thị 1-5 của 6 user</div>
+        <nav>
+          <ul class="pagination">
+            <li class="page-item disabled">
+              <a class="page-link" href="#" tabindex="-1">Trước</a>
+            </li>
+            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item">
+              <a class="page-link" href="#">Sau</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add User Modal -->
+<div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="addUserModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addUserModalLabel">Thêm mới User</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="addUserForm">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="fullName">Họ và tên</label>
+                <input type="text" class="form-control" id="fullName" placeholder="Nhập họ và tên">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" placeholder="Nhập email">
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="password">Mật khẩu</label>
+                <input type="password" class="form-control" id="password" placeholder="Nhập mật khẩu">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="confirmPassword">Xác nhận mật khẩu</label>
+                <input type="password" class="form-control" id="confirmPassword" placeholder="Xác nhận mật khẩu">
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="userRole">Vai trò</label>
+                <select class="form-control" id="userRole">
+                  <option value="user">Người dùng</option>
+                  <option value="admin">Quản trị viên</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="status">Trạng thái</label>
+                <select class="form-control" id="status">
+                  <option value="active">Hoạt động</option>
+                  <option value="inactive">Không hoạt động</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Chủ đề có thể truy cập</label>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" id="topic1" checked>
+                  <label class="custom-control-label" for="topic1">Khoa học</label>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" id="topic2" checked>
+                  <label class="custom-control-label" for="topic2">Kỹ thuật</label>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" id="topic3" checked>
+                  <label class="custom-control-label" for="topic3">Xã hội</label>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" id="topic4" checked>
+                  <label class="custom-control-label" for="topic4">Âm nhạc</label>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" id="topic5" checked>
+                  <label class="custom-control-label" for="topic5">Ngoài trời</label>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" id="topic6" checked>
+                  <label class="custom-control-label" for="topic6">Công nghiệp</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy bỏ</button>
+        <button type="button" class="btn btn-primary">Lưu User</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- User Detail Modal -->
+<div class="modal fade" id="viewUserModal" tabindex="-1" role="dialog" aria-labelledby="viewUserModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="viewUserModalLabel">Chi tiết User</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row mb-4">
+          <div class="col-md-2 text-center">
+            <div class="avatar avatar-lg bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto" style="width: 80px; height: 80px; font-size: 32px;">
+              RC
+            </div>
+          </div>
+          <div class="col-md-10">
+            <h4>Refugio Cruickshank</h4>
+            <p class="text-muted">refugio@example.com</p>
+            <div class="badge badge-success">Đang hoạt động</div>
+            <div class="badge badge-secondary ml-2">Người dùng</div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card mb-4">
+              <div class="card-header">
+                Thông tin cơ bản
+              </div>
+              <div class="card-body">
+                <p><strong>Ngày tạo:</strong> 25/02/2025</p>
+                <p><strong>Lần đăng nhập cuối:</strong> 03/03/2025 20:49</p>
+                <p><strong>Số bài test đã làm:</strong> 15</p>
+                <p><strong>Điểm cao nhất:</strong> 99</p>
+                <p><strong>Chủ đề yêu thích:</strong> Outdoor, Music</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card mb-4">
+              <div class="card-header">
+                Thống kê hoạt động
+              </div>
+              <div class="card-body">
+                <canvas id="userActivityChart" width="100%" height="200"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            Lịch sử làm bài gần đây
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-sm">
+                <thead>
+                  <tr>
+                    <th>Chủ đề</th>
+                    <th>Mức độ</th>
+                    <th>Ngày làm</th>
+                    <th>Điểm</th>
+                    <th>Thời gian</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Outdoor</td>
+                    <td><span class="badge badge-warning">Khó</span></td>
+                    <td>03/03/2025</td>
+                    <td>99</td>
+                    <td>10:25</td>
+                  </tr>
+                  <tr>
+                    <td>Music</td>
+                    <td><span class="badge badge-success">Trung bình</span></td>
+                    <td>01/03/2025</td>
+                    <td>88</td>
+                    <td>08:45</td>
+                  </tr>
+                  <tr>
+                    <td>Science</td>
+                    <td><span class="badge badge-danger">Rất khó</span></td>
+                    <td>28/02/2025</td>
+                    <td>75</td>
+                    <td>15:30</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+        <button type="button" class="btn btn-warning">Chỉnh sửa</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CSS Styles -->
+<style>
+  .avatar-sm {
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 12px;
+  }
+
+  .avatar-lg {
+    width: 80px;
+    height: 80px;
+    line-height: 80px;
+    font-size: 32px;
+  }
+</style>
+
+<!-- JavaScript -->
+<script>
+$(document).ready(function() {
+  // Enable tooltips
+  $('[data-toggle="tooltip"]').tooltip();
+
+  // View user details
+  $('.btn-info').click(function() {
+    $('#viewUserModal').modal('show');
+
+    // Set up user activity chart
+    var ctx = document.getElementById('userActivityChart').getContext('2d');
+    var chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'],
+        datasets: [{
+          label: 'Số bài test',
+          backgroundColor: 'rgba(0, 123, 255, 0.1)',
+          borderColor: 'rgba(0, 123, 255, 1)',
+          data: [2, 1, 3, 0, 2, 4, 3]
+        }]
+      },
+      options: {
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true,
+              stepSize: 1
+            }
+          }]
+        }
+      }
+    });
+  });
+
+  // Search functionality
+  $('#searchInput').on('keyup', function() {
+    var value = $(this).val().toLowerCase();
+    $('tbody tr').filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+
+  // Status filter
+  $('#statusFilter').change(function() {
+    var value = $(this).val();
+    if (value === 'all') {
+      $('tbody tr').show();
+    } else if (value === 'active') {
+      $('tbody tr').hide();
+      $('tbody tr:contains("Đang hoạt động")').show();
+    } else {
+      $('tbody tr').hide();
+      $('tbody tr:contains("Không hoạt động")').show();
+    }
+  });
+});
+</script>

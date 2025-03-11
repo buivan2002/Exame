@@ -8,44 +8,46 @@
 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
-    
-    <!-- app/views/layouts/application.html.erb -->
-    <p class="notice"><%= notice %></p>
-    <p class="alert"><%= alert %></p>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   </head>
 
   <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <div class="container">
-    
-    <div class="collapse navbar-collapse">
-      <ul class="navbar-nav ms-auto">
-        <% if user_signed_in? %>
-          <li class="nav-item">
-            <%= link_to "Xin chào, #{current_user.email}", "#", class: "nav-link" %>
-          </li>
-          <li class="nav-item">
-<%= button_to "Đăng Xuất", destroy_user_session_path, method: :delete, class: "btn btn-danger" %>
-          </li>
-          <li class="nav-item">
-<%= link_to "Đăng Xuất", destroy_user_session_path, data: { turbo_method: :delete, turbo: false }, class: "nav-link" %>
+    <% unless ['sessions', 'registrations', 'passwords'].include?(controller_name) %>
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+          <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+              <% if user_signed_in? %>
+                <li class="nav-item">
+                  <%= link_to "Xin chào, #{current_user.email}", "#", class: "nav-link" %>
+                </li>
+                <li class="nav-item">
+                  <%= button_to "Đăng Xuất", destroy_user_session_path, method: :delete, class: "btn btn-danger" %>
+                </li>
+              <% else %>
+                <li class="nav-item">
+                  <%= link_to "Đăng Nhập", new_user_session_path, class: "nav-link" %>
+                </li>
+                <li class="nav-item">
+                  <%= link_to "Đăng Ký", new_user_registration_path, class: "nav-link" %>
+                </li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    <% end %>
 
-
-        <% else %>
-          <li class="nav-item">
-            <%= link_to "Đăng Nhập", new_user_session_path, class: "nav-link" %>
-          </li>
-          <li class="nav-item">
-            <%= link_to "Đăng Ký", new_user_registration_path, class: "nav-link" %>
-          </li>
-        <% end %>
-      </ul>
-    </div>
-  </div>
-</nav>
-    <%= yield %>
+    <% if ['sessions', 'registrations', 'passwords'].include?(controller_name) %>
+      <%= yield %>
+    <% else %>
+      <div class="container mt-3">
+        <p class="notice"><%= notice %></p>
+        <p class="alert"><%= alert %></p>
+        <%= yield %>
+      </div>
+    <% end %>
   </body>
 </html>
-

@@ -1,6 +1,225 @@
-<h1>Chào mừng Admin!</h1>
-<p>Đây là trang quản trị.</p>
+<!-- Stats Cards -->
+        <div class="row">
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <i class="fas fa-users"></i>
+                    <div class="stats-number"><%= @stats[:total_users] %></div>
+                    <div class="stats-title">Tổng số users</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <i class="fas fa-question-circle"></i>
+                    <div class="stats-number"><%= @stats[:total_questions] %></div>
+                    <div class="stats-title">Tổng số câu hỏi</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <i class="fas fa-clipboard-list"></i>
+                    <div class="stats-number"><%= @stats[:total_quizzes_today] %></div>
+                    <div class="stats-title">Bài thi hôm nay</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <i class="fas fa-trophy"></i>
+                    <div class="stats-number"><%= @stats[:total_categories] %></div>
+                    <div class="stats-title">Chủ đề Quiz</div>
+                </div>
+            </div>
+        </div>
 
-<ul>
-  <li><%= link_to "Đăng xuất", destroy_user_session_path, method: :delete %></li>
-</ul>
+        <!-- Charts -->
+        <div class="row mt-4">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-chart-line me-2"></i> Thống kê user làm bài trong tuần
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <img src="/api/placeholder/700/300" alt="User Activity Chart" class="img-fluid"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-chart-pie me-2"></i> Phân bố theo chủ đề
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="categoryChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Users & Top Scorers -->
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="fas fa-user-clock me-2"></i> Users đăng nhập gần đây
+                        </div>
+                        <a href="#all" class="btn btn-sm btn-primary">Xem tất cả</a>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Tên</th>
+                                        <th>Thời gian</th>
+                                        <th>Trạng thái</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% @recent_logs.each do |log| %>
+                                        <tr>
+                                            <!-- log.user là User liên kết với AuthLog (nếu bạn có belongs_to :user) -->
+                                            <td><%= log.user&.name || "Chưa rõ" %></td>
+
+                                            <!-- Thời gian đăng nhập lấy trực tiếp từ log.login_at -->
+                                            <td>
+                                            <%= log.login_at&.strftime('%H:%M %d/%m/%Y') || '-' %>
+                                            </td>
+
+                                            <!-- Ví dụ trạng thái Online/Offline (cần định nghĩa user.online? trong model User) -->
+                                            <td>
+                                            
+                                            </td>
+                                        </tr>
+                                        <% end %>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="fas fa-trophy me-2"></i> Top điểm cao nhất
+                        </div>
+                        <a href="#all-scores" class="btn btn-sm btn-primary">Xem tất cả</a>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Tên</th>
+                                        <th>Chủ đề</th>
+                                        <th>Điểm</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% @top_scores.each_with_index do |result, index| %>
+                                        <tr>
+                                            <!-- STT -->
+                                            <td><%= index + 1 %></td>
+                                            <!-- Tên người dùng -->
+                                            <td>
+                                                <%= result.user&.name || "No Name" %>
+                                            </td>
+                                            <!-- Chủ đề (nếu quiz -> category) -->
+                                            <td>
+                                                <%= result.quiz&.category&.name || "N/A" %>
+                                            </td>
+                                            <!-- Điểm (cột score trong quiz_results) -->
+                                            <td>
+                                                <%= result.score %>
+                                            </td>
+                                        </tr>
+                                    <% end %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions & Recent Activities -->
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-bolt me-2"></i> Hành động nhanh
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <a href="#add-user" class="btn btn-outline-primary">
+                                <i class="fas fa-user-plus me-2"></i> Thêm User mới
+                            </a>
+                            <a href="#add-question" class="btn btn-outline-primary">
+                                <i class="fas fa-plus-circle me-2"></i> Thêm Câu hỏi mới
+                            </a>
+                            <a href="#add-category" class="btn btn-outline-primary">
+                                <i class="fas fa-folder-plus me-2"></i> Thêm Chủ đề mới
+                            </a>
+                            <a href="#export-data" class="btn btn-outline-primary">
+                                <i class="fas fa-file-export me-2"></i> Xuất báo cáo
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-clipboard-list me-2"></i> Hoạt động gần đây
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="fas fa-user-plus text-success me-2"></i>
+                                    <span>Nguyễn Văn A đã đăng ký tài khoản mới</span>
+                                </div>
+                                <small class="text-muted">5 phút trước</small>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="fas fa-clipboard-check text-primary me-2"></i>
+                                    <span>Trần Thị B đã hoàn thành bài test "Khoa học xã hội"</span>
+                                </div>
+                                <small class="text-muted">10 phút trước</small>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="fas fa-edit text-warning me-2"></i>
+                                    <span>Admin đã thêm 5 câu hỏi mới vào chủ đề "Khoa học tự nhiên"</span>
+                                </div>
+                                <small class="text-muted">30 phút trước</small>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="fas fa-trophy text-danger me-2"></i>
+                                    <span>Lê Văn C đã đạt điểm cao nhất trong chủ đề "Khoa học tự nhiên"</span>
+                                </div>
+                                <small class="text-muted">1 giờ trước</small>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="fas fa-folder-plus text-info me-2"></i>
+                                    <span>Admin đã tạo chủ đề mới "Lịch sử Việt Nam"</span>
+                                </div>
+                                <small class="text-muted">2 giờ trước</small>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
