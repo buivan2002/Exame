@@ -13,16 +13,19 @@ class Users::CategoriesController < ApplicationController
   end
 
   def question
+    session[:user_answers] ||= {}
+    
     @category = Category.find(params[:id])
     @difficulty = params[:difficulty]
     @question_index = params[:question_index].to_i
     # Lấy danh sách câu hỏi theo độ khó và lưu vào session nếu chưa có
     session[:question_ids] = fetch_questions(@category.id, @difficulty).map(&:id)
-
+    
     
     # Lấy câu hỏi theo index
     @questions = Question.where(id: session[:question_ids])
     @question = @questions[@question_index]
+    session[:user_answers][@question.id.to_s] ||= [] # Đảm bảo mỗi câu hỏi luôn có một array
     if @question.nil?
       redirect_to root_path, alert: "Không có câu hỏi nào!" and return
     end
@@ -30,7 +33,6 @@ class Users::CategoriesController < ApplicationController
     # Lấy danh sách câu trả lời của câu hỏi hiện tại
     @answers = Answer.where(question_id: @question.id)
     # session[:user_answers] ||= {} # Khởi tạo session[:user_answers] nếu nó chưa có
-    session[:user_answers] ||= {}
 
   end
   
@@ -44,7 +46,6 @@ class Users::CategoriesController < ApplicationController
     @question_index = params[:question_index].to_i
     @questions = Question.where(id: session[:question_ids])
     @question = @questions[@question_index]
-    session[:user_answers] ||= {} 
     # Xóa câu trả lời cũ (nếu có) trước khi lưu cái mới
     session[:user_answers].delete(@question.id.to_s)
     

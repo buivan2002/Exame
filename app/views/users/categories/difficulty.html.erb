@@ -1,21 +1,146 @@
-<div class="container mt-4">
-  <h1 class="text-center"><%= @category.name %></h1>
-  <h3 class="text-center mb-4">Chọn mức độ kỹ năng</h3>
+<div class="container mt-5">
+  <div class="category-header text-center mb-5">
+    <h1 class="display-4 fw-bold text-primary"><%= @category.name %></h1>
+    <h3 class="fw-light mb-4">Chọn mức độ kỹ năng</h3>
+    <div class="divider mx-auto"></div>
+  </div>
 
-  <div class="row justify-content-center">
-    <% @difficulties.each do |difficulty| %>
+  <div class="row justify-content-center g-4">
+    <% @difficulties.each_with_index do |difficulty, index| %>
       <div class="col-md-3">
-        <div class="card text-center shadow-sm mb-3">
-          <div class="card-body">
-            <h5 class="card-title"><%= difficulty %></h5>
-          <%= link_to "Bắt đầu làm bài", users_question_path(id: @category.id, difficulty: difficulty, question_index: 0), class: "btn btn-primary btn-lg px-5 mt-2" %>
+        <div class="difficulty-card card h-100 border-0 shadow-sm text-center <%= difficulty.downcase %>" data-aos="fade-up" data-aos-delay="<%= index * 100 %>">
+          <div class="card-body p-4 d-flex flex-column">
+            <div class="difficulty-icon mb-3">
+              <% if difficulty.downcase == "easy" %>
+                <i class="fas fa-seedling text-success"></i>
+              <% elsif difficulty.downcase == "medium" %>
+                <i class="fas fa-fire text-warning"></i>
+              <% elsif difficulty.downcase == "hard" %>
+                <i class="fas fa-mountain text-danger"></i>
+              <% else %>
+                <i class="fas fa-star text-primary"></i>
+              <% end %>
+            </div>
+            <h5 class="card-title mb-3 fw-bold"><%= difficulty %></h5>
+            <p class="card-text text-muted mb-4 flex-grow-1">
+              <% if difficulty.downcase == "easy" %>
+                Phù hợp cho người mới bắt đầu.
+              <% elsif difficulty.downcase == "medium" %>
+                Dành cho người đã có kiến thức cơ bản.
+              <% elsif difficulty.downcase == "hard" %>
+                Thử thách dành cho người có kinh nghiệm.
+              <% else %>
+                Kiểm tra kỹ năng của bạn ở mức độ này.
+              <% end %>
+            </p>
+            <%= link_to "Bắt đầu làm bài", users_question_path(id: @category.id, difficulty: difficulty, question_index: 0), class: "btn btn-primary btn-lg w-100 mt-auto" %>
           </div>
         </div>
       </div>
     <% end %>
   </div>
 
-  <div class="text-center mt-3">
-    <%= link_to "Quay lại", users_categories_path, class: "btn btn-secondary" %>
+  <div class="text-center mt-5">
+    <%= link_to users_categories_path, class: "btn btn-outline-secondary px-4" do %>
+      <i class="fas fa-arrow-left me-2"></i> Quay lại
+    <% end %>
   </div>
 </div>
+
+<style>
+  .category-header .divider {
+    height: 4px;
+    width: 60px;
+    background: linear-gradient(to right, #4776E6, #8E54E9);
+    margin-bottom: 30px;
+    border-radius: 2px;
+  }
+
+  .difficulty-card {
+    transition: all 0.3s ease;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .difficulty-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  .difficulty-card .card-body {
+    z-index: 10;
+    position: relative;
+  }
+
+  .difficulty-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(to right, #4776E6, #8E54E9);
+  }
+
+  .difficulty-card.dễ::before {
+    background: linear-gradient(to right, #56ab2f, #a8e063);
+  }
+
+  .difficulty-card.trung.bình::before {
+    background: linear-gradient(to right, #FF8008, #FFC837);
+  }
+
+  .difficulty-card.khó::before {
+    background: linear-gradient(to right, #CB356B, #BD3F32);
+  }
+
+  .difficulty-icon {
+    font-size: 2.5rem;
+    width: 70px;
+    height: 70px;
+    line-height: 70px;
+    border-radius: 50%;
+    margin: 0 auto;
+    background-color: rgba(0, 123, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .difficulty-card.dễ .difficulty-icon {
+    background-color: rgba(40, 167, 69, 0.1);
+  }
+
+  .difficulty-card.trung.bình .difficulty-icon {
+    background-color: rgba(255, 193, 7, 0.1);
+  }
+
+  .difficulty-card.khó .difficulty-icon {
+    background-color: rgba(220, 53, 69, 0.1);
+  }
+
+  /* Add responsive tweaks */
+  @media (max-width: 767.98px) {
+    .col-md-3 {
+      width: 80%;
+      margin-bottom: 15px;
+    }
+  }
+</style>
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<!-- AOS Animation Library (optional) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    AOS.init({
+      duration: 800,
+      easing: 'ease',
+      once: true
+    });
+  });
+</script>
