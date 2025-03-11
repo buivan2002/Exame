@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  # Quan hệ 1-n
   has_many :auth_logs, dependent: :destroy
   has_many :charts, dependent: :destroy
   has_many :favorites, dependent: :destroy
@@ -18,24 +19,5 @@ class User < ApplicationRecord
   # Quan hệ n-n (self-referential)
   has_many :follows, foreign_key: "follower_id", dependent: :destroy
   has_many :followers, class_name: "Follow", foreign_key: "followed_id", dependent: :destroy
-
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable,
-         :omniauthable, omniauth_providers: [:google_oauth2]
-
-  def self.from_omniauth(access_token)
-    where(provider: access_token.provider, uid: access_token.uid).first_or_create do |user|
-      user.email = access_token.info.email
-      user.password = Devise.friendly_token[0, 20]
-    end
-  end
-   enum role: { user: "user", admin: "admin" }, _default: "user"
-
-  after_initialize :set_default_role, if: :new_record?
-
-  private
-
-  def set_default_role
-    self.role ||= "user" # Mặc định là "user"
-  end
-end 
+  
+end
