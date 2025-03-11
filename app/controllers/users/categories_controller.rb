@@ -33,7 +33,13 @@ class Users::CategoriesController < ApplicationController
     # Lấy danh sách câu trả lời của câu hỏi hiện tại
     @answers = Answer.where(question_id: @question.id)
     # session[:user_answers] ||= {} # Khởi tạo session[:user_answers] nếu nó chưa có
+    unless session[:exam_start_time]
+      # session[:exam_start_time] = Time.current.to_s  # Lưu dưới dạng string
+      session[:exam_start_time] = Time.now
+    end
 
+    @time_left = ((session[:exam_start_time] + 30.minutes) - Time.now).to_i
+    binding.pry
   end
   
   

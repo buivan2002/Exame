@@ -1,6 +1,7 @@
 <h2 class="question-counter"><span class="current"><%= @question_index + 1 %></span>/<span class="total"><%= @questions.count %></span></h2>
 <div class="question-container">
   <h3 class="question-content"><%= @question.content %></h3>
+  <%# <p>Thời gian còn lại: <span id="exam-timer"><%= @time_left %></span> giây</p> %>
 
   <%= form_with url: users_question_path(@category.id, @difficulty, @question_index), method: :post, class: "question-form" do %>
     <% case @question.question_type %>

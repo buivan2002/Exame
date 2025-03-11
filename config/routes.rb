@@ -29,7 +29,6 @@ Rails.application.routes.draw do
     get 'dashboard', to: 'dashboard#index' # Điều hướng đến Admin::DashboardController#index
   end
   resources :charts
-  resources :charts 
   get "/custom_page", to: "pages#custom"
   
 end
