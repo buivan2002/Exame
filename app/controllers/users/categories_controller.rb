@@ -14,14 +14,14 @@ class Users::CategoriesController < ApplicationController
 
   def question
     session[:user_answers] ||= {}
-    
+
     @category = Category.find(params[:id])
     @difficulty = params[:difficulty]
     @question_index = params[:question_index].to_i
     # Lấy danh sách câu hỏi theo độ khó và lưu vào session nếu chưa có
     session[:question_ids] = fetch_questions(@category.id, @difficulty).map(&:id)
-    
-    
+
+
     # Lấy câu hỏi theo index
     @questions = Question.where(id: session[:question_ids])
     @question = @questions[@question_index]
@@ -29,7 +29,7 @@ class Users::CategoriesController < ApplicationController
     if @question.nil?
       redirect_to root_path, alert: "Không có câu hỏi nào!" and return
     end
-  
+
     # Lấy danh sách câu trả lời của câu hỏi hiện tại
     @answers = Answer.where(question_id: @question.id)
     # session[:user_answers] ||= {} # Khởi tạo session[:user_answers] nếu nó chưa có
@@ -41,11 +41,7 @@ class Users::CategoriesController < ApplicationController
     @time_left = ((session[:exam_start_time] + 30.minutes) - Time.now).to_i
     binding.pry
   end
-  
-  
-  
-  
-  
+
   def submit_answer
     @category = Category.find(params[:id])
     @difficulty = params[:difficulty]
@@ -54,7 +50,7 @@ class Users::CategoriesController < ApplicationController
     @question = @questions[@question_index]
     # Xóa câu trả lời cũ (nếu có) trước khi lưu cái mới
     session[:user_answers].delete(@question.id.to_s)
-    
+
     # Kiểm tra loại câu hỏi để lưu đúng định dạng
     answer_values = case @question.question_type
     when "multiple_choice"
@@ -62,10 +58,10 @@ class Users::CategoriesController < ApplicationController
     else
       [params[:answer_id]] || [] # Chọn 1 đáp án -> mảng có 1 phần tử
     end
-    
+
     session[:user_answers][@question.id.to_s] = answer_values
     # binding.pry
-                  
+
     # Chuyển hướng đến câu tiếp theo hoặc trang kết quả
     if params[:next]
       redirect_to users_question_path(@category.id, @difficulty, @question_index + 1)
@@ -75,13 +71,13 @@ class Users::CategoriesController < ApplicationController
       redirect_to root_path
     end
   end
-  
-  
+
+
   private
 
   def fetch_questions(category_id, difficulty)
     case difficulty
-      
+
     when "easy"
       Question.where(category_id: category_id, difficulty: "easy").order(Arel.sql("RAND()")).limit(10)
     when "medium"
