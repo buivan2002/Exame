@@ -1,6 +1,10 @@
-class Admin::UsersController < Admin::BaseController
+class Admin::UsersController < Admin::ApplicationController
   before_action :set_user, only: %i[show edit update destroy]
 
+  def all_user_recent_log
+    # Xử lý logic cho trang profile (ví dụ: lấy thông tin user)
+    render template: 'admin/dashboard/all_user_recent_log'
+  end
   def index
     @admin_user = User.find_by(role: 'admin')
   end

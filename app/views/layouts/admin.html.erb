@@ -180,16 +180,16 @@
         </div>
         <ul class="sidebar-menu">
             <li>
-                <%= link_to 'Dashboard', admin_root_path, class: 'active' %>
+                <%= link_to 'Dashboard', admin_dashboard_path  %>
             </li>
             <li>
                 <%= link_to 'Quản lý Users', admin_users_path %>
             </li>
             <li>
-                <%= link_to 'Chủ đề Quiz', '#' %>
+                <%= link_to 'Chủ đề Quiz', admin_quizzes_path %>
             </li>
             <li>
-                <%= link_to 'Quản lý Câu hỏi', "#" %>
+                <%= link_to 'Quản lý Câu hỏi', admin_questions_path %>
             </li>
             <li>
                 <%= link_to 'Lịch sử', '#' %>
@@ -212,7 +212,7 @@
             <h4>Admin Dashboard</h4>
             <div>
                 <span class="me-3">Xin chào, <%= @admin_user&.name %></span>
-                <a href="#profile" class="btn btn-sm btn-outline-primary">
+                <a href="profile" class="btn btn-sm btn-outline-primary">
                     <i class="fas fa-user"></i> Hồ sơ
                 </a>
             </div>
@@ -224,6 +224,7 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
     <%= yield :javascripts %>
 </body>
 </html>

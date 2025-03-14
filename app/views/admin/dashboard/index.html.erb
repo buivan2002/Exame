@@ -17,7 +17,7 @@
             <div class="col-md-3">
                 <div class="stats-card">
                     <i class="fas fa-clipboard-list"></i>
-                    <div class="stats-number"><%= @stats[:total_quizzes_today] %></div>
+                    <div class="stats-number"><%= @stats[:todays_quizzes] %></div>
                     <div class="stats-title">Bài thi hôm nay</div>
                 </div>
             </div>
@@ -39,7 +39,7 @@
                     </div>
                     <div class="card-body">
                         <div class="chart-container">
-                            <img src="/api/placeholder/700/300" alt="User Activity Chart" class="img-fluid"/>
+                            <canvas id="weeklyChart" width="700" height="300"></canvas>
                         </div>
                     </div>
                 </div>
@@ -52,7 +52,7 @@
                     </div>
                     <div class="card-body">
                         <div class="chart-container">
-                            <canvas id="categoryChart"></canvas>
+                            <canvas id="topicChart" width="700" height="300"></canvas>
                         </div>
                     </div>
                 </div>
@@ -68,6 +68,7 @@
                             <i class="fas fa-user-clock me-2"></i> Users đăng nhập gần đây
                         </div>
                         <a href="#all" class="btn btn-sm btn-primary">Xem tất cả</a>
+
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -80,19 +81,20 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <% @recent_logs.each do |log| %>
+                                    <% @recent_auth_logs.each do |log| %>
                                         <tr>
-                                            <!-- log.user là User liên kết với AuthLog (nếu bạn có belongs_to :user) -->
-                                            <td><%= log.user&.name || "Chưa rõ" %></td>
-
-                                            <!-- Thời gian đăng nhập lấy trực tiếp từ log.login_at -->
                                             <td>
-                                            <%= log.login_at&.strftime('%H:%M %d/%m/%Y') || '-' %>
+                                                <%= log.user&.name || "Chưa rõ" %>
                                             </td>
-
-                                            <!-- Ví dụ trạng thái Online/Offline (cần định nghĩa user.online? trong model User) -->
                                             <td>
-                                            
+                                                <%= log.login_at&.strftime('%H:%M %d/%m/%Y') || '-' %>
+                                            </td>
+                                            <td>
+                                                <% if log.logout_at.nil? %>
+                                                    <span class="badge bg-success">Đang hoạt động</span>
+                                                <% else %>
+                                                    <span class="badge bg-danger">Đã thoát</span>
+                                                <% end %>
                                             </td>
                                         </tr>
                                         <% end %>
@@ -223,3 +225,112 @@
                 </div>
             </div>
         </div>
+
+<!-- Tích hợp Chart.js qua CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // Chuyển dữ liệu thống kê từ server sang JS
+    var labels = <%= raw @weekly_stats.map { |s| s.day.strftime("%A, %d-%m-%Y") }.to_json %>;
+    var correctData = <%= raw @weekly_stats.map { |s| s.total_correct.to_i }.to_json %>;
+    var incorrectData = <%= raw @weekly_stats.map { |s| s.total_incorrect.to_i }.to_json %>;
+
+    // Lấy context của canvas
+    var ctx = document.getElementById('weeklyChart').getContext('2d');
+
+    // Khởi tạo biểu đồ
+    var weeklyChart = new Chart(ctx, {
+      type: 'bar',  // Sử dụng biểu đồ cột
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Số câu trả lời đúng',
+            data: correctData,
+            backgroundColor: 'rgba(75, 192, 192, 0.5)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+          },
+          {
+            label: 'Số câu trả lời sai',
+            data: incorrectData,
+            backgroundColor: 'rgba(255, 99, 132, 0.5)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1
+          }
+        ]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: "Số lượng"
+            }
+          },
+          x: {
+            title: {
+              display: true,
+              text: "Ngày"
+            }
+          }
+        },
+        plugins: {
+          title: {
+            display: true,
+            text: "Thống kê số câu trả lời đúng/sai trong tuần"
+          }
+        }
+      }
+    });
+  });
+</script>
+
+<!-- Tích hợp Chart.js qua CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // Chuyển đổi dữ liệu từ server sang JS
+    var labels = <%= raw @topic_distribution.map { |record| record.category_name }.to_json %>;
+    var data = <%= raw @topic_distribution.map { |record| record.quiz_count.to_i }.to_json %>;
+
+    // Ví dụ màu sắc cho các phần của biểu đồ
+    var backgroundColors = [
+      'rgba(255, 99, 132, 0.5)',
+      'rgba(54, 162, 235, 0.5)',
+      'rgba(255, 206, 86, 0.5)',
+      'rgba(75, 192, 192, 0.5)',
+      'rgba(153, 102, 255, 0.5)',
+      'rgba(255, 159, 64, 0.5)'
+    ];
+
+    // Lấy context của canvas
+    var ctx = document.getElementById('topicChart').getContext('2d');
+
+    // Khởi tạo biểu đồ pie chart
+    var topicChart = new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: labels,
+        datasets: [{
+          data: data,
+          backgroundColor: backgroundColors.slice(0, labels.length),
+          borderColor: 'rgba(255, 255, 255, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        plugins: {
+          title: {
+            display: true,
+            text: 'Phân bố kết quả quiz theo chủ đề'
+          },
+          legend: {
+            position: 'bottom'
+          }
+        }
+      }
+    });
+  });
+</script>

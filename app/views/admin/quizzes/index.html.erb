@@ -1,0 +1,623 @@
+<!-- admin/quizzes/index.html.erb -->
+<div class="container-fluid p-0">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Quản lý Chủ đề Quiz</h2>
+    <%= link_to new_admin_quiz_path, class: "btn btn-primary" do %>
+      <i class="fas fa-plus"></i> Thêm chủ đề mới
+    <% end %>
+  </div>
+
+  <!-- Search and filter bar -->
+  <div class="card mb-4">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Tìm kiếm theo tên chủ đề..." id="searchInput">
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary" type="button">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 d-flex justify-content-end">
+          <select class="form-control w-auto mr-2" id="statusFilter">
+            <option value="all">Tất cả trạng thái</option>
+            <option value="active">Đang hoạt động</option>
+            <option value="inactive">Không hoạt động</option>
+          </select>
+          <select class="form-control w-auto mr-2" id="difficultyFilter">
+            <option value="all">Tất cả độ khó</option>
+            <option value="easy">Dễ</option>
+            <option value="medium">Trung bình</option>
+            <option value="hard">Khó</option>
+          </select>
+          <select class="form-control w-auto" id="sortBy">
+            <option value="newest">Mới nhất</option>
+            <option value="oldest">Cũ nhất</option>
+            <option value="name">Theo tên</option>
+            <option value="popularity">Phổ biến nhất</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quiz topics stats cards -->
+  <div class="row mb-4">
+    <div class="col-md-3">
+      <div class="stats-card">
+        <i class="fas fa-clipboard-list"></i>
+        <div class="stats-number">24</div>
+        <div class="stats-title">Tổng số chủ đề</div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="stats-card">
+        <i class="fas fa-question-circle"></i>
+        <div class="stats-number">243</div>
+        <div class="stats-title">Tổng số câu hỏi</div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="stats-card">
+        <i class="fas fa-users"></i>
+        <div class="stats-number">1,567</div>
+        <div class="stats-title">Lượt làm bài</div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="stats-card">
+        <i class="fas fa-trophy"></i>
+        <div class="stats-number">87%</div>
+        <div class="stats-title">Tỷ lệ hoàn thành</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quiz topics table -->
+  <div class="card">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead class="thead-light">
+            <tr>
+              <th>#</th>
+              <th>Tên chủ đề</th>
+              <th>Mô tả</th>
+              <th>Số câu hỏi</th>
+              <th>Độ khó</th>
+              <th>Thời gian</th>
+              <th>Ngày tạo</th>
+              <th>Trạng thái</th>
+              <th>Lượt làm</th>
+              <th class="text-center">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>
+                <div class="d-flex align-items-center">
+                  <div class="quiz-icon mr-2 bg-primary text-white rounded p-2">
+                    <i class="fas fa-flask"></i>
+                  </div>
+                  <div>Khoa học</div>
+                </div>
+              </td>
+              <td>Kiến thức khoa học cơ bản và nâng cao</td>
+              <td>35</td>
+              <td><span class="badge badge-success">Dễ</span></td>
+              <td>15 phút</td>
+              <td>01/03/2025</td>
+              <td><span class="badge badge-primary">Đang hoạt động</span></td>
+              <td>425</td>
+              <td class="text-center">
+                <div class="btn-group">
+                  <button class="btn btn-sm btn-info view-quiz" data-id="1" data-toggle="tooltip" title="Xem chi tiết">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button class="btn btn-sm btn-warning" data-toggle="tooltip" title="Chỉnh sửa">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="btn btn-sm btn-success" data-toggle="tooltip" title="Quản lý câu hỏi">
+                    <i class="fas fa-question"></i>
+                  </button>
+                  <button class="btn btn-sm btn-danger" data-toggle="tooltip" title="Xóa">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>
+                <div class="d-flex align-items-center">
+                  <div class="quiz-icon mr-2 bg-success text-white rounded p-2">
+                    <i class="fas fa-music"></i>
+                  </div>
+                  <div>Âm nhạc</div>
+                </div>
+              </td>
+              <td>Kiến thức âm nhạc thế giới và Việt Nam</td>
+              <td>28</td>
+              <td><span class="badge badge-warning">Trung bình</span></td>
+              <td>12 phút</td>
+              <td>28/02/2025</td>
+              <td><span class="badge badge-primary">Đang hoạt động</span></td>
+              <td>356</td>
+              <td class="text-center">
+                <div class="btn-group">
+                  <button class="btn btn-sm btn-info view-quiz" data-id="2" data-toggle="tooltip" title="Xem chi tiết">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button class="btn btn-sm btn-warning" data-toggle="tooltip" title="Chỉnh sửa">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="btn btn-sm btn-success" data-toggle="tooltip" title="Quản lý câu hỏi">
+                    <i class="fas fa-question"></i>
+                  </button>
+                  <button class="btn btn-sm btn-danger" data-toggle="tooltip" title="Xóa">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>
+                <div class="d-flex align-items-center">
+                  <div class="quiz-icon mr-2 bg-info text-white rounded p-2">
+                    <i class="fas fa-globe"></i>
+                  </div>
+                  <div>Địa lý</div>
+                </div>
+              </td>
+              <td>Kiến thức địa lý thế giới và Việt Nam</td>
+              <td>32</td>
+              <td><span class="badge badge-danger">Khó</span></td>
+              <td>20 phút</td>
+              <td>25/02/2025</td>
+              <td><span class="badge badge-primary">Đang hoạt động</span></td>
+              <td>287</td>
+              <td class="text-center">
+                <div class="btn-group">
+                  <button class="btn btn-sm btn-info view-quiz" data-id="3" data-toggle="tooltip" title="Xem chi tiết">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button class="btn btn-sm btn-warning" data-toggle="tooltip" title="Chỉnh sửa">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="btn btn-sm btn-success" data-toggle="tooltip" title="Quản lý câu hỏi">
+                    <i class="fas fa-question"></i>
+                  </button>
+                  <button class="btn btn-sm btn-danger" data-toggle="tooltip" title="Xóa">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td>
+                <div class="d-flex align-items-center">
+                  <div class="quiz-icon mr-2 bg-warning text-white rounded p-2">
+                    <i class="fas fa-history"></i>
+                  </div>
+                  <div>Lịch sử</div>
+                </div>
+              </td>
+              <td>Các sự kiện lịch sử quan trọng</td>
+              <td>40</td>
+              <td><span class="badge badge-warning">Trung bình</span></td>
+              <td>25 phút</td>
+              <td>20/02/2025</td>
+              <td><span class="badge badge-primary">Đang hoạt động</span></td>
+              <td>312</td>
+              <td class="text-center">
+                <div class="btn-group">
+                  <button class="btn btn-sm btn-info view-quiz" data-id="4" data-toggle="tooltip" title="Xem chi tiết">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button class="btn btn-sm btn-warning" data-toggle="tooltip" title="Chỉnh sửa">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="btn btn-sm btn-success" data-toggle="tooltip" title="Quản lý câu hỏi">
+                    <i class="fas fa-question"></i>
+                  </button>
+                  <button class="btn btn-sm btn-danger" data-toggle="tooltip" title="Xóa">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td>
+                <div class="d-flex align-items-center">
+                  <div class="quiz-icon mr-2 bg-danger text-white rounded p-2">
+                    <i class="fas fa-laptop-code"></i>
+                  </div>
+                  <div>Công nghệ</div>
+                </div>
+              </td>
+              <td>Kiến thức về công nghệ và lập trình</td>
+              <td>30</td>
+              <td><span class="badge badge-danger">Khó</span></td>
+              <td>18 phút</td>
+              <td>15/02/2025</td>
+              <td><span class="badge badge-danger">Không hoạt động</span></td>
+              <td>187</td>
+              <td class="text-center">
+                <div class="btn-group">
+                  <button class="btn btn-sm btn-info view-quiz" data-id="5" data-toggle="tooltip" title="Xem chi tiết">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button class="btn btn-sm btn-warning" data-toggle="tooltip" title="Chỉnh sửa">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="btn btn-sm btn-success" data-toggle="tooltip" title="Quản lý câu hỏi">
+                    <i class="fas fa-question"></i>
+                  </button>
+                  <button class="btn btn-sm btn-danger" data-toggle="tooltip" title="Xóa">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="d-flex justify-content-between align-items-center mt-4">
+        <div>Hiển thị 1-5 của 24 chủ đề</div>
+        <nav>
+          <ul class="pagination">
+            <li class="page-item disabled">
+              <a class="page-link" href="#" tabindex="-1">Trước</a>
+            </li>
+            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">4</a></li>
+            <li class="page-item"><a class="page-link" href="#">5</a></li>
+            <li class="page-item">
+              <a class="page-link" href="#">Sau</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Quiz Topic Modal -->
+<div class="modal fade" id="addQuizModal" tabindex="-1" role="dialog" aria-labelledby="addQuizModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addQuizModalLabel">Thêm chủ đề Quiz mới</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="addQuizForm">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="quizName">Tên chủ đề</label>
+                <input type="text" class="form-control" id="quizName" placeholder="Nhập tên chủ đề">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="quizIcon">Icon</label>
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-icons"></i></span>
+                  </div>
+                  <select class="form-control" id="quizIcon">
+                    <option value="fas fa-flask">Khoa học (Flask)</option>
+                    <option value="fas fa-music">Âm nhạc (Music)</option>
+                    <option value="fas fa-globe">Địa lý (Globe)</option>
+                    <option value="fas fa-history">Lịch sử (History)</option>
+                    <option value="fas fa-laptop-code">Công nghệ (Code)</option>
+                    <option value="fas fa-calculator">Toán học (Calculator)</option>
+                    <option value="fas fa-language">Ngôn ngữ (Language)</option>
+                    <option value="fas fa-palette">Nghệ thuật (Art)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="quizDescription">Mô tả</label>
+            <textarea class="form-control" id="quizDescription" rows="3" placeholder="Nhập mô tả cho chủ đề quiz"></textarea>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="quizDifficulty">Độ khó</label>
+                <select class="form-control" id="quizDifficulty">
+                  <option value="easy">Dễ</option>
+                  <option value="medium">Trung bình</option>
+                  <option value="hard">Khó</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="quizTime">Thời gian làm bài (phút)</label>
+                <input type="number" class="form-control" id="quizTime" min="1" max="60" value="15">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="quizStatus">Trạng thái</label>
+                <select class="form-control" id="quizStatus">
+                  <option value="active">Hoạt động</option>
+                  <option value="inactive">Không hoạt động</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="minQuestions">Số câu hỏi tối thiểu</label>
+                <input type="number" class="form-control" id="minQuestions" min="5" max="50" value="10">
+                <small class="form-text text-muted">Số câu hỏi tối thiểu để bắt đầu làm bài</small>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="passScore">Điểm đạt (phần trăm)</label>
+                <input type="number" class="form-control" id="passScore" min="50" max="100" value="70">
+                <small class="form-text text-muted">Phần trăm điểm tối thiểu để đạt</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Đối tượng truy cập</label>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" id="accessAll" checked>
+                  <label class="custom-control-label" for="accessAll">Tất cả người dùng</label>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" id="accessPremium">
+                  <label class="custom-control-label" for="accessPremium">Người dùng Premium</label>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" id="accessAdmin">
+                  <label class="custom-control-label" for="accessAdmin">Chỉ Admin</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy bỏ</button>
+        <button type="button" class="btn btn-primary">Lưu chủ đề</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Quiz Detail Modal -->
+<div class="modal fade" id="viewQuizModal" tabindex="-1" role="dialog" aria-labelledby="viewQuizModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="viewQuizModalLabel">Chi tiết chủ đề Quiz</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row mb-4">
+          <div class="col-md-2 text-center">
+            <div class="quiz-icon-lg bg-info text-white rounded d-flex align-items-center justify-content-center mx-auto" style="width: 80px; height: 80px; font-size: 32px;">
+              <i class="fas fa-globe"></i>
+            </div>
+          </div>
+          <div class="col-md-10">
+            <h4>Địa lý</h4>
+            <p class="text-muted">Kiến thức địa lý thế giới và Việt Nam</p>
+            <div class="badge badge-primary">Đang hoạt động</div>
+            <div class="badge badge-danger ml-2">Khó</div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card mb-4">
+              <div class="card-header">
+                Thông tin cơ bản
+              </div>
+              <div class="card-body">
+                <p><strong>Ngày tạo:</strong> 25/02/2025</p>
+                <p><strong>Thời gian làm bài:</strong> 20 phút</p>
+                <p><strong>Số câu hỏi:</strong> 32</p>
+                <p><strong>Điểm đạt tối thiểu:</strong> 70%</p>
+                <p><strong>Đối tượng truy cập:</strong> Tất cả người dùng</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card mb-4">
+              <div class="card-header">
+                Thống kê tham gia
+              </div>
+              <div class="card-body">
+                <canvas id="quizParticipationChart" width="100%" height="200"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header">
+                Câu hỏi gần đây
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-sm">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Câu hỏi</th>
+                        <th>Loại</th>
+                        <th>Tỷ lệ trả lời đúng</th>
+                        <th>Thao tác</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>1</td>
+                        <td>Đâu là con sông dài nhất Việt Nam?</td>
+                        <td><span class="badge badge-secondary">Multiple Choice</span></td>
+                        <td>
+                          <div class="progress" style="height: 10px;">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 85%;" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100">85%</div>
+                          </div>
+                        </td>
+                        <td>
+                          <button class="btn btn-sm btn-warning">
+                            <i class="fas fa-edit"></i>
+                          </button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>2</td>
+                        <td>Thủ đô của Việt Nam là gì?</td>
+                        <td><span class="badge badge-secondary">Multiple Choice</span></td>
+                        <td>
+                          <div class="progress" style="height: 10px;">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 95%;" aria-valuenow="95" aria-valuemin="0" aria-valuemax="100">95%</div>
+                          </div>
+                        </td>
+                        <td>
+                          <button class="btn btn-sm btn-warning">
+                            <i class="fas fa-edit"></i>
+                          </button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>3</td>
+                        <td>Liệt kê 5 quốc gia có diện tích lớn nhất thế giới?</td>
+                        <td><span class="badge badge-secondary">Essay</span></td>
+                        <td>
+                          <div class="progress" style="height: 10px;">
+                            <div class="progress-bar bg-warning" role="progressbar" style="width: 62%;" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100">62%</div>
+                          </div>
+                        </td>
+                        <td>
+                          <button class="btn btn-sm btn-warning">
+                            <i class="fas fa-edit"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+        <button type="button" class="btn btn-success">Quản lý câu hỏi</button>
+        <button type="button" class="btn btn-warning">Chỉnh sửa</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Quiz Questions Management Modal -->
+<div class="modal fade" id="questionsManagementModal" tabindex="-1" role="dialog" aria-labelledby="questionsManagementModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="questionsManagementModalLabel">Quản lý câu hỏi - Địa lý</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <div>
+            <button class="btn btn-primary">
+              <i class="fas fa-plus"></i> Thêm câu hỏi mới
+            </button>
+            <button class="btn btn-secondary ml-2">
+              <i class="fas fa-file-import"></i> Nhập từ Excel
+            </button>
+          </div>
+          <div class="d-flex">
+            <select class="form-control w-auto mr-2">
+              <option>Tất cả loại câu hỏi</option>
+              <option>Multiple Choice</option>
+              <option>True/False</option>
+              <option>Essay</option>
+              <option>Matching</option>
+            </select>
+            <div class="input-group" style="width: 250px;">
+              <input type="text" class="form-control" placeholder="Tìm kiếm câu hỏi...">
+              <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="button">
+                  <i class="fas fa-search"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="questions-container">
+          <!-- Question Item -->
+          <div class="card mb-3">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <div>
+                <span class="badge badge-primary mr-2">Multiple Choice</span>
+                <strong>Câu hỏi #1</strong>
+              </div>
+              <div>
+                <button class="btn btn-sm btn-warning">
+                  <i class="fas fa-edit"></i> Sửa
+                </button>
+                <button class="btn btn-sm btn-danger ml-1">
+                  <i class="fas fa-trash"></i> Xóa
+                </button>
+              </div>
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">Đâu là con sông dài nhất Việt Nam?</h5>
+              <div class="options-list mt-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="q1" id="q1_1" disabled>
+                  <label class="form-check-label" for="q1_1">
+                    Sông Hồng
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="q1" id="q1_2" checked disabled>
+                  <label class="form-check-label font-weight-bold text-success" for="q1_2">
+                    Sông Mê Kông

@@ -17,13 +17,12 @@ Rails.application.routes.draw do
     passwords: "users/passwords",
     omniauth_callbacks: 'users/omniauth_callbacks',
   }
-  get 'pages/custom'
-  resources :charts
-  get "/custom_page", to: "pages#custom"
 
   namespace :admin do
-    get "dashboard", to: "dashboard#index", as: :dashboard
-    root "dashboard#index"
+    # root "dashboard#index"
+    get "dashboard" => "dashboard#index"
+    # get "profile" => "profile#show"
+    resources :profile, ony: [:show, :edit, :update]
     resources :users
     resources :questions
     resources :quizzes
