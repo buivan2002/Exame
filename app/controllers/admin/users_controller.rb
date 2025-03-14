@@ -7,10 +7,10 @@ class Admin::UsersController < Admin::ApplicationController
   end
   def index
     @admin_user = User.find_by(role: 'admin')
+    @users = User.order(created_at: :desc).page(params[:page]).per(10)
   end
 
   def new
-    # @admin_user = User.find_by(role: 'admin')
     @user = User.new
   end
 
@@ -24,9 +24,13 @@ class Admin::UsersController < Admin::ApplicationController
     end
   end
 
-  def show; end
+  def show
+    @user = User.find(params[:id])
+  end
 
-  def edit; end
+  def edit
+    @user = User.find(params[:id])
+  end
 
   def update
     if @user.update(user_params)

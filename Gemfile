@@ -85,3 +85,5 @@ group :test do
 end
 
 gem 'rails-ujs'
+
+gem 'kaminari'
