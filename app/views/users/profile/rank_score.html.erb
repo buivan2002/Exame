@@ -1,0 +1,22 @@
+<h2>Bảng Xếp Hạng</h2>
+
+<table class="table table-bordered table-striped">
+  <thead class="thead-dark">
+    <tr>
+      <th>Hạng</th>
+      <th>Tên người dùng</th>
+      <th>Tổng điểm</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @leaderboard.each_with_index do |entry, index| %>
+      <tr>
+        <td><%= index + 1 %></td>
+        <td><%= entry.user.name %></td>
+        <td><%= entry.score %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<a href="javascript:history.back()" class="btn btn-secondary">Quay lại</a>

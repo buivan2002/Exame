@@ -1,0 +1,95 @@
+<!-- Modal Follow -->
+<div class="modal fade" id="followingModal" tabindex="-1" aria-labelledby="followingModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="followingModalLabel">Đang Follow</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <ul class="list-group">
+          <% @following.each do |user| %>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <%= user.followed.email %>
+              <button class="btn btn-danger btn-sm" onclick="unfollow(<%= user.id %>)">Hủy Follow</button>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Followers -->
+<div class="modal fade" id="followersModal" tabindex="-1" aria-labelledby="followersModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="followersModalLabel">Người Theo Dõi</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <ul class="list-group">
+          <% @followers.each do |user| %> 
+          <%# dùng như này nó bị select để tìm nên lúc trước mới dùng include  %>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <%= user.follower.email %>
+              <%# follow.followed ➝ Lấy User có ID là followed_id. %>
+
+              <button class="btn btn-danger btn-sm" onclick="removeFollower(<%= user.id %>)">Xóa</button>
+              <%# này là lấy user.id này k phải userid đâu mà là của bảng followers đấy  %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function unfollow(userId) {
+    if (confirm("Bạn có chắc muốn hủy Follow?")) {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content'); // Lấy CSRF token
+
+      fetch(`/users/unfollow/${userId}`, {
+      method: 'DELETE',
+      headers: {
+        "X-CSRF-Token": csrfToken, // Thêm CSRF token vào header
+        "Content-Type": "application/json"
+      },
+      credentials: 'same-origin' // Giữ session và cookie
+    })
+    .then(response => {
+      if (response.ok) {
+        location.reload();
+      } else {
+        alert("Có lỗi xảy ra, vui lòng thử lại!");
+      }
+    })
+    .catch(error => console.error("Lỗi:", error));
+  }
+}
+
+  function removeFollower(userId) {
+  if (confirm("Bạn có chắc muốn xóa người theo dõi này?")) {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content'); // Lấy CSRF token
+
+    fetch(`/users/remove_follower/${userId}`, {
+      method: 'DELETE',
+      headers: {
+        "X-CSRF-Token": csrfToken, // Thêm CSRF token vào header
+        "Content-Type": "application/json"
+      },
+      credentials: 'same-origin' // Giữ session và cookie
+    })
+    .then(response => {
+      if (response.ok) {
+        location.reload();
+      } else {
+        alert("Có lỗi xảy ra, vui lòng thử lại!");
+      }
+    })
+    .catch(error => console.error("Lỗi:", error));
+  }
+}
+</script>

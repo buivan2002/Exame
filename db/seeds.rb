@@ -72,7 +72,7 @@ puts "Seeded #{categories.count} Categories."
 puts "Seeding Questions..."
 questions = []
 categories.each do |category|
-  3.times do
+  20.times do
     questions << Question.create!(
       category: category,
       content: Faker::Lorem.sentence(word_count: 10),

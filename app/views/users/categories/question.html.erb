@@ -1,0 +1,389 @@
+<h2 class="question-counter">
+  <span class="current"><%= @question_index + 1 %></span>/
+  <span class="total"><%= @questions.count %></span>
+</h2>
+
+<div class="question-container">
+  <h3 class="question-content"><%= @question.content %></h3>
+  <div class="exam-container">
+    <p>Thời gian còn lại: 
+      <span id="exam-timer" data-time-left="<%= @time_left %>">
+        <%= @time_left %>
+      </span> giây
+    </p>
+
+    <%= form_with url: users_question_path(@category.id, @difficulty, @question_index), method: :post, class: "question-form", id: "exam-form" do %>
+      <% case @question.question_type %>
+        <% when "true_false" %>
+          <div class="options true-false-options">
+            <label class="option-label">
+              <input type="radio" name="answer_id" value="1" <%= "checked" if session[:user_answers][@question.id.to_s][0] == "1"%>>
+              <span class="option-text">
+                <span class="option-icon yes-icon"><i class="fas fa-check"></i></span>
+                <span>Yes</span>
+              </span>
+            </label>
+            <label class="option-label">
+              <input type="radio" name="answer_id" value="0" <%= "checked" if session[:user_answers][@question.id.to_s][0] == "0" %>>
+              <span class="option-text">
+                <span class="option-icon no-icon"><i class="fas fa-times"></i></span>
+                <span>No</span>
+              </span>
+            </label>
+          </div>
+        <% when "short_answer" %>
+          <div class="options">
+            <% @answers.each_with_index do |answer, index| %>
+              <label class="option-label">
+                <input type="radio" name="answer_id" value="<%= answer.id %>" <%= "checked" if session[:user_answers][@question.id.to_s]&.include?(answer.id.to_s) %>>
+                <span class="option-text">
+                  <span class="option-index"><%= ('A'.ord + index).chr %></span>
+                  <span><%= answer.body %></span>
+                </span>
+              </label>
+            <% end %>
+          </div>
+        <% when "multiple_choice" %>
+          <div class="options">
+            <% @answers.each_with_index do |answer, index| %>
+              <label class="option-label">
+                <input type="checkbox" name="answers[]" value="<%= answer.id %>" <%= "checked" if session[:user_answers][@question.id.to_s]&.include?(answer.id.to_s) %>>
+                <span class="option-text">
+                  <span class="option-index"><%= ('A'.ord + index).chr %></span>
+                  <span><%= answer.body %></span>
+                </span>
+              </label>
+            <% end %>
+          </div>
+      <% end %>
+
+      <div class="navigation-buttons">
+        <% if @question_index > 0 %>
+          <%= submit_tag "Quay lại", name: "prev", class: "btn btn-secondary" %>
+        <% else %>
+          <div></div> <!-- Empty div to maintain flexbox spacing -->
+        <% end %>
+
+        <div class="progress-indicator">
+          <% @questions.count.times do |i| %>
+            <span class="progress-dot <%= 'active' if i == @question_index %>"></span>
+          <% end %>
+        </div>
+
+        <% if @question_index < @questions.count - 1 %>
+          <%= submit_tag "Tiếp theo", name: "next", class: "btn btn-primary" %>
+        <% else %>
+         <%= submit_tag "Nộp bài", name: "submit_exam", class: "btn btn-success", id: "submit-button" %>
+
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<script>
+  
+document.addEventListener("DOMContentLoaded", function () {
+    console.log("JavaScript đã load từ application.js!");
+    let timeLeftElement = document.getElementById("exam-timer");
+    
+    if (timeLeftElement) {
+        let timeLeft = parseInt(timeLeftElement.dataset.timeLeft, 10);
+
+        function updateTimerDisplay() {
+            let minutes = Math.floor(timeLeft / 60);
+            let seconds = timeLeft % 60;
+            timeLeftElement.textContent = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+        }
+
+        function startTimer() {
+            updateTimerDisplay();
+            let timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    console.log("Hết thời gian!");
+
+                    let examForm = document.getElementById("exam-form");
+                    if (examForm) {
+                        // ✅ Tạo input ẩn để chỉ định hành động là "Nộp bài"
+                        let hiddenSubmit = document.createElement("input");
+                        hiddenSubmit.type = "hidden";
+                        hiddenSubmit.name = "submit_exam";
+                        hiddenSubmit.value = "1"; // Giá trị không quan trọng, chỉ cần có name
+
+                        examForm.appendChild(hiddenSubmit);
+                        examForm.submit();
+                    } else {
+                        console.error("Không tìm thấy form để nộp bài!");
+                    }
+                }
+            }, 1000);
+        }
+
+        startTimer();
+    }
+});
+
+  
+</script> 
+
+<style>
+  /* Base styles */
+  body {
+    font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    line-height: 1.6;
+  }
+
+  /* Question container */
+  .question-container {
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 30px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  }
+
+  /* Question counter */
+  .question-counter {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #666;
+    margin-top: 30px;
+  }
+
+  .question-counter .current {
+    font-size: 2rem;
+    color: #4776E6;
+    font-weight: 700;
+  }
+
+  /* Question content */
+  .question-content {
+    font-size: 1.3rem;
+    margin-bottom: 25px;
+    color: #2c3e50;
+    line-height: 1.5;
+    font-weight: 500;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 15px;
+  }
+
+  /* Options styling */
+  .options {
+    margin: 25px 0;
+  }
+
+  .option-label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    background-color: white;
+  }
+
+  .option-label:hover {
+    background-color: #f5f9ff;
+    border-color: #b3d4fc;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  /* Hide default radio and checkbox */
+  input[type="radio"],
+  input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+  }
+
+  /* Option text */
+  .option-text {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 15px;
+  }
+
+  /* Option index (A, B, C...) */
+  .option-index {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background-color: #f0f4f8;
+    color: #4776E6;
+    border-radius: 50%;
+    margin-right: 12px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  /* Option icons for true/false */
+  .option-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    margin-right: 12px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .yes-icon {
+    background-color: #e6f7ee;
+    color: #52c41a;
+  }
+
+  .no-icon {
+    background-color: #fff2f0;
+    color: #ff4d4f;
+  }
+
+  /* Selected option */
+  input[type="radio"]:checked + .option-text,
+  input[type="checkbox"]:checked + .option-text {
+    font-weight: 500;
+  }
+
+  input[type="radio"]:checked + .option-text .option-index,
+  input[type="checkbox"]:checked + .option-text .option-index {
+    background-color: #4776E6;
+    color: white;
+  }
+
+  /* Selected option styling */
+  input[type="radio"]:checked + .option-text,
+  input[type="checkbox"]:checked + .option-text {
+    color: #4776E6;
+  }
+
+  input[type="radio"]:checked ~ .option-label,
+  input[type="checkbox"]:checked ~ .option-label {
+    border-color: #4776E6;
+    background-color: #f0f7ff;
+  }
+
+  /* True/False styling */
+  .true-false-options .option-label {
+    width: 48%;
+    display: inline-flex;
+    margin-right: 2%;
+  }
+
+  /* Navigation buttons */
+  .navigation-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #f0f0f0;
+  }
+
+  /* Progress indicator */
+  .progress-indicator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .progress-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #e0e0e0;
+    margin: 0 5px;
+    display: inline-block;
+  }
+
+  .progress-dot.active {
+    background-color: #4776E6;
+    transform: scale(1.3);
+  }
+
+  /* Button styling */
+  .btn {
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    border: none;
+    outline: none;
+  }
+
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .btn-primary {
+    background: linear-gradient(to right, #4776E6, #8E54E9);
+    color: white;
+  }
+
+  .btn-secondary {
+    background-color: #f0f0f0;
+    color: #666;
+  }
+
+  .btn-success {
+    background: linear-gradient(to right, #56ab2f, #a8e063);
+    color: white;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .question-container {
+      padding: 20px;
+      margin: 15px;
+    }
+
+    .true-false-options .option-label {
+      width: 100%;
+      margin-right: 0;
+    }
+
+    .navigation-buttons {
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .btn {
+      width: 100%;
+    }
+  }
+
+  /* Animation for options */
+  .option-label {
+    animation: fadeIn 0.5s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
+<!-- Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">

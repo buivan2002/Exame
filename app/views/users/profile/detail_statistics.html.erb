@@ -1,0 +1,26 @@
+<div class="container mt-4">
+  <div class="card shadow-lg border-0">
+    <div class="card-header bg-primary text-white text-center">
+      <h3 class="mb-0">Thống kê của bạn trong chủ đề <%= @category.name %></h3>
+    </div>
+    <div class="card-body">
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item d-flex justify-content-between">
+          <strong>Số câu trả lời đúng:</strong> 
+          <span class="badge bg-success fs-6"><%= @statistic.total_correct_answers %></span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+          <strong>Số câu trả lời sai:</strong> 
+          <span class="badge bg-danger fs-6"><%= @statistic.total_incorrect_answers %></span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+          <strong>Lần làm bài cuối cùng:</strong> 
+          <span class="text-muted"><%= @statistic.date.strftime("%d/%m/%Y %H:%M") %></span>
+        </li>
+      </ul>
+    </div>
+    <div class="card-footer text-center">
+  <a href="javascript:history.back()" class="btn btn-secondary">Quay lại</a>
+    </div>
+  </div>
+</div>
