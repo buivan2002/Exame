@@ -1,55 +1,63 @@
-# app/controllers/admin/quizzes_controller.rb
-class Admin::QuizzesController < ApplicationController
-  layout "admin"
+class Admin::QuizzesController < Admin::ApplicationController
   before_action :set_quiz, only: [:show, :edit, :update, :destroy]
 
   def index
-    # Sử dụng phân trang (giả sử gem kaminari hoặc will_paginate đã được cài)
-    # Sắp xếp theo ngày tạo mới nhất
-    # @quizzes = Quiz.order(created_at: :desc).page(params[:page]).per(5)
+    @quizzes = Quiz.includes(:questions).order(created_at: :desc)
+    # Thống kê số lượng
+    @total_quizzes = @quizzes.count
+    @total_questions = Question.count
+    @total_attempts = QuizResult.count
+    @completion_rate = if QuizResult.count > 0
+                          (QuizResult.where(status: "completed").count.to_f / QuizResult.count * 100).round(2)
+                        else
+                          0
+                        end
   end
 
   def new
-    @quiz = Quiz.new
+
   end
 
   def create
-    @quiz = Quiz.new(quiz_params)
-    if @quiz.save
-      redirect_to admin_quizzes_path, notice: "Quiz được tạo thành công."
-    else
-      render :new
-    end
   end
 
   def show
-    # Có thể hiển thị chi tiết quiz, ví dụ như danh sách câu hỏi nếu cần
+    @quiz_setting = @quiz.quiz_setting
+    @quiz_questions = @quiz.quiz_questions.includes(question: :answers).order(:position)
   end
 
   def edit
-  end
-
-  def update
-    if @quiz.update(quiz_params)
-      redirect_to admin_quizzes_path, notice: "Quiz được cập nhật thành công."
-    else
-      render :edit
+    begin
+      if true
+        raise "Không thể sửa quiz do quiz được tạo tự động."
+      end
+    rescue ActiveRecord::RecordNotFound
+      flash[:error] = "Quiz không tồn tại."
+      redirect_to admin_quizzes_path
+    rescue => e
+      flash[:error] = e.message
+      redirect_to admin_quizzes_path
     end
   end
 
+  def update
+  end
+
   def destroy
-    @quiz.destroy
-    redirect_to admin_quizzes_path, notice: "Quiz đã được xóa."
+    if @quiz.destroy
+      flash[:notice] = "Bài quiz đã được xóa thành công."
+    else
+      flash[:alert] = "Có lỗi xảy ra khi xóa bài quiz."
+    end
+    redirect_to admin_quizzes_path
   end
 
   private
 
   def set_quiz
     @quiz = Quiz.find(params[:id])
-  end
-
-  def quiz_params
-    # Giả sử bảng quizzes có các trường: title, category, description, status
-    params.require(:quiz).permit(:title, :category, :description, :status)
+    rescue ActiveRecord::RecordNotFound
+      flash[:alert] = "Bài quiz không tồn tại."
+    redirect_to admin_quizzes_path
   end
 end

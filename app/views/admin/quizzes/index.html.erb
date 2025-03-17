@@ -3,7 +3,7 @@
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h2>Quản lý Chủ đề Quiz</h2>
     <%= link_to new_admin_quiz_path, class: "btn btn-primary" do %>
-      <i class="fas fa-plus"></i> Thêm chủ đề mới
+      <i class="fas fa-plus"></i> Thêm quiz mới
     <% end %>
   </div>
 
@@ -49,28 +49,28 @@
     <div class="col-md-3">
       <div class="stats-card">
         <i class="fas fa-clipboard-list"></i>
-        <div class="stats-number">24</div>
+        <div class="stats-number"><%= @total_quizzes %></div>
         <div class="stats-title">Tổng số chủ đề</div>
       </div>
     </div>
     <div class="col-md-3">
       <div class="stats-card">
         <i class="fas fa-question-circle"></i>
-        <div class="stats-number">243</div>
+        <div class="stats-number"><%= @total_questions %></div>
         <div class="stats-title">Tổng số câu hỏi</div>
       </div>
     </div>
     <div class="col-md-3">
       <div class="stats-card">
         <i class="fas fa-users"></i>
-        <div class="stats-number">1,567</div>
+        <div class="stats-number"><%= @total_attempts %></div>
         <div class="stats-title">Lượt làm bài</div>
       </div>
     </div>
     <div class="col-md-3">
       <div class="stats-card">
         <i class="fas fa-trophy"></i>
-        <div class="stats-number">87%</div>
+        <div class="stats-number"><%= @completion_rate %>%</div>
         <div class="stats-title">Tỷ lệ hoàn thành</div>
       </div>
     </div>
@@ -96,176 +96,54 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>1</td>
-              <td>
-                <div class="d-flex align-items-center">
-                  <div class="quiz-icon mr-2 bg-primary text-white rounded p-2">
-                    <i class="fas fa-flask"></i>
+            <% @quizzes.each_with_index do |quiz, index| %>
+              <tr>
+                <td><%= index + 1 %></td>
+                <td>
+                  <div class="d-flex align-items-center">
+                    <div class="quiz-icon mr-2 bg-primary text-white rounded p-2">
+                      <i class="fas fa-book"></i>
+                    </div>
+                    <div><%= quiz.title %></div>
                   </div>
-                  <div>Khoa học</div>
-                </div>
-              </td>
-              <td>Kiến thức khoa học cơ bản và nâng cao</td>
-              <td>35</td>
-              <td><span class="badge badge-success">Dễ</span></td>
-              <td>15 phút</td>
-              <td>01/03/2025</td>
-              <td><span class="badge badge-primary">Đang hoạt động</span></td>
-              <td>425</td>
-              <td class="text-center">
-                <div class="btn-group">
-                  <button class="btn btn-sm btn-info view-quiz" data-id="1" data-toggle="tooltip" title="Xem chi tiết">
-                    <i class="fas fa-eye"></i>
-                  </button>
-                  <button class="btn btn-sm btn-warning" data-toggle="tooltip" title="Chỉnh sửa">
-                    <i class="fas fa-edit"></i>
-                  </button>
-                  <button class="btn btn-sm btn-success" data-toggle="tooltip" title="Quản lý câu hỏi">
-                    <i class="fas fa-question"></i>
-                  </button>
-                  <button class="btn btn-sm btn-danger" data-toggle="tooltip" title="Xóa">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>
-                <div class="d-flex align-items-center">
-                  <div class="quiz-icon mr-2 bg-success text-white rounded p-2">
-                    <i class="fas fa-music"></i>
+                </td>
+                <td><%= quiz.description %></td>
+                <td><%= quiz.questions.count %></td>
+                <td>
+                  <% case quiz.difficulty %>
+                    <% when "easy" %>
+                      <span class="badge badge-success">Dễ</span>
+                    <% when "medium" %>
+                      <span class="badge badge-warning">Trung bình</span>
+                    <% when "hard" %>
+                      <span class="badge badge-danger">Khó</span>
+                  <% end %>
+                </td>
+                <td><%= quiz.time_limit %> phút</td>
+                <td><%= quiz.created_at.strftime("%d/%m/%Y") %></td>
+                <td>
+                  <% if quiz.status %>
+                    <span class="badge badge-primary">Đang hoạt động</span>
+                  <% else %>
+                    <span class="badge badge-danger">Không hoạt động</span>
+                  <% end %>
+                </td>
+                <td><%= quiz.quiz_results.count %></td>
+                <td class="text-center">
+                  <div class="btn-group">
+                    <%= link_to admin_quiz_path(quiz), class: "btn btn-sm btn-info", title: "Xem chi tiết" do %>
+                      <i class="fas fa-eye"></i>
+                    <% end %>
+                    <%= link_to edit_admin_quiz_path(quiz), class: "btn btn-sm btn-warning", title: "Chỉnh sửa" do %>
+                      <i class="fas fa-edit"></i>
+                    <% end %>
+                    <%= button_to admin_quiz_path(quiz), method: :delete, data: { confirm: "Bạn có chắc muốn xóa bài quiz này?" }, class: "btn btn-sm btn-danger", title: "Xóa" do %>
+                      <i class="fas fa-trash"></i>
+                    <% end %>
                   </div>
-                  <div>Âm nhạc</div>
-                </div>
-              </td>
-              <td>Kiến thức âm nhạc thế giới và Việt Nam</td>
-              <td>28</td>
-              <td><span class="badge badge-warning">Trung bình</span></td>
-              <td>12 phút</td>
-              <td>28/02/2025</td>
-              <td><span class="badge badge-primary">Đang hoạt động</span></td>
-              <td>356</td>
-              <td class="text-center">
-                <div class="btn-group">
-                  <button class="btn btn-sm btn-info view-quiz" data-id="2" data-toggle="tooltip" title="Xem chi tiết">
-                    <i class="fas fa-eye"></i>
-                  </button>
-                  <button class="btn btn-sm btn-warning" data-toggle="tooltip" title="Chỉnh sửa">
-                    <i class="fas fa-edit"></i>
-                  </button>
-                  <button class="btn btn-sm btn-success" data-toggle="tooltip" title="Quản lý câu hỏi">
-                    <i class="fas fa-question"></i>
-                  </button>
-                  <button class="btn btn-sm btn-danger" data-toggle="tooltip" title="Xóa">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>3</td>
-              <td>
-                <div class="d-flex align-items-center">
-                  <div class="quiz-icon mr-2 bg-info text-white rounded p-2">
-                    <i class="fas fa-globe"></i>
-                  </div>
-                  <div>Địa lý</div>
-                </div>
-              </td>
-              <td>Kiến thức địa lý thế giới và Việt Nam</td>
-              <td>32</td>
-              <td><span class="badge badge-danger">Khó</span></td>
-              <td>20 phút</td>
-              <td>25/02/2025</td>
-              <td><span class="badge badge-primary">Đang hoạt động</span></td>
-              <td>287</td>
-              <td class="text-center">
-                <div class="btn-group">
-                  <button class="btn btn-sm btn-info view-quiz" data-id="3" data-toggle="tooltip" title="Xem chi tiết">
-                    <i class="fas fa-eye"></i>
-                  </button>
-                  <button class="btn btn-sm btn-warning" data-toggle="tooltip" title="Chỉnh sửa">
-                    <i class="fas fa-edit"></i>
-                  </button>
-                  <button class="btn btn-sm btn-success" data-toggle="tooltip" title="Quản lý câu hỏi">
-                    <i class="fas fa-question"></i>
-                  </button>
-                  <button class="btn btn-sm btn-danger" data-toggle="tooltip" title="Xóa">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>4</td>
-              <td>
-                <div class="d-flex align-items-center">
-                  <div class="quiz-icon mr-2 bg-warning text-white rounded p-2">
-                    <i class="fas fa-history"></i>
-                  </div>
-                  <div>Lịch sử</div>
-                </div>
-              </td>
-              <td>Các sự kiện lịch sử quan trọng</td>
-              <td>40</td>
-              <td><span class="badge badge-warning">Trung bình</span></td>
-              <td>25 phút</td>
-              <td>20/02/2025</td>
-              <td><span class="badge badge-primary">Đang hoạt động</span></td>
-              <td>312</td>
-              <td class="text-center">
-                <div class="btn-group">
-                  <button class="btn btn-sm btn-info view-quiz" data-id="4" data-toggle="tooltip" title="Xem chi tiết">
-                    <i class="fas fa-eye"></i>
-                  </button>
-                  <button class="btn btn-sm btn-warning" data-toggle="tooltip" title="Chỉnh sửa">
-                    <i class="fas fa-edit"></i>
-                  </button>
-                  <button class="btn btn-sm btn-success" data-toggle="tooltip" title="Quản lý câu hỏi">
-                    <i class="fas fa-question"></i>
-                  </button>
-                  <button class="btn btn-sm btn-danger" data-toggle="tooltip" title="Xóa">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>5</td>
-              <td>
-                <div class="d-flex align-items-center">
-                  <div class="quiz-icon mr-2 bg-danger text-white rounded p-2">
-                    <i class="fas fa-laptop-code"></i>
-                  </div>
-                  <div>Công nghệ</div>
-                </div>
-              </td>
-              <td>Kiến thức về công nghệ và lập trình</td>
-              <td>30</td>
-              <td><span class="badge badge-danger">Khó</span></td>
-              <td>18 phút</td>
-              <td>15/02/2025</td>
-              <td><span class="badge badge-danger">Không hoạt động</span></td>
-              <td>187</td>
-              <td class="text-center">
-                <div class="btn-group">
-                  <button class="btn btn-sm btn-info view-quiz" data-id="5" data-toggle="tooltip" title="Xem chi tiết">
-                    <i class="fas fa-eye"></i>
-                  </button>
-                  <button class="btn btn-sm btn-warning" data-toggle="tooltip" title="Chỉnh sửa">
-                    <i class="fas fa-edit"></i>
-                  </button>
-                  <button class="btn btn-sm btn-success" data-toggle="tooltip" title="Quản lý câu hỏi">
-                    <i class="fas fa-question"></i>
-                  </button>
-                  <button class="btn btn-sm btn-danger" data-toggle="tooltip" title="Xóa">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                </div>
-              </td>
-            </tr>
+                </td>
+              </tr>
+            <% end %>
           </tbody>
         </table>
       </div>
