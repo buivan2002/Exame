@@ -1,10 +1,6 @@
 class Admin::UsersController < Admin::ApplicationController
   before_action :set_user, only: %i[show edit update destroy]
 
-  def all_user_recent_log
-    # Xử lý logic cho trang profile (ví dụ: lấy thông tin user)
-    render template: 'admin/dashboard/all_user_recent_log'
-  end
   def index
     @admin_user = User.find_by(role: 'admin')
     @users = User.order(created_at: :desc).page(params[:page]).per(10)
@@ -18,12 +14,47 @@ class Admin::UsersController < Admin::ApplicationController
     @user = User.new(user_params)
 
     if @user.save
+      Category.order(:id).each_with_index do |category, index|
+        SortOrder.create(
+          user_id: @user.id,
+          category_id: category.id,
+          order: index + 1
+        )
+      end
+
+      QuizSetting.create(
+        user_id: @user.id,
+        difficulty: "easy",
+        percen_complete: 0,
+        total_quiz: 0,
+        total_correct_answers: 0,
+        question_max: 5,
+        question_increase: 5
+      )
+
+      Point.create(
+        user_id: @user.id,
+        total_point: 0,
+        level: 1
+      )
+
+      Category.where(status: "active").each do |category|
+        UnlockedLevel.create(
+          user_id: @user.id,
+          category_id: category.id,
+          difficulty: "easy",
+          unlock_date: @user.created_at,
+          status: "active",
+          comleted_quiz: 0,
+          required_quiz: 5
+        )
+      end
+
       redirect_to admin_users_path, notice: 'User was successfully created.'
     else
       render :new
     end
   end
-
   def show
     @user = User.find(params[:id])
   end

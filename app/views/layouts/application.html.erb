@@ -24,7 +24,7 @@
                   <%= link_to "Xin chào, #{current_user.email}", "#", class: "nav-link" %>
                 </li>
                 <li class="nav-item">
-                  <%= link_to "Đăng Xuất", destroy_user_session_path, method: :delete, class: "btn btn-danger" %>
+                  <%= button_to "Đăng Xuất", destroy_user_session_path, method: :delete, class: "btn btn-danger" %>
                 </li>
               <% else %>
                 <li class="nav-item">

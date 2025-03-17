@@ -17,28 +17,8 @@
   </div>
 
   <div class="form-group mb-3">
-    <%= f.label :password_confirmation %>
-    <%= f.password_field :password_confirmation, class: "form-control" %>
-  </div>
-
-  <div class="form-group mb-3">
     <%= f.label :role %>
-    <%= f.select :role, options_for_select(["admin", "user", "editor"]), { include_blank: "Select Role" }, class: "form-control" %>
-  </div>
-
-  <div class="form-group mb-3">
-    <%= f.label :avatar_url, "Avatar URL" %>
-    <%= f.text_field :avatar_url, class: "form-control" %>
-  </div>
-
-  <div class="form-group mb-3">
-    <%= f.label :oauth_provider, "OAuth Provider" %>
-    <%= f.select :oauth_provider, options_for_select(["google", "facebook", "github"]), { include_blank: "Select Provider (optional)" }, class: "form-control" %>
-  </div>
-
-  <div class="form-group mb-3">
-    <%= f.label :oauth_id, "OAuth ID" %>
-    <%= f.text_field :oauth_id, class: "form-control" %>
+    <%= f.select :role, options_for_select(["user"]), { include_blank: "Select Role" }, class: "form-control" %>
   </div>
 
   <div class="form-group">
