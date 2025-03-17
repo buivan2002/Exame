@@ -1,0 +1,96 @@
+<!-- app/views/admin/categories/index.html.erb -->
+<div class="container-fluid">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Quản lý Chủ đề Quiz (Categories)</h2>
+    <%= link_to "Tạo Chủ đề Mới", new_admin_category_path, class: "btn btn-primary" %>
+  </div>
+
+  <!-- Search & Filter (nếu cần) -->
+  <!--
+  <div class="card mb-3">
+    <div class="card-body">
+      <form action="<%= admin_categories_path %>" method="get" class="form-inline">
+        <div class="form-group mr-2">
+          <label for="q" class="mr-2">Tìm kiếm</label>
+          <input type="text" name="q" id="q" class="form-control" placeholder="Tên chủ đề...">
+        </div>
+        <div class="form-group mr-2">
+          <label for="status" class="mr-2">Trạng thái</label>
+          <select name="status" id="status" class="form-control">
+            <option value="">Tất cả</option>
+            <option value="hiện">Hiện</option>
+            <option value="ẩn">Ẩn</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-secondary">Lọc</button>
+      </form>
+    </div>
+  </div>
+  -->
+
+  <div class="card">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+          <thead class="thead-light">
+            <tr>
+              <th>#</th>
+              <th>Tên chủ đề</th>
+              <th>Mô tả</th>
+              <th>Trạng thái</th>
+              <th>Ngày tạo</th>
+              <th class="text-center">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if @categories.any? %>
+              <% @categories.each_with_index do |category, index| %>
+                <tr>
+                  <td><%= index + 1 %></td>
+                  <td><%= category.name %></td>
+                  <td><%= category.description %></td>
+                  <td>
+                    <% if category.status == "hiện" %>
+                      <span class="badge badge-success" style="color: black;">Hiện</span>
+                    <% else %>
+                      <span class="badge badge-secondary" style="color: black;">Ẩn</span>
+                    <% end %>
+                  </td>
+                  <td><%= category.created_at.strftime("%d/%m/%Y") %></td>
+                  <td class="text-center">
+                    <div class="btn-group">
+                      <%= link_to admin_category_path(category), class: "btn btn-sm btn-info", title: "Xem chi tiết" do %>
+                        <i class="fas fa-eye"></i>
+                      <% end %>
+                      <%= link_to edit_admin_category_path(category), class: "btn btn-sm btn-warning", title: "Chỉnh sửa" do %>
+                        <i class="fas fa-edit"></i>
+                      <% end %>
+                      <%= link_to admin_category_path(category),
+                                  method: :delete,
+                                  data: { confirm: "Bạn có chắc muốn xóa chủ đề này?" },
+                                  class: "btn btn-sm btn-danger",
+                                  title: "Xóa" do %>
+                        <i class="fas fa-trash"></i>
+                      <% end %>
+                    </div>
+                  </td>
+                </tr>
+              <% end %>
+            <% else %>
+              <tr>
+                <td colspan="6" class="text-center">Chưa có chủ đề nào.</td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Phân trang (nếu có kèm gem kaminari hoặc will_paginate) -->
+      <!--
+      <div class="d-flex justify-content-end mt-3">
+        <%= paginate @categories %>
+      </div>
+      -->
+    </div>
+  </div>
+</div>
