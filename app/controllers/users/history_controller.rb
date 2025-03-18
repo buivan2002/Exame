@@ -13,7 +13,9 @@ class Users::HistoryController < ApplicationController
     
     
     # Lấy danh sách câu trả lời của người dùng cho quiz này
-    @user_answers = UserAnswer.includes(:question, :answer).where(quiz_id: @quiz_result.quiz_id) # cách viết này lạ quá lọc ra rồi 
+    # @user_answers = UserAnswer.includes(:question, :answer).where(quiz_id: @quiz_result.quiz_id) # cách viết này lạ quá lọc ra rồi 
+    @user_answers = UserAnswer.includes(question: :answers).where(quiz_id: @quiz_result.quiz_id)  
+
     # Lấy tất cả bản ghi từ UserAnswer.
     # Lấy tất cả Question có id trùng với question_id trong UserAnswer.
     # Lấy tất cả Answer có id trùng với answer_id trong UserAnswer.

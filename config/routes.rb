@@ -18,6 +18,8 @@ Rails.application.routes.draw do
   delete '/users/remove_follower/:id', to: 'users/follows#remove_follower', as: 'remove_follower'
   get 'users/profile/:id/statistics' , to: 'users/profile#statistics' , as: 'profile_statistics' 
   get 'users/profile/statistics/:id' , to: 'users/profile#detail_statistics' , as: 'detail_statistics' 
+  post 'users/favorites' , to: 'users/favorites#toggle' 
+  post 'users/notifications/:id/mark_as_read', to: 'users/notifications#mark_as_read'
   
 
   devise_for :users, controllers: {

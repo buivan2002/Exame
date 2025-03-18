@@ -31,13 +31,23 @@
             <%= link_to "Xin chào, #{current_user.email}", "#", class: "nav-link" %>
           </li>
                     <li class="nav-item">
-<%= button_to "Hồ sơ người dùng, #{current_user.email}", profile_path(current_user.id),method: :get, class: "nav-link" %>
+        <%= button_to "Hồ sơ người dùng, #{current_user.id}", profile_path(current_user.id),method: :get, class: "nav-link" %>
           </li>
           <li class="nav-item">
-<%= button_to "Đăng Xuất", destroy_user_session_path, method: :delete, class: "btn btn-danger" %>
+        <%= button_to "Đăng Xuất", destroy_user_session_path, method: :delete, class: "btn btn-danger" %>
           </li>
-          <li class="nav-item">
-<%= link_to "Đăng Xuất", destroy_user_session_path, data: { turbo_method: :delete, turbo: false }, class: "nav-link" %>
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+            🔔 Thông báo (<%= current_user.notifications.where(status: false).count %>)
+          </button>
+          <ul class="dropdown-menu">
+        <% current_user.notifications.order(created_at: :desc).each do |notification| %>
+      <li class="<%= notification.status ? 'text-muted' : 'bg-warning fw-bold' %>">
+              <%= link_to notification.message, "#", class: "dropdown-item", data: { notification_id: notification.id } %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
 
 
         <% else %>
@@ -58,3 +68,23 @@
   </body>
 </html>
 
+<script>
+  
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".dropdown-item").forEach(item => {
+      item.addEventListener("click", function () {
+        let notificationId = this.dataset.notificationId;
+        console.log (this.dataset.notificationId )
+         fetch(`/users/notifications/${notificationId}/mark_as_read`, {
+            method: "POST",
+            headers: {
+              "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content,
+              "Content-Type": "application/json"
+            },
+          })
+        this.classList.remove("bg-warning fw-bold");
+      });
+    });
+  });
+
+</script>

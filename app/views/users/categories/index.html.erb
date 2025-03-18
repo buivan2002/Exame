@@ -3,23 +3,66 @@
     <h1>Danh mục chủ đề</h1>
     <p>Lựa chọn danh mục theo từng chủ đề</p>
   </div>
+    <div class="categories-grid">
+      <% @categories.each do |category| %>
+        <div class="category-card">
+          <div class="category-icon">
+            <i class="fas fa-book"></i>
+          </div>
+          <div class="category-content">
+            <h3>
+              <%= link_to category.name, difficulty_users_category_path(category), class: "text-decoration-none text-primary" %>
+            </h3>
+            <p class="category-description">
+              <%= truncate(category.description, length: 100) %>
+            </p>
+          </div>
+          <div class="category-footer">
+            <button class="btn btn-outline-danger favorite-btn d-flex align-items-center" data-category-id="<%= category.id %>">
+              <i class="fas fa-heart <%= current_user.favorites.exists?(category: category) ? 'text-danger' : 'text-secondary' %>"></i>
+              <span class="ms-2">Yêu thích</span>
+            </button>
+          </div>
+        </div>
+      <% end %>
+    </div>
 
-  <div class="categories-grid">
-    <% @categories.each do |category| %>
-      <div class="category-card">
-        <div class="category-icon">
-          <i class="fas fa-book"></i>
-        </div>
-        <div class="category-content">
-          <h3><%= link_to category.name, difficulty_users_category_path(category), class: "text-decoration-none text-primary" %></h3>
-          <p class="category-description"><%= truncate(category.description, length: 100) %></p>
-        </div>
-        <div class="category-footer">
-        </div>
-      </div>
-    <% end %>
-  </div>
 </div>
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+      console.log ("js của chủ đề yêu thích")
+      document.querySelectorAll(".favorite-btn").forEach(button => {
+        button.addEventListener("click", function() {
+          const categoryId = this.dataset.categoryId;
+          const heartIcon = this.querySelector("i");
+
+          fetch("/users/favorites", {
+            method: "POST",
+            headers: {
+              "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content,
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ category_id: categoryId })   
+            // # nayf laf quan trong nhat 
+          })
+          .then(response => response.json())
+          .then(data => {
+            // đoạn này là để nó k cần reload lại trang vẫn xóa tym đi - DOMContentLoaded
+            if (data.favorited) {
+              heartIcon.classList.remove("text-secondary");
+              heartIcon.classList.add("text-danger");
+            } else {
+              heartIcon.classList.remove("text-danger");
+              heartIcon.classList.add("text-secondary");
+            }
+          });
+        });
+      });
+    });
+</script>
+
 
 <style>
   .categories-page {

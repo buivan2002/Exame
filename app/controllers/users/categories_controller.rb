@@ -5,12 +5,17 @@ class Users::CategoriesController < ApplicationController
 
   def show
     @category = Category.find(params[:id])
+    
   end
-
+  
   def difficulty
     @category = Category.find(params[:id])
-    @difficulties = QuizSetting.distinct.pluck(:difficulty)
-    @difficultOFuser = QuizSetting.find_by(user_id: current_user.id).difficulty
+    # @difficulties = QuizSetting.distinct.pluck(:difficulty)
+    @difficulties = ["easy", "medium", "hard"]
+    
+    @difficultOFuser = current_user.unlocked_levels.find_by(category_id: params[:id])&.difficulty
+    # binding.pry
+    UnlockedLevelsJob.perform_later(current_user.id) # lấy từng chủ đề và tăng độ khó lên nếu làm đủ yêu cầu 
     session[:user_answers] ||= {}
   end
 
@@ -48,7 +53,6 @@ class Users::CategoriesController < ApplicationController
       session[:exam_start_time] = Time.now
     end
     # binding.pry
-    
 
     @time_left = ((session[:exam_start_time].to_time  + 1.minutes) - Time.now).to_i
     
@@ -58,6 +62,7 @@ end
   
   
   def submit_answer
+    @user = current_user # Người dùng đang làm bài
     @category = Category.find(params[:id])
     @difficulty = params[:difficulty]
     @quizzSetting = QuizSetting.find_by(user_id: current_user.id) # Bỏ select(:id, :question_max)
@@ -104,6 +109,16 @@ end
           quiz_setting_id = @quizzSetting.id
           category_id = @category.id
           difficulty = @difficulty
+          @user.followers.each do |follower|
+            Notification.create(
+              user_id: follower.follower_id,
+              message: "#{@user.email} vừa hoàn thành bài kiểm tra!",
+              notification_type: "quiz",
+              status: false
+            )
+            puts "có✅✅✅ #{follower}"
+          end
+          # binding.pry
           CreateQuizJob.perform_later(user_id, quiz_setting_id, category_id, difficulty, question_ids,user_answers,  @correct_answers.transform_keys(&:to_s))
           PoinJob.perform_later(user_id,category_id,difficulty)
           session.delete(:user_answers)
@@ -118,6 +133,7 @@ end
 
 
 
+    
 
   private
   def fetch_questions(category_id, difficulty, question_max)
