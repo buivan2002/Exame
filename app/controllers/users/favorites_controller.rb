@@ -1,5 +1,4 @@
-class Users::FavoritesController < ApplicationController
-
+class Users::FavoritesController < ApplicationController  
   def toggle
     category = Category.find(params[:category_id])
     favorite = current_user.favorites.find_by(category: category)

@@ -10,32 +10,21 @@ class Users::ProfileController < ApplicationController
     @followers = Follow.where(followed_id: @user.id)
     @followers_count = @followers.count
     @points = @user.point
-    # binding.pry
     render "users/profile/index"
-
   end
   def rank_score
     @leaderboard = LeaderBoard.order(score: :desc).limit(10)
-    
-    
     render "users/profile/rank_score"
   end
 
   def statistics
     @categories = Category.where(status: "active") # Chỉ lấy danh mục active
-
-
-
     render "users/profile/statistics"
-
   end
-
   def detail_statistics
     @user = current_user # Lấy thông tin người dùng đang đăng nhập
     @category = Category.find(params[:id])
     @statistic = @user.statistics.find_by(category: @category)
-
     render "users/profile/detail_statistics"
-    
   end
 end 

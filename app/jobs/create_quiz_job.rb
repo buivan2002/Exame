@@ -18,7 +18,6 @@ class CreateQuizJob < ApplicationJob
       time_limit: 30,
       status: :active
     )
-
     # ✅ Bulk insert QuizQuestion để tối ưu hiệu suất
     quiz_questions = question_ids.each_with_index.map do |question_id, index|
       { quiz_id: quiz.id, question_id: question_id, position: index + 1, created_at: Time.now, updated_at: Time.now }
@@ -68,13 +67,9 @@ class CreateQuizJob < ApplicationJob
     update_rankings
     # cap nhat quizsetting
     quizz_setting(user_id, correct_count, incorrect_count,quiz_setting)
-
-
-
   end
 
   private
-
   # 📌 Hàm riêng để lưu kết quả vào bảng quiz_results
   def save_quiz_result(user_id, category_id, quiz, score, correct_count, incorrect_count)
     QuizResult.create!(
@@ -91,10 +86,6 @@ class CreateQuizJob < ApplicationJob
 
     Rails.logger.info "✅ QuizResult created for User ##{user_id}, Score: #{score}"
   end
-
-
-
-
   def update_rankings
     LeaderBoard.order(score: :desc).each_with_index do |lb, index| #Lấy tất cả người chơi, sắp xếp theo total_score từ cao xuống thấp.
       lb.update_column(:rank, index + 1) # Tránh gọi callback để tối ưu hiệu suất
@@ -102,51 +93,34 @@ class CreateQuizJob < ApplicationJob
     end
     Rails.logger.info "✅ okee r  Score: "
   end
-
-
-
-
   def update_statistics(user_id, category_id, correct_answers, incorrect_answers)
     # Lấy ngày hiện tại
     today = Time.now
-  
     # Tìm hoặc tạo mới bản ghi thống kê của user trong ngày
     statistics = Statistic.find_by(user_id: user_id, category_id: category_id)
-  
     # Cộng dồn dữ liệu
     statistics.date = today
     statistics.category_id = category_id
     statistics.total_correct_answers += correct_answers
     statistics.total_incorrect_answers += incorrect_answers
-  
     # Lưu vào database
     statistics.save!
-
-
     Rails.logger.info "✅ : update_statistics okii "
-
   end
-
   def quizz_setting(user_id, correct_count, incorrect_count,quizz_setting)
-
   # Cập nhật tổng số bài quiz đã làm
   quizz_setting.total_quiz += 1
-
   # Cập nhật tổng số câu đúng và câu sai
   quizz_setting.total_correct_answers = correct_count
-
   # Tính phần trăm hoàn thành
   total_answers = correct_count + incorrect_count
   quizz_setting.percen_complete = total_answers.positive? ? quizz_setting.total_correct_answers.to_f / total_answers : 0
-
   # Nếu tỷ lệ đúng >= 50% thì tăng question_max
   if quizz_setting.percen_complete >= 0.5
     quizz_setting.question_max += quizz_setting.question_increase
   end
-
   quizz_setting.save!
   Rails.logger.info "✅ quizz_setting okii "
-
   end
 
 end

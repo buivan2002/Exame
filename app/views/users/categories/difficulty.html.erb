@@ -33,7 +33,6 @@
               Kiểm tra kỹ năng của bạn ở mức độ này.
             <% end %>
           </p>
-
           <% # Kiểm tra xem người dùng có thể làm bài ở mức độ này không %>
           <% allowed_levels = { "easy" => ["easy"], "medium" => ["easy", "medium"], "hard" => ["easy", "medium", "hard"] } %>
           <% if allowed_levels[@difficultOFuser]&.include?(difficulty.downcase) %>
@@ -41,7 +40,6 @@
           <% else %>
             <button class="btn btn-secondary btn-lg w-100 mt-auto" disabled>Không thể làm bài</button>
           <% end %>
-
         </div>
       </div>
     </div>
