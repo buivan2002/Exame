@@ -7,417 +7,293 @@
 #   Character.create(name: "Luke", movie: movies.first)
 # db/seeds.rb
 require 'faker'
+# db/seeds.rb
 
-puts "Cleaning up database..."
+puts "Xoá dữ liệu cũ..."
+[User, Category, Question, Answer, QuizSetting, Quiz, QuizQuestion,
+ QuizResult, UserAnswer, AuthLog, Chart, Favorite, Follow,
+ LeaderBoard, Notification, PointHistory, PointRule, Point,
+ SortOrder, Statistic, UnlockedLevel].each(&:delete_all)
 
-# Xóa dữ liệu theo thứ tự ngược lại với quan hệ (để tránh lỗi khóa ngoại)
-UserAnswer.destroy_all
-QuizQuestion.destroy_all
-QuizResult.destroy_all
-Quiz.destroy_all
-QuizSetting.destroy_all
-SortOrder.destroy_all
-UnlockedLevel.destroy_all
-Statistic.destroy_all
-Point.destroy_all
-PointRule.destroy_all
-Notification.destroy_all
-LeaderBoard.destroy_all
-Follow.destroy_all
-Favorite.destroy_all
-Chart.destroy_all
-PointHistory.destroy_all
-AuthLog.destroy_all
-Answer.destroy_all
-Question.destroy_all
-Category.destroy_all
-User.destroy_all
+now = Time.current
+# db/seeds.rb
+puts "Bắt đầu seed dữ liệu..."
 
-puts "Database cleaned!"
+# 1. Tạo tài khoản admin (password: 123456)
+admin = User.create!(
+  name: "Admin",
+  email: "admin@example.com",
+  password: "123456",
+  role: "admin",
+  last_login_at: Time.now,
+  avatar_url: "http://example.com/admin_avatar.png",
+  oauth_provider: nil,
+  oauth_id: nil,
+)
+puts "Tạo tài khoản admin thành công."
 
-# ---------------------------
-# 1. Tạo Users
-# ---------------------------
-puts "Seeding Users..."
-users = 5.times.map do
+# 2. Tạo 30 tài khoản người dùng (user)
+30.times do |i|
   User.create!(
-    name: Faker::Name.name,
-    email: Faker::Internet.email,
-    password: 'password',
-    role: ['admin', 'user'].sample,
-    last_login_at: Faker::Time.backward(days: 30),
-    avatar_url: Faker::Avatar.image,
-    oauth_provider: [nil, 'google', 'facebook'].sample,
-    oauth_id: Faker::Internet.uuid
+    name: "User #{i+1}",
+    email: "user#{i+1}@example.com",
+    password: "password#{i+1}",
+    role: "user",
+    last_login_at: Time.now,
+    avatar_url: "http://example.com/user#{i+1}_avatar.png",
+    oauth_provider: "none",
+    oauth_id: "#{i+1}",
   )
 end
-puts "Seeded #{users.count} Users."
+puts "Tạo 30 tài khoản người dùng thành công."
 
-# ---------------------------
-# 2. Tạo Categories
-# ---------------------------
-puts "Seeding Categories..."
-categories = 3.times.map do
+# Lấy danh sách người dùng thường (không bao gồm admin)
+users = User.where(role: "user").order(:id)
+
+# 3. Tạo 30 bản ghi cho bảng Categories
+30.times do |i|
   Category.create!(
-    name: Faker::Commerce.department(max: 1, fixed_amount: true),
-    description: Faker::Lorem.sentence,
-    status: ['active', 'inactive'].sample
+    name: "Category #{i+1}",
+    description: "Mô tả cho Category #{i+1}",
+    status: "active"
   )
 end
-puts "Seeded #{categories.count} Categories."
+puts "Tạo 30 bản ghi trong bảng Categories."
 
-# ---------------------------
-# 3. Tạo Questions cho mỗi Category
-# ---------------------------
-puts "Seeding Questions..."
-questions = []
-categories.each do |category|
-  3.times do
-    questions << Question.create!(
-      category: category,
-      content: Faker::Lorem.sentence(word_count: 10),
-      question_type: ['multiple_choice', 'true_false', 'short_answer'].sample,
-      difficulty: ['easy', 'medium', 'hard'].sample,
-      status: ['active', 'inactive'].sample,
-      explanation: Faker::Lorem.sentence,
-      image_url: Faker::LoremFlickr.image
-    )
-  end
-end
-puts "Seeded #{questions.count} Questions."
-
-# ---------------------------
-# 4. Tạo Answers cho mỗi Question
-# ---------------------------
-puts "Seeding Answers..."
-answers = []
-questions.each do |question|
-  # Giả sử: câu trả lời đầu tiên của mỗi câu hỏi là đáp án đúng
-  4.times do |i|
-    answers << Answer.create!(
-      question: question,
-      body: Faker::Lorem.sentence,
-      is_correct: i == 0,   # đáp án đầu tiên đúng
-      image_url: Faker::LoremFlickr.image,
-      created_at: Time.now,
-      updated_at: Time.now
-    )
-  end
-end
-puts "Seeded #{answers.count} Answers."
-
-# ---------------------------
-# 5. Tạo AuthLogs cho mỗi User
-# ---------------------------
-puts "Seeding AuthLogs..."
-users.each do |user|
-  2.times do
-    AuthLog.create!(
-      user: user,
-      login_at: Faker::Time.backward(days: 10),
-      ip_address: Faker::Internet.ip_v4_address,
-      user_agent: Faker::Internet.user_agent,
-      status: ['success', 'failure'].sample,
-      logout_at: Faker::Time.backward(days: 5),
-      created_at: Time.now,
-      updated_at: Time.now
-    )
-  end
-end
-puts "Seeded AuthLogs."
-
-# ---------------------------
-# 6. Tạo Charts cho mỗi kết hợp User - Category
-# ---------------------------
-puts "Seeding Charts..."
-users.each do |user|
-  categories.each do |category|
-    Chart.create!(
-      user: user,
-      category: category,
-      date: Faker::Time.backward(days: 7),
-      quiz_taken: rand(1..10),
-      correct_answers: rand(1..10),
-      wrong_answers: rand(0..5),
-      total_score: rand(10..100),
-      created_at: Time.now,
-      updated_at: Time.now
-    )
-  end
-end
-puts "Seeded Charts."
-
-# ---------------------------
-# 7. Tạo Favorites (mỗi user chọn 1 category ngẫu nhiên)
-# ---------------------------
-puts "Seeding Favorites..."
-users.each do |user|
-  Favorite.create!(
-    user: user,
-    category: categories.sample,
-    created_at: Time.now,
-    updated_at: Time.now
+# 4. Tạo 30 bản ghi cho bảng Questions
+# Mỗi câu hỏi thuộc 1 danh mục (lấy vòng theo danh mục đã tạo)
+categories = Category.order(:id)
+30.times do |i|
+  Question.create!(
+    category_id: categories[i % 30].id,
+    content: "Nội dung câu hỏi #{i+1}",
+    question_type: "multiple_choice",
+    difficulty: "medium",
+    status: "active",
+    explanation: "Giải thích cho câu hỏi #{i+1}",
+    image_url: "http://example.com/question#{i+1}.png"
   )
 end
-puts "Seeded Favorites."
+puts "Tạo 30 bản ghi trong bảng Questions."
 
-# ---------------------------
-# 8. Tạo Follows (mỗi cặp user khác nhau sẽ có mối quan hệ follow)
-# ---------------------------
-puts "Seeding Follows..."
-users.combination(2).each do |follower, followed|
-  Follow.create!(
-    follower: follower,
-    followed: followed,
-    created_at: Time.now,
-    updated_at: Time.now
+# 5. Tạo 30 bản ghi cho bảng Answers
+# Mỗi đáp án gán cho câu hỏi theo thứ tự (có đánh dấu đúng/sai xen kẽ)
+questions = Question.order(:id)
+30.times do |i|
+  Answer.create!(
+    question_id: questions[i % 30].id,
+    body: "Đáp án #{i+1} cho câu hỏi #{questions[i % 30].id}",
+    is_correct: (i % 2 == 0),
+    image_url: "http://example.com/answer#{i+1}.png"
   )
 end
-puts "Seeded Follows."
+puts "Tạo 30 bản ghi trong bảng Answers."
 
-# ---------------------------
-# 9. Tạo LeaderBoards cho mỗi User
-# ---------------------------
-puts "Seeding LeaderBoards..."
-users.each do |user|
-  LeaderBoard.create!(
-    user: user,
-    score: rand(50..200),
-    rank: rand(1..users.count),
-    created_at: Time.now,
-    updated_at: Time.now
-  )
-end
-puts "Seeded LeaderBoards."
-
-# ---------------------------
-# 10. Tạo Notifications cho mỗi User
-# ---------------------------
-puts "Seeding Notifications..."
-users.each do |user|
-  2.times do
-    Notification.create!(
-      user: user,
-      message: Faker::Lorem.sentence,
-      notification_type: ['info', 'warning', 'alert'].sample,
-      status: [true, false].sample,
-      created_at: Time.now,
-      updated_at: Time.now
-    )
-  end
-end
-puts "Seeded Notifications."
-
-# ---------------------------
-# 11. Tạo PointHistories cho mỗi User
-# ---------------------------
-puts "Seeding PointHistories..."
-users.each do |user|
-  3.times do
-    PointHistory.create!(
-      user: user,
-      point: rand(1..10),
-      reason: Faker::Lorem.sentence,
-      status: [true, false].sample,
-      created_at: Time.now,
-      updated_at: Time.now
-    )
-  end
-end
-puts "Seeded PointHistories."
-
-# ---------------------------
-# 12. Tạo PointRules cho mỗi Category theo từng độ khó
-# ---------------------------
-puts "Seeding PointRules..."
-categories.each do |category|
-  ['easy', 'medium', 'hard'].each do |difficulty|
-    PointRule.create!(
-      category: category,
-      difficulty: difficulty,
-      point_awarded: rand(1..10),
-      created_at: Time.now,
-      updated_at: Time.now
-    )
-  end
-end
-puts "Seeded PointRules."
-
-# ---------------------------
-# 13. Tạo Points cho mỗi User
-# ---------------------------
-puts "Seeding Points..."
-users.each do |user|
-  Point.create!(
-    user: user,
-    total_point: rand(10..100),
-    level: rand(1..5),
-    created_at: Time.now,
-    updated_at: Time.now
-  )
-end
-puts "Seeded Points."
-
-# ---------------------------
-# 14. Tạo QuizSettings cho mỗi User
-# ---------------------------
-puts "Seeding QuizSettings..."
-quiz_settings = users.map do |user|
+# 6. Tạo 30 bản ghi cho bảng QuizSettings (cho 30 user thường)
+users.first(30).each do |user|
   QuizSetting.create!(
-    user: user,
-    difficulty: ['easy', 'medium', 'hard'].sample,
-    percen_complete: rand.round(2),
-    total_quiz: rand(1..10),
-    total_correct_answers: rand(1..10),
-    question_max: "10",
-    question_increase: rand(1..5),
-    created_at: Time.now,
-    updated_at: Time.now
+    user_id: user.id,
+    difficulty: "medium",
+    percen_complete: 100.0,
+    total_quiz: 10,
+    total_correct_answers: 7,
+    question_max: "20",
+    question_increase: 2
   )
 end
-puts "Seeded QuizSettings."
+puts "Tạo 30 bản ghi trong bảng QuizSettings."
 
-# ---------------------------
-# 15. Tạo Quizzes cho mỗi QuizSetting và Category
-# ---------------------------
-puts "Seeding Quizzes..."
-quizzes = []
-quiz_settings.each do |qs|
-  categories.each do |category|
-    quizzes << Quiz.create!(
-      title: Faker::Lorem.sentence,
-      quiz_setting: qs,
-      description: Faker::Lorem.sentence,
-      category: category,
-      difficulty: qs.difficulty,
-      total_questions: rand(5..15),
-      time_limit: rand(30..120),
-      status: [true, false].sample,
-      created_at: Time.now,
-      updated_at: Time.now
-    )
-  end
+# 7. Tạo 30 bản ghi cho bảng Quizzes
+quiz_settings = QuizSetting.order(:id)
+30.times do |i|
+  Quiz.create!(
+    title: "Quiz #{i+1}",
+    quiz_setting_id: quiz_settings[i % 30].id,
+    description: "Mô tả cho Quiz #{i+1}",
+    category_id: categories[i % 30].id,
+    difficulty: "medium",
+    total_questions: 10,
+    time_limit: 30,
+    status: true
+  )
 end
-puts "Seeded #{quizzes.count} Quizzes."
+puts "Tạo 30 bản ghi trong bảng Quizzes."
 
-# ---------------------------
-# 16. Tạo QuizQuestions (liên kết Quiz và Question)
-# ---------------------------
-puts "Seeding QuizQuestions..."
-quizzes.each do |quiz|
-  selected_questions = questions.sample(3)
-  selected_questions.each_with_index do |question, index|
-    QuizQuestion.create!(
-      quiz: quiz,
-      question: question,
-      position: index + 1,
-      created_at: Time.now,
-      updated_at: Time.now
-    )
-  end
+# 8. Tạo 30 bản ghi cho bảng QuizQuestions (liên kết giữa Quizzes và Questions)
+quizzes = Quiz.order(:id)
+30.times do |i|
+  QuizQuestion.create!(
+    quiz_id: quizzes[i % 30].id,
+    question_id: questions[i % 30].id,
+    position: i+1
+  )
 end
-puts "Seeded QuizQuestions."
+puts "Tạo 30 bản ghi trong bảng QuizQuestions."
 
-# ---------------------------
-# 17. Tạo QuizResults cho mỗi Quiz
-# ---------------------------
-puts "Seeding QuizResults..."
-quizzes.each do |quiz|
+# 9. Tạo 30 bản ghi cho bảng QuizResults
+30.times do |i|
   QuizResult.create!(
-    user: users.sample,
-    category: quiz.category,
-    quiz: quiz,
-    score: rand(0..100),
-    correct_answers: rand(0..quiz.total_questions),
-    incorrect_answers: rand(0..quiz.total_questions),
-    start_time: Time.now - 3600,
-    end_time: Time.now,
-    status: 'completed',
-    created_at: Time.now,
-    updated_at: Time.now
+    user_id: users[i % users.size].id,
+    category_id: categories[i % 30].id,
+    quiz_id: quizzes[i % 30].id,
+    score: 80,
+    correct_answers: 8,
+    incorrect_answers: 2,
+    start_time: Time.now,
+    end_time: Time.now + 30.minutes,
+    status: "completed"
   )
 end
-puts "Seeded QuizResults."
+puts "Tạo 30 bản ghi trong bảng QuizResults."
 
-# ---------------------------
-# 18. Tạo SortOrders cho mỗi User và Category
-# ---------------------------
-puts "Seeding SortOrders..."
-users.each do |user|
-  categories.each do |category|
-    SortOrder.create!(
-      user: user,
-      category: category,
-      order: rand(1..10),
-      created_at: Time.now,
-      updated_at: Time.now
-    )
-  end
+# 10. Tạo 30 bản ghi cho bảng UserAnswers
+answers = Answer.order(:id)
+30.times do |i|
+  UserAnswer.create!(
+    user_id: users[i % users.size].id,
+    quiz_id: quizzes[i % 30].id,
+    question_id: questions[i % 30].id,
+    answer_id: answers[i % 30].id,
+    is_correct: (i % 2 == 0),
+    category_id: categories[i % 30].id
+  )
 end
-puts "Seeded SortOrders."
+puts "Tạo 30 bản ghi trong bảng UserAnswers."
 
-# ---------------------------
-# 19. Tạo Statistics cho mỗi User và Category
-# ---------------------------
-puts "Seeding Statistics..."
-users.each do |user|
-  categories.each do |category|
-    Statistic.create!(
-      user: user,
-      category: category,
-      total_correct_answers: rand(0..50),
-      total_incorrect_answers: rand(0..50),
-      date: Time.now,
-      created_at: Time.now,
-      updated_at: Time.now
-    )
-  end
+# 11. Tạo 30 bản ghi cho bảng AuthLogs
+30.times do |i|
+  AuthLog.create!(
+    user_id: users[i % users.size].id,
+    login_at: Time.now,
+    ip_address: "192.168.1.#{i+1}",
+    user_agent: "Mozilla/5.0 (Test Agent #{i+1})",
+    status: "success",
+    logout_at: Time.now + 1.hour
+  )
 end
-puts "Seeded Statistics."
+puts "Tạo 30 bản ghi trong bảng AuthLogs."
 
-# ---------------------------
-# 20. Tạo UnlockedLevels cho mỗi User và Category
-# ---------------------------
-puts "Seeding UnlockedLevels..."
-users.each do |user|
-  categories.each do |category|
-    UnlockedLevel.create!(
-      user: user,
-      category: category,
-      difficulty: ['easy', 'medium', 'hard'].sample,
-      unlock_date: Time.now,
-      status: ['unlocked', 'locked'].sample,
-      comleted_quiz: rand(0..5),
-      required_quiz: rand(1..10),
-      created_at: Time.now,
-      updated_at: Time.now
-    )
-  end
+# 12. Tạo 30 bản ghi cho bảng Charts
+30.times do |i|
+  Chart.create!(
+    user_id: users[i % users.size].id,
+    category_id: categories[i % 30].id,
+    date: Time.now,
+    quiz_taken: 5,
+    correct_answers: 4,
+    wrong_answers: 1,
+    total_score: 80
+  )
 end
-puts "Seeded UnlockedLevels."
+puts "Tạo 30 bản ghi trong bảng Charts."
 
-# ---------------------------
-# 21. Tạo UserAnswers cho mỗi User và Quiz
-# ---------------------------
-puts "Seeding UserAnswers..."
-quizzes.each do |quiz|
-  quiz.quiz_questions.each do |qq|
-    users.each do |user|
-      possible_answers = Answer.where(question: qq.question)
-      selected_answer = possible_answers.sample
-      UserAnswer.create!(
-        user: user,
-        quiz: quiz,
-        question: qq.question,
-        answer: selected_answer,
-        is_correct: selected_answer.is_correct,
-        category: qq.question.category,
-        created_at: Time.now,
-        updated_at: Time.now
-      )
-    end
-  end
+# 13. Tạo 30 bản ghi cho bảng Favorites
+30.times do |i|
+  Favorite.create!(
+    user_id: users[i % users.size].id,
+    category_id: categories[i % 30].id
+  )
 end
-puts "Seeded UserAnswers."
+puts "Tạo 30 bản ghi trong bảng Favorites."
 
-puts "Database seeding completed!"
+# 14. Tạo 30 bản ghi cho bảng Follows (người dùng theo dõi nhau)
+user_ids = users.pluck(:id)
+30.times do |i|
+  follower_id = user_ids[i % user_ids.size]
+  followed_id = user_ids[(i+1) % user_ids.size]  # user tiếp theo trong danh sách
+  Follow.create!(
+    follower_id: follower_id,
+    followed_id: followed_id
+  )
+end
+puts "Tạo 30 bản ghi trong bảng Follows."
+
+# 15. Tạo 30 bản ghi cho bảng LeaderBoards
+30.times do |i|
+  LeaderBoard.create!(
+    user_id: users[i % users.size].id,
+    score: (i+1) * 10,
+    rank: i+1
+  )
+end
+puts "Tạo 30 bản ghi trong bảng LeaderBoards."
+
+# 16. Tạo 30 bản ghi cho bảng Notifications
+30.times do |i|
+  Notification.create!(
+    user_id: users[i % users.size].id,
+    message: "Thông báo số #{i+1}",
+    notification_type: "info",
+    status: false
+  )
+end
+puts "Tạo 30 bản ghi trong bảng Notifications."
+
+# 17. Tạo 30 bản ghi cho bảng PointHistories
+30.times do |i|
+  PointHistory.create!(
+    user_id: users[i % users.size].id,
+    point: i+1,
+    reason: "Lý do thay đổi điểm #{i+1}",
+    status: 0
+  )
+end
+puts "Tạo 30 bản ghi trong bảng PointHistories."
+
+# 18. Tạo 30 bản ghi cho bảng PointRules
+30.times do |i|
+  PointRule.create!(
+    category_id: categories[i % 30].id,
+    difficulty: "medium",
+    point_awarded: 10
+  )
+end
+puts "Tạo 30 bản ghi trong bảng PointRules."
+
+# 19. Tạo 30 bản ghi cho bảng Points
+30.times do |i|
+  Point.create!(
+    user_id: users[i % users.size].id,
+    total_point: 100,
+    level: 1
+  )
+end
+puts "Tạo 30 bản ghi trong bảng Points."
+
+# 20. Tạo 30 bản ghi cho bảng SortOrders
+30.times do |i|
+  SortOrder.create!(
+    user_id: users[i % users.size].id,
+    category_id: categories[i % 30].id,
+    order: i+1
+  )
+end
+puts "Tạo 30 bản ghi trong bảng SortOrders."
+
+# 21. Tạo 30 bản ghi cho bảng Statistics
+30.times do |i|
+  Statistic.create!(
+    user_id: users[i % users.size].id,
+    category_id: categories[i % 30].id,
+    total_correct_answers: 10,
+    total_incorrect_answers: 2,
+    date: Time.now
+  )
+end
+puts "Tạo 30 bản ghi trong bảng Statistics."
+
+# 22. Tạo 30 bản ghi cho bảng UnlockedLevels
+30.times do |i|
+  UnlockedLevel.create!(
+    user_id: users[i % users.size].id,
+    category_id: categories[i % 30].id,
+    difficulty: "medium",
+    unlock_date: Time.now,
+    status: "unlocked",
+    comleted_quiz: 5,
+    required_quiz: 10
+  )
+end
+puts "Tạo 30 bản ghi trong bảng UnlockedLevels."
+
+puts "Seed dữ liệu hoàn tất!"
