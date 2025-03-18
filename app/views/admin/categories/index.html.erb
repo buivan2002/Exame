@@ -65,7 +65,7 @@
                       <%= link_to edit_admin_category_path(category), class: "btn btn-sm btn-warning", title: "Chỉnh sửa" do %>
                         <i class="fas fa-edit"></i>
                       <% end %>
-                      <%= link_to admin_category_path(category),
+                      <%= button_to admin_category_path(category),
                                   method: :delete,
                                   data: { confirm: "Bạn có chắc muốn xóa chủ đề này?" },
                                   class: "btn btn-sm btn-danger",

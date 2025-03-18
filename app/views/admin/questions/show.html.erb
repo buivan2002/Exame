@@ -1,0 +1,54 @@
+<!-- app/views/admin/questions/show.html.erb -->
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-header">
+      <h3>Chi tiết câu hỏi</h3>
+    </div>
+    <div class="card-body">
+      <!-- Thông tin câu hỏi -->
+      <p><strong>Nội dung câu hỏi:</strong> <%= @question.content %></p>
+      <p><strong>Loại câu hỏi:</strong> <%= @question.question_type %></p>
+      <p><strong>Ngày tạo:</strong> <%= @question.created_at.strftime("%d/%m/%Y %H:%M") %></p>
+
+      <!-- Danh sách câu trả lời -->
+      <h5 class="mt-4">Danh sách câu trả lời</h5>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>STT</th>
+            <th>Nội dung</th>
+            <th>Ảnh</th>
+            <th>Đáp án đúng?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @question.answers.each_with_index do |answer, index| %>
+            <tr>
+              <td><%= index + 1 %></td>
+              <td><%= answer.body %></td>
+              <td>
+                <% if answer.image_url.present? %>
+                  <%= image_tag answer.image_url, alt: "Ảnh đáp án", style: "max-width: 100px;" %>
+                <% else %>
+                  <em>Không có ảnh</em>
+                <% end %>
+              </td>
+              <td>
+                <% if answer.is_correct %>
+                  <span class="badge badge-success" style="color: black;">Đúng</span>
+                <% else %>
+                  <span class="badge badge-secondary" style="color: black;">Sai</span>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+
+      <!-- Nút quay lại danh sách (tùy route) -->
+      <div class="mt-3">
+        <%= link_to "Quay lại danh sách", admin_questions_path, class: "btn btn-secondary" %>
+      </div>
+    </div>
+  </div>
+</div>

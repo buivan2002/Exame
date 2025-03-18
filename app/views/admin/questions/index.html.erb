@@ -1,11 +1,12 @@
+<!-- app/views/admin/questions/index.html.erb -->
 <!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Quản lý Câu hỏi</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <%= stylesheet_link_tag 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/css/bootstrap.min.css' %>
+  <%= stylesheet_link_tag 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css' %>
   <style>
     .badge {
       font-size: 85%;
@@ -22,9 +23,10 @@
   <!-- Header -->
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h2>Quản lý Câu hỏi</h2>
-    <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#addQuestionModal">
+    <!-- Nút mở modal thêm câu hỏi -->
+    <button class="btn btn-primary" data-toggle="modal" data-target="#addQuestionModal">
       <i class="fas fa-plus"></i> Thêm mới câu hỏi
-    </a>
+    </button>
   </div>
 
   <!-- Search and filter bar -->
@@ -32,28 +34,33 @@
     <div class="card-body">
       <div class="row">
         <div class="col-md-8">
-          <form action="#" method="get" class="w-100">
+          <!-- Form tìm kiếm (GET) -->
+          <%= form_with url: admin_questions_path, method: :get, local: true, class: "w-100" do %>
             <div class="input-group">
-              <input type="text" name="search" class="form-control" placeholder="Tìm kiếm theo nội dung câu hỏi...">
+              <%= text_field_tag :search, params[:search], class: "form-control", placeholder: "Tìm kiếm theo nội dung câu hỏi..." %>
               <div class="input-group-append">
                 <button class="btn btn-outline-secondary" type="submit">
                   <i class="fas fa-search"></i>
                 </button>
               </div>
             </div>
-          </form>
+          <% end %>
         </div>
         <div class="col-md-4 d-flex justify-content-end">
-          <form action="#" method="get" class="d-flex">
-            <select name="question_type" class="form-control w-auto mr-2">
-              <option value="all" selected>Tất cả loại</option>
-              <option value="multiple_choice">Multiple Choice</option>
-              <option value="true_false">True/False</option>
-              <option value="essay">Essay</option>
-              <option value="matching">Matching</option>
-            </select>
+          <!-- Form lọc theo loại câu hỏi (GET) -->
+          <%= form_with url: admin_questions_path, method: :get, local: true, class: "d-flex" do %>
+            <%= select_tag :question_type,
+                options_for_select([
+                  ['Tất cả loại', 'all'],
+                  ['Multiple Choice', 'multiple_choice'],
+                  ['True/False', 'true_false'],
+                  ['Essay', 'essay'],
+                  ['Matching', 'matching']
+                ], selected: params[:question_type]),
+                class: "form-control w-auto mr-2" %>
+
             <button type="submit" class="btn btn-outline-secondary">Lọc</button>
-          </form>
+          <% end %>
         </div>
       </div>
     </div>
@@ -75,318 +82,78 @@
             </tr>
           </thead>
           <tbody>
-            <!-- Row 1 -->
-            <tr>
-              <td>1</td>
-              <td>Trong phát triển phần mềm Agile, khái niệm 'Sprint' có ý nghĩa gì?</td>
-              <td>
-                <span class="badge badge-secondary">Multiple Choice</span>
-              </td>
-              <td>
-                <div class="progress" style="height: 10px;">
-                  <div class="progress-bar bg-success" role="progressbar" style="width: 78%;" aria-valuenow="78" aria-valuemin="0" aria-valuemax="100">
-                    78%
-                  </div>
-                </div>
-              </td>
-              <td>05/12/2024</td>
-              <td class="text-center">
-                <div class="btn-group">
-                  <a href="#" class="btn btn-sm btn-info" data-toggle="tooltip" title="Xem chi tiết">
-                    <i class="fas fa-eye"></i>
-                  </a>
-                  <a href="#" class="btn btn-sm btn-warning" data-toggle="tooltip" title="Chỉnh sửa">
-                    <i class="fas fa-edit"></i>
-                  </a>
-                  <a href="#" class="btn btn-sm btn-danger" data-toggle="tooltip" title="Xóa">
-                    <i class="fas fa-trash"></i>
-                  </a>
-                </div>
-              </td>
-            </tr>
+            <% # Vòng lặp hiển thị danh sách câu hỏi %>
+            <% @questions.each_with_index do |question, index| %>
+              <tr>
+                <!-- Số thứ tự: index + 1 + offset_value để đúng thứ tự khi phân trang -->
+                <td><%= index + 1 + @questions.offset_value %></td>
 
-            <!-- Row 2 -->
-            <tr>
-              <td>2</td>
-              <td>HTML là viết tắt của 'Hypertext Markup Language'.</td>
-              <td>
-                <span class="badge badge-secondary">True/False</span>
-              </td>
-              <td>
-                <div class="progress" style="height: 10px;">
-                  <div class="progress-bar bg-success" role="progressbar" style="width: 94%;" aria-valuenow="94" aria-valuemin="0" aria-valuemax="100">
-                    94%
-                  </div>
-                </div>
-              </td>
-              <td>08/12/2024</td>
-              <td class="text-center">
-                <div class="btn-group">
-                  <a href="#" class="btn btn-sm btn-info" data-toggle="tooltip" title="Xem chi tiết">
-                    <i class="fas fa-eye"></i>
-                  </a>
-                  <a href="#" class="btn btn-sm btn-warning" data-toggle="tooltip" title="Chỉnh sửa">
-                    <i class="fas fa-edit"></i>
-                  </a>
-                  <a href="#" class="btn btn-sm btn-danger" data-toggle="tooltip" title="Xóa">
-                    <i class="fas fa-trash"></i>
-                  </a>
-                </div>
-              </td>
-            </tr>
+                <td><%= question.content %></td>
 
-            <!-- Row 3 -->
-            <tr>
-              <td>3</td>
-              <td>Giải thích các nguyên tắc cơ bản của lập trình hướng đối tượng và đưa ra ví dụ minh họa.</td>
-              <td>
-                <span class="badge badge-secondary">Essay</span>
-              </td>
-              <td>
-                <div class="progress" style="height: 10px;">
-                  <div class="progress-bar bg-success" role="progressbar" style="width: 65%;" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100">
-                    65%
-                  </div>
-                </div>
-              </td>
-              <td>10/12/2024</td>
-              <td class="text-center">
-                <div class="btn-group">
-                  <a href="#" class="btn btn-sm btn-info" data-toggle="tooltip" title="Xem chi tiết">
-                    <i class="fas fa-eye"></i>
-                  </a>
-                  <a href="#" class="btn btn-sm btn-warning" data-toggle="tooltip" title="Chỉnh sửa">
-                    <i class="fas fa-edit"></i>
-                  </a>
-                  <a href="#" class="btn btn-sm btn-danger" data-toggle="tooltip" title="Xóa">
-                    <i class="fas fa-trash"></i>
-                  </a>
-                </div>
-              </td>
-            </tr>
+                <td>
+                  <span class="badge badge-secondary">
+                    <%= question.question_type %>
+                  </span>
+                </td>
 
-            <!-- Row 4 -->
-            <tr>
-              <td>4</td>
-              <td>Ghép các thuật ngữ với định nghĩa tương ứng: API, ORM, MVC, CRUD.</td>
-              <td>
-                <span class="badge badge-secondary">Matching</span>
-              </td>
-              <td>
-                <div class="progress" style="height: 10px;">
-                  <div class="progress-bar bg-success" role="progressbar" style="width: 72%;" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100">
-                    72%
+                <td>
+                  <% correct_rate = question.correct_rate.to_i rescue 0 %>
+                  <div class="progress" style="height: 10px;">
+                    <div class="progress-bar bg-success"
+                         role="progressbar"
+                         style="width: <%= correct_rate %>%;"
+                         aria-valuenow="<%= correct_rate %>"
+                         aria-valuemin="0"
+                         aria-valuemax="100">
+                      <%= correct_rate %>%
+                    </div>
                   </div>
-                </div>
-              </td>
-              <td>15/12/2024</td>
-              <td class="text-center">
-                <div class="btn-group">
-                  <a href="#" class="btn btn-sm btn-info" data-toggle="tooltip" title="Xem chi tiết">
-                    <i class="fas fa-eye"></i>
-                  </a>
-                  <a href="#" class="btn btn-sm btn-warning" data-toggle="tooltip" title="Chỉnh sửa">
-                    <i class="fas fa-edit"></i>
-                  </a>
-                  <a href="#" class="btn btn-sm btn-danger" data-toggle="tooltip" title="Xóa">
-                    <i class="fas fa-trash"></i>
-                  </a>
-                </div>
-              </td>
-            </tr>
+                </td>
 
-            <!-- Row 5 -->
-            <tr>
-              <td>5</td>
-              <td>Trong ngôn ngữ JavaScript, phương thức nào được sử dụng để thêm phần tử vào cuối mảng?</td>
-              <td>
-                <span class="badge badge-secondary">Multiple Choice</span>
-              </td>
-              <td>
-                <div class="progress" style="height: 10px;">
-                  <div class="progress-bar bg-success" role="progressbar" style="width: 83%;" aria-valuenow="83" aria-valuemin="0" aria-valuemax="100">
-                    83%
-                  </div>
-                </div>
-              </td>
-              <td>05/01/2025</td>
-              <td class="text-center">
-                <div class="btn-group">
-                  <a href="#" class="btn btn-sm btn-info" data-toggle="tooltip" title="Xem chi tiết">
-                    <i class="fas fa-eye"></i>
-                  </a>
-                  <a href="#" class="btn btn-sm btn-warning" data-toggle="tooltip" title="Chỉnh sửa">
-                    <i class="fas fa-edit"></i>
-                  </a>
-                  <a href="#" class="btn btn-sm btn-danger" data-toggle="tooltip" title="Xóa">
-                    <i class="fas fa-trash"></i>
-                  </a>
-                </div>
-              </td>
-            </tr>
+                <td><%= question.created_at.strftime("%d/%m/%Y") %></td>
 
-            <!-- Row 6 -->
-            <tr>
-              <td>6</td>
-              <td>NoSQL databases are typically better for handling structured data than relational databases.</td>
-              <td>
-                <span class="badge badge-secondary">True/False</span>
-              </td>
-              <td>
-                <div class="progress" style="height: 10px;">
-                  <div class="progress-bar bg-success" role="progressbar" style="width: 43%;" aria-valuenow="43" aria-valuemin="0" aria-valuemax="100">
-                    43%
-                  </div>
-                </div>
-              </td>
-              <td>12/01/2025</td>
-              <td class="text-center">
-                <div class="btn-group">
-                  <a href="#" class="btn btn-sm btn-info" data-toggle="tooltip" title="Xem chi tiết">
-                    <i class="fas fa-eye"></i>
-                  </a>
-                  <a href="#" class="btn btn-sm btn-warning" data-toggle="tooltip" title="Chỉnh sửa">
-                    <i class="fas fa-edit"></i>
-                  </a>
-                  <a href="#" class="btn btn-sm btn-danger" data-toggle="tooltip" title="Xóa">
-                    <i class="fas fa-trash"></i>
-                  </a>
-                </div>
-              </td>
-            </tr>
+                <td class="text-center">
+                  <div class="btn-group">
+                    <%= link_to admin_question_path(question),
+                                class: "btn btn-sm btn-info",
+                                data: { toggle: "tooltip" },
+                                title: "Xem chi tiết" do %>
+                      <i class="fas fa-eye"></i>
+                    <% end %>
 
-            <!-- Row 7 -->
-            <tr>
-              <td>7</td>
-              <td>So sánh và đối chiếu các mô hình triển khai ứng dụng trên cloud: IaaS, PaaS và SaaS.</td>
-              <td>
-                <span class="badge badge-secondary">Essay</span>
-              </td>
-              <td>
-                <div class="progress" style="height: 10px;">
-                  <div class="progress-bar bg-success" role="progressbar" style="width: 58%;" aria-valuenow="58" aria-valuemin="0" aria-valuemax="100">
-                    58%
-                  </div>
-                </div>
-              </td>
-              <td>18/01/2025</td>
-              <td class="text-center">
-                <div class="btn-group">
-                  <a href="#" class="btn btn-sm btn-info" data-toggle="tooltip" title="Xem chi tiết">
-                    <i class="fas fa-eye"></i>
-                  </a>
-                  <a href="#" class="btn btn-sm btn-warning" data-toggle="tooltip" title="Chỉnh sửa">
-                    <i class="fas fa-edit"></i>
-                  </a>
-                  <a href="#" class="btn btn-sm btn-danger" data-toggle="tooltip" title="Xóa">
-                    <i class="fas fa-trash"></i>
-                  </a>
-                </div>
-              </td>
-            </tr>
+                    <%= link_to edit_admin_question_path(question),
+                                class: "btn btn-sm btn-warning",
+                                data: { toggle: "tooltip" },
+                                title: "Chỉnh sửa" do %>
+                      <i class="fas fa-edit"></i>
+                    <% end %>
 
-            <!-- Row 8 -->
-            <tr>
-              <td>8</td>
-              <td>Ghép các lệnh SQL với chức năng tương ứng: SELECT, INSERT, UPDATE, DELETE.</td>
-              <td>
-                <span class="badge badge-secondary">Matching</span>
-              </td>
-              <td>
-                <div class="progress" style="height: 10px;">
-                  <div class="progress-bar bg-success" role="progressbar" style="width: 89%;" aria-valuenow="89" aria-valuemin="0" aria-valuemax="100">
-                    89%
+                    <%= link_to admin_question_path(question),
+                                method: :delete,
+                                data: { confirm: "Bạn có chắc chắn muốn xóa?" },
+                                class: "btn btn-sm btn-danger",
+                                title: "Xóa" do %>
+                      <i class="fas fa-trash"></i>
+                    <% end %>
                   </div>
-                </div>
-              </td>
-              <td>25/01/2025</td>
-              <td class="text-center">
-                <div class="btn-group">
-                  <a href="#" class="btn btn-sm btn-info" data-toggle="tooltip" title="Xem chi tiết">
-                    <i class="fas fa-eye"></i>
-                  </a>
-                  <a href="#" class="btn btn-sm btn-warning" data-toggle="tooltip" title="Chỉnh sửa">
-                    <i class="fas fa-edit"></i>
-                  </a>
-                  <a href="#" class="btn btn-sm btn-danger" data-toggle="tooltip" title="Xóa">
-                    <i class="fas fa-trash"></i>
-                  </a>
-                </div>
-              </td>
-            </tr>
-
-            <!-- Row 9 -->
-            <tr>
-              <td>9</td>
-              <td>Thuật toán nào sau đây có độ phức tạp thời gian tốt nhất trong trường hợp trung bình cho việc sắp xếp?</td>
-              <td>
-                <span class="badge badge-secondary">Multiple Choice</span>
-              </td>
-              <td>
-                <div class="progress" style="height: 10px;">
-                  <div class="progress-bar bg-success" role="progressbar" style="width: 61%;" aria-valuenow="61" aria-valuemin="0" aria-valuemax="100">
-                    61%
-                  </div>
-                </div>
-              </td>
-              <td>03/02/2025</td>
-              <td class="text-center">
-                <div class="btn-group">
-                  <a href="#" class="btn btn-sm btn-info" data-toggle="tooltip" title="Xem chi tiết">
-                    <i class="fas fa-eye"></i>
-                  </a>
-                  <a href="#" class="btn btn-sm btn-warning" data-toggle="tooltip" title="Chỉnh sửa">
-                    <i class="fas fa-edit"></i>
-                  </a>
-                  <a href="#" class="btn btn-sm btn-danger" data-toggle="tooltip" title="Xóa">
-                    <i class="fas fa-trash"></i>
-                  </a>
-                </div>
-              </td>
-            </tr>
-
-            <!-- Row 10 -->
-            <tr>
-              <td>10</td>
-              <td>JWT (JSON Web Tokens) là phương pháp an toàn để truyền thông tin giữa các bên dưới dạng đối tượng JSON.</td>
-              <td>
-                <span class="badge badge-secondary">True/False</span>
-              </td>
-              <td>
-                <div class="progress" style="height: 10px;">
-                  <div class="progress-bar bg-success" role="progressbar" style="width: 75%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
-                    75%
-                  </div>
-                </div>
-              </td>
-              <td>10/02/2025</td>
-              <td class="text-center">
-                <div class="btn-group">
-                  <a href="#" class="btn btn-sm btn-info" data-toggle="tooltip" title="Xem chi tiết">
-                    <i class="fas fa-eye"></i>
-                  </a>
-                  <a href="#" class="btn btn-sm btn-warning" data-toggle="tooltip" title="Chỉnh sửa">
-                    <i class="fas fa-edit"></i>
-                  </a>
-                  <a href="#" class="btn btn-sm btn-danger" data-toggle="tooltip" title="Xóa">
-                    <i class="fas fa-trash"></i>
-                  </a>
-                </div>
-              </td>
-            </tr>
+                </td>
+              </tr>
+            <% end %>
           </tbody>
         </table>
       </div>
 
-      <!-- Pagination -->
+      <!-- Pagination (kaminari) -->
       <div class="d-flex justify-content-between align-items-center mt-4">
-        <div>Hiển thị 1-10 của 12 câu hỏi</div>
+        <!-- Hiển thị thông tin phân trang -->
+        <div>
+          Hiển thị
+          <%= @questions.offset_value + 1 %> -
+          <%= [@questions.offset_value + @questions.limit_value, @questions.total_count].min %>
+          của <%= @questions.total_count %> câu hỏi
+        </div>
         <nav>
-          <ul class="pagination">
-            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">Tiếp &raquo;</a></li>
-          </ul>
+          <%= paginate @questions %>
         </nav>
       </div>
     </div>
@@ -403,55 +170,47 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form action="#" method="post" id="addQuestionForm">
+      <!-- Form thêm mới câu hỏi -->
+      <%= form_with url: admin_questions_path, method: :post, local: true, id: "addQuestionForm" do %>
         <div class="modal-body">
           <div class="form-group">
             <label for="content">Nội dung câu hỏi</label>
-            <textarea id="content" name="content" class="form-control" rows="3" placeholder="Nhập nội dung câu hỏi" required></textarea>
+            <%= text_area_tag :content, nil, class: "form-control", rows: 3, placeholder: "Nhập nội dung câu hỏi", required: true %>
           </div>
           <div class="form-group">
             <label for="question_type">Loại câu hỏi</label>
-            <select id="question_type" name="question_type" class="form-control" required>
-              <option value="">Chọn loại câu hỏi</option>
-              <option value="multiple_choice">Multiple Choice</option>
-              <option value="true_false">True/False</option>
-              <option value="essay">Essay</option>
-              <option value="matching">Matching</option>
-            </select>
+            <%= select_tag :question_type,
+                options_for_select([
+                  ['Chọn loại câu hỏi', ''],
+                  ['Multiple Choice', 'multiple_choice'],
+                  ['True/False', 'true_false'],
+                  ['Essay', 'essay'],
+                  ['Matching', 'matching']
+                ]),
+                class: "form-control",
+                required: true %>
           </div>
           <div class="form-group">
             <label for="correct_rate">Tỷ lệ trả lời đúng (%)</label>
-            <input type="number" id="correct_rate" name="correct_rate" class="form-control" min="0" max="100" value="0">
+            <%= number_field_tag :correct_rate, 0, class: "form-control", min: 0, max: 100 %>
           </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy bỏ</button>
           <button type="submit" class="btn btn-primary">Lưu câu hỏi</button>
         </div>
-      </form>
+      <% end %>
     </div>
   </div>
 </div>
 
-<!-- Scripts -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/js/bootstrap.min.js"></script>
+<%= javascript_include_tag 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js' %>
+<%= javascript_include_tag 'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js' %>
+<%= javascript_include_tag 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/js/bootstrap.min.js' %>
+
 <script>
   $(document).ready(function() {
     $('[data-toggle="tooltip"]').tooltip();
-
-    $('#searchInput').on('keyup', function() {
-      var value = $(this).val().toLowerCase();
-      $('tbody tr').filter(function() {
-        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-      });
-    });
-
-    // Khi thay đổi bộ lọc, submit form lọc
-    $('select[name="question_type"]').change(function() {
-      $(this).closest('form').submit();
-    });
   });
 </script>
 </body>
