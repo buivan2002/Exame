@@ -3,7 +3,7 @@ import "controllers"
 document.addEventListener("DOMContentLoaded", function () {
   console.log("JavaScript đã load từ application.js!");
   let timeLeftElement = document.getElementById("exam-timer");
-  
+
   if (timeLeftElement) {
       let timeLeft = parseInt(timeLeftElement.dataset.timeLeft, 10);
 
@@ -43,3 +43,10 @@ document.addEventListener("DOMContentLoaded", function () {
       startTimer();
   }
 });
+import "./controllers"
+import "@rails/ujs";
+Rails.start();
+
+//= require rails-ujs
+//= require turbolinks
+//= require_tree .

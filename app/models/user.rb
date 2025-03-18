@@ -38,4 +38,8 @@ class User < ApplicationRecord
   def set_default_role
     self.role ||= "user" # Mặc định là "user"
   end
-end 
+
+  def online?
+    return true
+  end
+end
