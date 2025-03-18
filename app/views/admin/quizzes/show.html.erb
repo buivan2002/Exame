@@ -1,0 +1,155 @@
+<!-- app/views/admin/quizzes/show.html.erb -->
+<div class="container">
+  <div class="card mb-4">
+    <div class="card-header">
+      <h3>Chi tiết bài Quiz</h3>
+    </div>
+    <div class="card-body">
+      <!-- Thông tin cơ bản của Quiz -->
+      <div class="mb-3">
+        <strong>Tiêu đề:</strong>
+        <span><%= @quiz.title %></span>
+      </div>
+
+      <div class="mb-3">
+        <strong>Mô tả:</strong>
+        <p><%= @quiz.description %></p>
+      </div>
+
+      <div class="mb-3">
+        <strong>Độ khó (Quiz):</strong>
+        <% case @quiz.difficulty %>
+          <% when "easy" %>
+            <span class="badge badge-success">Dễ</span>
+          <% when "medium" %>
+            <span class="badge badge-warning">Trung bình</span>
+          <% when "hard" %>
+            <span class="badge badge-danger">Khó</span>
+          <% else %>
+            <span class="badge badge-secondary">Chưa xác định</span>
+        <% end %>
+      </div>
+
+      <div class="mb-3">
+        <strong>Tổng số câu hỏi:</strong>
+        <span><%= @quiz.total_questions %></span>
+      </div>
+
+      <div class="mb-3">
+        <strong>Thời gian làm bài:</strong>
+        <span><%= @quiz.time_limit %> phút</span>
+      </div>
+
+      <div class="mb-3">
+        <strong>Trạng thái:</strong>
+        <% if @quiz.status == true || @quiz.status == 1 %>
+          <span class="badge badge-primary">Đang hoạt động</span>
+        <% else %>
+          <span class="badge badge-danger">Không hoạt động</span>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hiển thị cài đặt Quiz (nếu có) -->
+  <% if @quiz_setting.present? %>
+    <div class="card mb-4">
+      <div class="card-header">
+        <h4>Cài đặt Quiz</h4>
+      </div>
+      <div class="card-body">
+        <div class="mb-2">
+          <strong>Độ khó (QuizSetting):</strong>
+          <%= @quiz_setting.difficulty || "N/A" %>
+        </div>
+        <div class="mb-2">
+          <strong>Phần trăm hoàn thành:</strong>
+          <%= @quiz_setting.percen_complete || 0 %> %
+        </div>
+        <div class="mb-2">
+          <strong>Tổng số bài quiz đã làm:</strong>
+          <%= @quiz_setting.total_quiz || 0 %>
+        </div>
+        <div class="mb-2">
+          <strong>Số câu trả lời đúng:</strong>
+          <%= @quiz_setting.total_correct_answers || 0 %>
+        </div>
+        <div class="mb-2">
+          <strong>Số câu hỏi tối đa:</strong>
+          <%= @quiz_setting.question_max || 5 %>
+        </div>
+        <div class="mb-2">
+          <strong>Số câu hỏi tăng:</strong>
+          <%= @quiz_setting.question_increase || 5 %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Hiển thị chi tiết câu hỏi và đáp án theo quiz_questions -->
+  <div class="card">
+    <div class="card-header">
+      <h4>Danh sách câu hỏi và đáp án</h4>
+    </div>
+    <div class="card-body">
+      <% if @quiz_questions.blank? %>
+        <p>Chưa có câu hỏi nào cho bài quiz này.</p>
+      <% else %>
+        <% @quiz_questions.each do |qq| %>
+          <% question = qq.question %>
+          <div class="card mb-3">
+            <div class="card-header">
+              <strong>Câu hỏi thứ <%= qq.position %>:</strong> <%= question.content %>
+            </div>
+            <div class="card-body">
+              <% if question.image_url.present? %>
+                <img src="<%= question.image_url %>" alt="Hình ảnh câu hỏi" class="img-fluid mb-3">
+              <% end %>
+              <p>
+                <strong>Loại câu hỏi:</strong> <%= question.question_type %><br>
+                <strong>Độ khó (Câu hỏi):</strong>
+                <% case question.difficulty %>
+                  <% when "easy" %>
+                    <span class="badge badge-success">Dễ</span>
+                  <% when "medium" %>
+                    <span class="badge badge-warning">Trung bình</span>
+                  <% when "hard" %>
+                    <span class="badge badge-danger">Khó</span>
+                  <% else %>
+                    <span class="badge badge-secondary">N/A</span>
+                <% end %>
+              </p>
+
+              <h5>Đáp án:</h5>
+              <% if question.answers.blank? %>
+                <p>Chưa có đáp án nào.</p>
+              <% else %>
+                <ul class="list-group">
+                  <% question.answers.each do |answer| %>
+                    <li class="list-group-item d-flex align-items-center justify-content-between">
+                      <span>
+                        <%= answer.body %>
+                        <% if answer.image_url.present? %>
+                          <img src="<%= answer.image_url %>" alt="Hình ảnh đáp án" class="img-thumbnail ml-2" style="max-width: 100px;">
+                        <% end %>
+                      </span>
+                      <% if answer.is_correct == true || answer.is_correct == 1 %>
+                        <span class="badge badge-success">Đúng</span>
+                      <% else %>
+                        <span class="badge badge-danger">Sai</span>
+                      <% end %>
+                    </li>
+                  <% end %>
+                </ul>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="mt-3">
+    <%= link_to "Quay lại", admin_quizzes_path, class: "btn btn-secondary" %>
+  </div>
+</div>

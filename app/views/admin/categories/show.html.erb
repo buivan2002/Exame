@@ -1,0 +1,33 @@
+<!-- app/views/admin/categories/show.html.erb -->
+
+<div class="container">
+  <div class="card">
+    <div class="card-header">
+      <h3>Chi tiết Chủ đề</h3>
+    </div>
+    <div class="card-body">
+      <div class="mb-3">
+        <strong>Tên chủ đề:</strong>
+        <span><%= @category.name %></span>
+      </div>
+
+      <div class="mb-3">
+        <strong>Mô tả:</strong>
+        <p><%= @category.description %></p>
+      </div>
+
+      <div class="mb-3">
+        <strong>Trạng thái:</strong>
+        <% if @category.status == "hiện" %>
+          <span class="badge badge-success" style="color: black;">Hiện</span>
+        <% else %>
+          <span class="badge badge-secondary" style="color: black;">Ẩn</span>
+        <% end %>
+      </div>
+
+      <hr>
+      <%= link_to "Chỉnh sửa", edit_admin_category_path(@category), class: "btn btn-warning" %>
+      <%= link_to "Quay lại", admin_categories_path, class: "btn btn-secondary ml-2" %>
+    </div>
+  </div>
+</div>

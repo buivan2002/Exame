@@ -1,6 +1,336 @@
-<h1>Chào mừng Admin!</h1>
-<p>Đây là trang quản trị.</p>
+<!-- Stats Cards -->
+        <div class="row">
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <i class="fas fa-users"></i>
+                    <div class="stats-number"><%= @stats[:total_users] %></div>
+                    <div class="stats-title">Tổng số users</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <i class="fas fa-question-circle"></i>
+                    <div class="stats-number"><%= @stats[:total_questions] %></div>
+                    <div class="stats-title">Tổng số câu hỏi</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <i class="fas fa-clipboard-list"></i>
+                    <div class="stats-number"><%= @stats[:todays_quizzes] %></div>
+                    <div class="stats-title">Bài thi hôm nay</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <i class="fas fa-trophy"></i>
+                    <div class="stats-number"><%= @stats[:total_categories] %></div>
+                    <div class="stats-title">Chủ đề Quiz</div>
+                </div>
+            </div>
+        </div>
 
-<ul>
-  <li><%= link_to "Đăng xuất", destroy_user_session_path, method: :delete %></li>
-</ul>
+        <!-- Charts -->
+        <div class="row mt-4">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-chart-line me-2"></i> Thống kê user làm bài trong tuần
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="weeklyChart" width="700" height="300"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-chart-pie me-2"></i> Phân bố theo chủ đề
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="topicChart" width="700" height="300"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Users & Top Scorers -->
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="fas fa-user-clock me-2"></i> Users đăng nhập gần đây
+                        </div>
+                        <a href="#all" class="btn btn-sm btn-primary">Xem tất cả</a>
+
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Tên</th>
+                                        <th>Thời gian</th>
+                                        <th>Trạng thái</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% @recent_auth_logs.each do |log| %>
+                                        <tr>
+                                            <td>
+                                                <%= log.user&.name || "Chưa rõ" %>
+                                            </td>
+                                            <td>
+                                                <%= log.login_at&.strftime('%H:%M %d/%m/%Y') || '-' %>
+                                            </td>
+                                            <td>
+                                                <% if log.logout_at.nil? %>
+                                                    <span class="badge bg-success">Đang hoạt động</span>
+                                                <% else %>
+                                                    <span class="badge bg-danger">Đã thoát</span>
+                                                <% end %>
+                                            </td>
+                                        </tr>
+                                        <% end %>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="fas fa-trophy me-2"></i> Top điểm cao nhất
+                        </div>
+                        <a href="#all-scores" class="btn btn-sm btn-primary">Xem tất cả</a>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Tên</th>
+                                        <th>Chủ đề</th>
+                                        <th>Điểm</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% @top_scores.each_with_index do |result, index| %>
+                                        <tr>
+                                            <!-- STT -->
+                                            <td><%= index + 1 %></td>
+                                            <!-- Tên người dùng -->
+                                            <td>
+                                                <%= result.user&.name || "No Name" %>
+                                            </td>
+                                            <!-- Chủ đề (nếu quiz -> category) -->
+                                            <td>
+                                                <%= result.quiz&.category&.name || "N/A" %>
+                                            </td>
+                                            <!-- Điểm (cột score trong quiz_results) -->
+                                            <td>
+                                                <%= result.score %>
+                                            </td>
+                                        </tr>
+                                    <% end %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions & Recent Activities -->
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-bolt me-2"></i> Hành động nhanh
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <a href="#add-user" class="btn btn-outline-primary">
+                                <i class="fas fa-user-plus me-2"></i> Thêm User mới
+                            </a>
+                            <a href="#add-question" class="btn btn-outline-primary">
+                                <i class="fas fa-plus-circle me-2"></i> Thêm Câu hỏi mới
+                            </a>
+                            <a href="#add-category" class="btn btn-outline-primary">
+                                <i class="fas fa-folder-plus me-2"></i> Thêm Chủ đề mới
+                            </a>
+                            <a href="#export-data" class="btn btn-outline-primary">
+                                <i class="fas fa-file-export me-2"></i> Xuất báo cáo
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-clipboard-list me-2"></i> Hoạt động gần đây
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="fas fa-user-plus text-success me-2"></i>
+                                    <span>Nguyễn Văn A đã đăng ký tài khoản mới</span>
+                                </div>
+                                <small class="text-muted">5 phút trước</small>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="fas fa-clipboard-check text-primary me-2"></i>
+                                    <span>Trần Thị B đã hoàn thành bài test "Khoa học xã hội"</span>
+                                </div>
+                                <small class="text-muted">10 phút trước</small>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="fas fa-edit text-warning me-2"></i>
+                                    <span>Admin đã thêm 5 câu hỏi mới vào chủ đề "Khoa học tự nhiên"</span>
+                                </div>
+                                <small class="text-muted">30 phút trước</small>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="fas fa-trophy text-danger me-2"></i>
+                                    <span>Lê Văn C đã đạt điểm cao nhất trong chủ đề "Khoa học tự nhiên"</span>
+                                </div>
+                                <small class="text-muted">1 giờ trước</small>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="fas fa-folder-plus text-info me-2"></i>
+                                    <span>Admin đã tạo chủ đề mới "Lịch sử Việt Nam"</span>
+                                </div>
+                                <small class="text-muted">2 giờ trước</small>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<!-- Tích hợp Chart.js qua CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // Chuyển dữ liệu thống kê từ server sang JS
+    var labels = <%= raw @weekly_stats.map { |s| s.day.strftime("%A, %d-%m-%Y") }.to_json %>;
+    var correctData = <%= raw @weekly_stats.map { |s| s.total_correct.to_i }.to_json %>;
+    var incorrectData = <%= raw @weekly_stats.map { |s| s.total_incorrect.to_i }.to_json %>;
+
+    // Lấy context của canvas
+    var ctx = document.getElementById('weeklyChart').getContext('2d');
+
+    // Khởi tạo biểu đồ
+    var weeklyChart = new Chart(ctx, {
+      type: 'bar',  // Sử dụng biểu đồ cột
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Số câu trả lời đúng',
+            data: correctData,
+            backgroundColor: 'rgba(75, 192, 192, 0.5)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+          },
+          {
+            label: 'Số câu trả lời sai',
+            data: incorrectData,
+            backgroundColor: 'rgba(255, 99, 132, 0.5)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1
+          }
+        ]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: "Số lượng"
+            }
+          },
+          x: {
+            title: {
+              display: true,
+              text: "Ngày"
+            }
+          }
+        },
+        plugins: {
+          title: {
+            display: true,
+            text: "Thống kê số câu trả lời đúng/sai trong tuần"
+          }
+        }
+      }
+    });
+  });
+</script>
+
+<!-- Tích hợp Chart.js qua CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // Chuyển đổi dữ liệu từ server sang JS
+    var labels = <%= raw @topic_distribution.map { |record| record.category_name }.to_json %>;
+    var data = <%= raw @topic_distribution.map { |record| record.quiz_count.to_i }.to_json %>;
+
+    // Ví dụ màu sắc cho các phần của biểu đồ
+    var backgroundColors = [
+      'rgba(255, 99, 132, 0.5)',
+      'rgba(54, 162, 235, 0.5)',
+      'rgba(255, 206, 86, 0.5)',
+      'rgba(75, 192, 192, 0.5)',
+      'rgba(153, 102, 255, 0.5)',
+      'rgba(255, 159, 64, 0.5)'
+    ];
+
+    // Lấy context của canvas
+    var ctx = document.getElementById('topicChart').getContext('2d');
+
+    // Khởi tạo biểu đồ pie chart
+    var topicChart = new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: labels,
+        datasets: [{
+          data: data,
+          backgroundColor: backgroundColors.slice(0, labels.length),
+          borderColor: 'rgba(255, 255, 255, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        plugins: {
+          title: {
+            display: true,
+            text: 'Phân bố kết quả quiz theo chủ đề'
+          },
+          legend: {
+            position: 'bottom'
+          }
+        }
+      }
+    });
+  });
+</script>
