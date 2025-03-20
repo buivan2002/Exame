@@ -19,21 +19,21 @@
     <div class="col-md-4">
         <div class="stats-card">
             <i class="fas fa-sign-in-alt"></i>
-            <div class="stats-number">1,458</div>
+            <div class="stats-number"><%= @total_user.count %></div>
             <div class="stats-title">Tổng đăng nhập tháng này</div>
         </div>
     </div>
     <div class="col-md-4">
         <div class="stats-card">
             <i class="fas fa-clipboard-list"></i>
-            <div class="stats-number">723</div>
+            <div class="stats-number"><%=@quiz_comple.count%></div>
             <div class="stats-title">Bài làm hoàn thành</div>
         </div>
     </div>
     <div class="col-md-4">
         <div class="stats-card">
             <i class="fas fa-trophy"></i>
-            <div class="stats-number">85%</div>
+            <div class="stats-number"><%=@quiz_hightscore.count %></div>
             <div class="stats-title">Tỉ lệ đạt điểm cao</div>
         </div>
     </div>
@@ -67,12 +67,15 @@
                 <h5>Lịch sử đăng nhập của users vào hệ thống</h5>
                 <div class="d-flex">
                     <input type="text" class="form-control form-control-sm me-2" placeholder="Tìm kiếm...">
-                    <select class="form-select form-select-sm me-2" style="width: 100px;">
-                        <option>Tất cả</option>
-                        <option>Hôm nay</option>
-                        <option>Tuần này</option>
-                        <option>Tháng này</option>
-                    </select>
+                    <%= form_with url: admin_histories_path, method: :get, local: true do %>
+                <select name="filter" class="form-select form-select-sm me-2" style="width: 100px;" onchange="this.form.submit();">
+                    <option value="all" <%= "selected" if params[:filter] == "all" %>>Tất cả</option>
+                    <option value="today" <%= "selected" if params[:filter] == "today" %>>Hôm nay</option>
+                    <option value="week" <%= "selected" if params[:filter] == "week" %>>Tuần này</option>
+                    <option value="month" <%= "selected" if params[:filter] == "month" %>>Tháng này</option>
+                </select>
+                <% end %>
+
                 </div>
             </div>
             <table class="table table-hover">
@@ -88,51 +91,24 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>Nguyễn Văn A</td>
-                        <td>nguyenvana@gmail.com</td>
-                        <td>19/03/2025 08:23:15</td>
-                        <td>192.168.1.105</td>
-                        <td>iPhone 16</td>
-                        <td><span class="badge bg-success">Thành công</span></td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Trần Thị B</td>
-                        <td>tranthib@gmail.com</td>
-                        <td>19/03/2025 07:45:22</td>
-                        <td>192.168.1.110</td>
-                        <td>Samsung Galaxy S28</td>
-                        <td><span class="badge bg-success">Thành công</span></td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>Lê Văn C</td>
-                        <td>levanc@gmail.com</td>
-                        <td>19/03/2025 07:32:47</td>
-                        <td>192.168.1.115</td>
-                        <td>Windows 11</td>
-                        <td><span class="badge bg-success">Thành công</span></td>
-                    </tr>
-                    <tr>
-                        <td>4</td>
-                        <td>Phạm Thị D</td>
-                        <td>phamthid@gmail.com</td>
-                        <td>19/03/2025 07:22:18</td>
-                        <td>192.168.1.120</td>
-                        <td>MacBook Pro</td>
-                        <td><span class="badge bg-danger">Thất bại</span></td>
-                    </tr>
-                    <tr>
-                        <td>5</td>
-                        <td>Hoàng Văn E</td>
-                        <td>hoangvane@gmail.com</td>
-                        <td>19/03/2025 07:10:05</td>
-                        <td>192.168.1.125</td>
-                        <td>iPad Pro</td>
-                        <td><span class="badge bg-success">Thành công</span></td>
-                    </tr>
+                <% @users.each_with_index do |user, index| %>
+            <tr>
+                <td><%= index + 1 %></td>
+                <td><%= user.name %></td>
+                <td><%= user.email %></td>
+                <td><%= user.last_login_at.strftime('%d/%m/%Y %H:%M:%S') if user.last_login_at %></td>
+                <td><%=  "N/A" %></td>
+                <td><%=  "N/A" %></td>
+
+                <td>
+                    <% if user.last_login_at %>
+                        <span class="badge bg-success">Thành công</span>
+                    <% else %>
+                        <span class="badge bg-danger">Thất bại</span>
+                    <% end %>
+                    </td>
+                 </tr>
+                 <% end %>
                 </tbody>
             </table>
             <nav aria-label="Page navigation">
@@ -180,71 +156,22 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <% @quiz_results.each_with_index do |result, index| %>
                     <tr>
-                        <td>1</td>
-                        <td>Nguyễn Văn A</td>
-                        <td>Toán học cơ bản</td>
-                        <td>Toán học</td>
-                        <td>19/03/2025 09:15:00</td>
-                        <td>19/03/2025 09:45:30</td>
-                        <td>90/100</td>
+                        <td><%= index + 1 %></td>
+                        <td><%= result.user.name %></td>
+                        <td><%= result.quiz.title %></td>
+                        <td><%= result.category.name %></td>
+                        <td><%= result.start_time.strftime('%d/%m/%Y %H:%M:%S') if result.start_time %></td>
+                        <td><%= result.end_time.strftime('%d/%m/%Y %H:%M:%S') if result.end_time %></td>
+                        <td><%= "#{result.score}/100" %></td>
                         <td>
                             <button class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-eye"></i></button>
                             <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
                         </td>
                     </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Trần Thị B</td>
-                        <td>Tiếng Anh giao tiếp</td>
-                        <td>Tiếng Anh</td>
-                        <td>19/03/2025 10:00:00</td>
-                        <td>19/03/2025 10:25:45</td>
-                        <td>85/100</td>
-                        <td>
-                            <button class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-eye"></i></button>
-                            <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>Lê Văn C</td>
-                        <td>Lập trình Python</td>
-                        <td>Tin học</td>
-                        <td>19/03/2025 11:30:00</td>
-                        <td>19/03/2025 12:15:20</td>
-                        <td>95/100</td>
-                        <td>
-                            <button class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-eye"></i></button>
-                            <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>4</td>
-                        <td>Phạm Thị D</td>
-                        <td>Đại số cơ bản</td>
-                        <td>Toán học</td>
-                        <td>19/03/2025 13:00:00</td>
-                        <td>19/03/2025 13:30:15</td>
-                        <td>75/100</td>
-                        <td>
-                            <button class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-eye"></i></button>
-                            <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>5</td>
-                        <td>Hoàng Văn E</td>
-                        <td>Ngữ pháp tiếng Anh</td>
-                        <td>Tiếng Anh</td>
-                        <td>19/03/2025 14:15:00</td>
-                        <td>19/03/2025 14:45:30</td>
-                        <td>88/100</td>
-                        <td>
-                            <button class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-eye"></i></button>
-                            <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
-                        </td>
-                    </tr>
+                    <% end %>
+
                 </tbody>
             </table>
             <nav aria-label="Page navigation">
@@ -297,56 +224,31 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>Lê Văn C</td>
-                        <td>Lập trình Python</td>
-                        <td>Tin học</td>
-                        <td>19/03/2025 12:15:20</td>
-                        <td>95/100</td>
-                        <td>45 phút</td>
-                        <td><span class="badge bg-primary">Xuất sắc</span></td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Nguyễn Văn A</td>
-                        <td>Toán học cơ bản</td>
-                        <td>Toán học</td>
-                        <td>19/03/2025 09:45:30</td>
-                        <td>90/100</td>
-                        <td>30 phút</td>
-                        <td><span class="badge bg-primary">Xuất sắc</span></td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>Trần Văn F</td>
-                        <td>Thuật toán cơ bản</td>
-                        <td>Tin học</td>
-                        <td>18/03/2025 15:30:45</td>
-                        <td>89/100</td>
-                        <td>40 phút</td>
-                        <td><span class="badge bg-primary">Xuất sắc</span></td>
-                    </tr>
-                    <tr>
-                        <td>4</td>
-                        <td>Hoàng Văn E</td>
-                        <td>Ngữ pháp tiếng Anh</td>
-                        <td>Tiếng Anh</td>
-                        <td>19/03/2025 14:45:30</td>
-                        <td>88/100</td>
-                        <td>30 phút</td>
-                        <td><span class="badge bg-success">Giỏi</span></td>
-                    </tr>
-                    <tr>
-                        <td>5</td>
-                        <td>Trần Thị B</td>
-                        <td>Tiếng Anh giao tiếp</td>
-                        <td>Tiếng Anh</td>
-                        <td>19/03/2025 10:25:45</td>
-                        <td>85/100</td>
-                        <td>25 phút</td>
-                        <td><span class="badge bg-success">Giỏi</span></td>
-                    </tr>
+                  <% @quiz_score.each_with_index do |quiz, index| %>
+            <tr>
+                <td><%= index + 1 %></td>
+                <td><%= quiz.user.name %></td>
+                <td><%= quiz.quiz.title %></td>
+                <td><%= quiz.category.name %></td>
+                <td><%= quiz.end_time.strftime('%d/%m/%Y %H:%M:%S') %></td>
+                <td><%= quiz.score %>/100</td>
+                <td><%= ((quiz.end_time - quiz.start_time) / 60).to_i %> phút</td>
+                <td>
+                <% if quiz.score >= 90 %>
+                    <span class="badge bg-primary">Xuất sắc</span>
+                <% elsif quiz.score >= 80 %>
+                    <span class="badge bg-success">Giỏi</span>
+                <% elsif quiz.score >= 50 %>
+                    <span class="badge bg-warning">Khá</span>
+                <% else %>
+                    <span class="badge bg-dark">chán</span>
+                
+                <% end %>
+                
+                </td>
+            </tr>
+            <% end %>
+
                 </tbody>
             </table>
             <nav aria-label="Page navigation">
