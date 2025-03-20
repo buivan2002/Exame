@@ -23,6 +23,8 @@ gem "slim"
 gem 'slim-rails', '~> 3.1', '>= 3.1.1'
 gem "faker"
 gem "devise", "~> 4.9"
+gem 'elasticsearch-rails'
+gem 'elasticsearch-model'
 gem 'dotenv', groups: [:development, :test]
 gem 'pry-rails', :group => :development
 group :development, :test do

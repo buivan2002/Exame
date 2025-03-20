@@ -11,7 +11,7 @@ class Users::ProfileController < ApplicationController
     @followers_count = @followers.count
     @points = @user.point
     render "users/profile/index"
-  end
+  end 
   def rank_score
     @leaderboard = LeaderBoard.order(score: :desc).limit(10)
     render "users/profile/rank_score"

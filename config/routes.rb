@@ -14,13 +14,18 @@ Rails.application.routes.draw do
   get 'users/history', to: 'users/history#index', as: 'history'
   get 'users/history/detail/:id', to: 'users/history#detail', as: 'history_detail'   # id nay la cua quizz result
   get 'users/profile/rank/score', to: 'users/profile#rank_score', as: 'rank_score' # nếu chỉ đặt là profile/rank thì sẽ sai nó sẽ cho cái rank = :id
+  get '/users/follow/:id', to: 'users/follows#follow', as: 'follow'
   delete '/users/unfollow/:id', to: 'users/follows#unfollow', as: 'unfollow'
+  delete '/users/unfollow/serach/:id', to: 'users/follows#unfollow_serach'
   delete '/users/remove_follower/:id', to: 'users/follows#remove_follower', as: 'remove_follower'
   get 'users/profile/:id/statistics' , to: 'users/profile#statistics' , as: 'profile_statistics' 
   get 'users/profile/statistics/:id' , to: 'users/profile#detail_statistics' , as: 'detail_statistics' 
   post 'users/favorites' , to: 'users/favorites#toggle' 
   post 'users/notifications/:id/mark_as_read', to: 'users/notifications#mark_as_read'
+  get "/users/:id/search", to: "users/search#elastic"
+  get "/users/search/detail", to: "users/search#detail"
   
+
 
   devise_for :users, controllers: {
     sessions: "users/sessions",

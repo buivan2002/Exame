@@ -1,0 +1,48 @@
+=> [32m#<Elasticsearch::Model::Response::Records:0x000073bc97aee198[0m
+ @klass[32m=[0m
+  [[1;34;4mPROXY[0m] User([35mid[0m: integer, [35mname[0m: string, [35memail[0m: string, [35mpassword[0m: string, [35mrole[0m: string, [35mlast_login_at[0m: datetime, [35mavatar_url[0m: string, [35moauth_provider[0m: string, [35moauth_id[0m: string, [35mcreated_at[0m: datetime, [35mupdated_at[0m: datetime, [35mencrypted_password[0m: string, [35mreset_password_token[0m: string, [35mreset_password_sent_at[0m: datetime, [35mremember_created_at[0m: datetime, [35mprovider[0m: string, [35muid[0m: string),
+ @options[32m=[0m{},
+ @raw_response[32m=[0m
+  [32m#<Elasticsearch::Model::Response::Response:0x000073bc97aee238[0m
+   @klass[32m=[0m
+    [[1;34;4mPROXY[0m] User([35mid[0m: integer, [35mname[0m: string, [35memail[0m: string, [35mpassword[0m: string, [35mrole[0m: string, [35mlast_login_at[0m: datetime, [35mavatar_url[0m: string, [35moauth_provider[0m: string, [35moauth_id[0m: string, [35mcreated_at[0m: datetime, [35mupdated_at[0m: datetime, [35mencrypted_password[0m: string, [35mreset_password_token[0m: string, [35mreset_password_sent_at[0m: datetime, [35mremember_created_at[0m: datetime, [35mprovider[0m: string, [35muid[0m: string),
+   @records[32m=[0m[32m#<Elasticsearch::Model::Response::Records:0x000073bc97aee198[0m ...[32m>[0m,
+   @search[32m=[0m
+    [32m#<Elasticsearch::Model::Searching::SearchRequest:0x000073bc97aee468[0m
+     @definition[32m=[0m
+      {[33m:index[0m=>[31m[1;31m"[0m[31musers[1;31m"[0m[31m[0m,
+       [33m:body[0m=>
+        {[33m:query[0m=>
+          {[33m:script_score[0m=>
+            {[33m:query[0m=>
+              {[33m:bool[0m=>
+                {[33m:should[0m=>[{[33m:match[0m=>{[33m:name[0m=>{[33m:query[0m=>[31m[1;31m"[0m[31mha[1;31m"[0m[31m[0m, [33m:fuzziness[0m=>[31m[1;31m"[0m[31mAUTO[1;31m"[0m[31m[0m}}}, {[33m:match[0m=>{[33m:email[0m=>{[33m:query[0m=>[31m[1;31m"[0m[31mha[1;31m"[0m[31m[0m, [33m:fuzziness[0m=>[31m[1;31m"[0m[31mAUTO[1;31m"[0m[31m[0m}}}],
+                 [33m:minimum_should_match[0m=>[1;34m1[0m}},
+             [33m:script[0m=>
+              {[33m:source[0m=>
+                [31m[1;31m"[0m[31mdouble score = 1.0;[1;35m\n[0m[31mif (doc['is_following'].size() > 0 && doc['is_following'].value) {[1;35m\n[0m[31m  score += 5.0;[1;35m\n[0m[31m}[1;35m\n[0m[31mif (doc['followers_count'].size() > 0) {[1;35m\n[0m[31m  score += doc['followers_count'].value * 0.1;[1;35m\n[0m[31m}[1;35m\n[0m[31mreturn score;[1;35m\n[0m[31m[1;31m"[0m[31m[0m}}}}},
+     @klass[32m=[0m
+      [[1;34;4mPROXY[0m] User([35mid[0m: integer, [35mname[0m: string, [35memail[0m: string, [35mpassword[0m: string, [35mrole[0m: string, [35mlast_login_at[0m: datetime, [35mavatar_url[0m: string, [35moauth_provider[0m: string, [35moauth_id[0m: string, [35mcreated_at[0m: datetime, [35mupdated_at[0m: datetime, [35mencrypted_password[0m: string, [35mreset_password_token[0m: string, [35mreset_password_sent_at[0m: datetime, [35mremember_created_at[0m: datetime, [35mprovider[0m: string, [35muid[0m: string),
+     @options[32m=[0m{}[32m>[0m[32m>[0m,
+ @response[32m=[0m
+  [32m#<Elasticsearch::Model::Response::Response:0x000073bc97aee238[0m
+   @klass[32m=[0m
+    [[1;34;4mPROXY[0m] User([35mid[0m: integer, [35mname[0m: string, [35memail[0m: string, [35mpassword[0m: string, [35mrole[0m: string, [35mlast_login_at[0m: datetime, [35mavatar_url[0m: string, [35moauth_provider[0m: string, [35moauth_id[0m: string, [35mcreated_at[0m: datetime, [35mupdated_at[0m: datetime, [35mencrypted_password[0m: string, [35mreset_password_token[0m: string, [35mreset_password_sent_at[0m: datetime, [35mremember_created_at[0m: datetime, [35mprovider[0m: string, [35muid[0m: string),
+   @records[32m=[0m[32m#<Elasticsearch::Model::Response::Records:0x000073bc97aee198[0m ...[32m>[0m,
+   @search[32m=[0m
+    [32m#<Elasticsearch::Model::Searching::SearchRequest:0x000073bc97aee468[0m
+     @definition[32m=[0m
+      {[33m:index[0m=>[31m[1;31m"[0m[31musers[1;31m"[0m[31m[0m,
+       [33m:body[0m=>
+        {[33m:query[0m=>
+          {[33m:script_score[0m=>
+            {[33m:query[0m=>
+              {[33m:bool[0m=>
+                {[33m:should[0m=>[{[33m:match[0m=>{[33m:name[0m=>{[33m:query[0m=>[31m[1;31m"[0m[31mha[1;31m"[0m[31m[0m, [33m:fuzziness[0m=>[31m[1;31m"[0m[31mAUTO[1;31m"[0m[31m[0m}}}, {[33m:match[0m=>{[33m:email[0m=>{[33m:query[0m=>[31m[1;31m"[0m[31mha[1;31m"[0m[31m[0m, [33m:fuzziness[0m=>[31m[1;31m"[0m[31mAUTO[1;31m"[0m[31m[0m}}}],
+                 [33m:minimum_should_match[0m=>[1;34m1[0m}},
+             [33m:script[0m=>
+              {[33m:source[0m=>
+                [31m[1;31m"[0m[31mdouble score = 1.0;[1;35m\n[0m[31mif (doc['is_following'].size() > 0 && doc['is_following'].value) {[1;35m\n[0m[31m  score += 5.0;[1;35m\n[0m[31m}[1;35m\n[0m[31mif (doc['followers_count'].size() > 0) {[1;35m\n[0m[31m  score += doc['followers_count'].value * 0.1;[1;35m\n[0m[31m}[1;35m\n[0m[31mreturn score;[1;35m\n[0m[31m[1;31m"[0m[31m[0m}}}}},
+     @klass[32m=[0m
+      [[1;34;4mPROXY[0m] User([35mid[0m: integer, [35mname[0m: string, [35memail[0m: string, [35mpassword[0m: string, [35mrole[0m: string, [35mlast_login_at[0m: datetime, [35mavatar_url[0m: string, [35moauth_provider[0m: string, [35moauth_id[0m: string, [35mcreated_at[0m: datetime, [35mupdated_at[0m: datetime, [35mencrypted_password[0m: string, [35mreset_password_token[0m: string, [35mreset_password_sent_at[0m: datetime, [35mremember_created_at[0m: datetime, [35mprovider[0m: string, [35muid[0m: string),
+     @options[32m=[0m{}[32m>[0m[32m>[0m[32m>[0m
