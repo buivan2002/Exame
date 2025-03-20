@@ -18,15 +18,14 @@
   </style>
 </head>
 <body>
-
 <div class="container-fluid p-3">
   <!-- Header -->
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h2>Quản lý Câu hỏi</h2>
-    <!-- Nút mở modal thêm câu hỏi -->
-    <button class="btn btn-primary" data-toggle="modal" data-target="#addQuestionModal">
+    <!-- Nút dẫn đến trang thêm mới câu hỏi -->
+    <%= link_to new_admin_question_path, class: "btn btn-primary" do %>
       <i class="fas fa-plus"></i> Thêm mới câu hỏi
-    </button>
+    <% end %>
   </div>
 
   <!-- Search and filter bar -->
@@ -58,7 +57,6 @@
                   ['Matching', 'matching']
                 ], selected: params[:question_type]),
                 class: "form-control w-auto mr-2" %>
-
             <button type="submit" class="btn btn-outline-secondary">Lọc</button>
           <% end %>
         </div>
@@ -75,6 +73,7 @@
             <tr>
               <th>#</th>
               <th>Nội dung câu hỏi</th>
+              <th>Danh mục</th> <!-- Cột Danh mục mới -->
               <th>Loại</th>
               <th>Tỷ lệ trả lời đúng</th>
               <th>Ngày tạo</th>
@@ -82,20 +81,17 @@
             </tr>
           </thead>
           <tbody>
-            <% # Vòng lặp hiển thị danh sách câu hỏi %>
             <% @questions.each_with_index do |question, index| %>
               <tr>
-                <!-- Số thứ tự: index + 1 + offset_value để đúng thứ tự khi phân trang -->
+                <!-- Hiển thị số thứ tự dựa trên index và offset phân trang -->
                 <td><%= index + 1 + @questions.offset_value %></td>
-
                 <td><%= question.content %></td>
-
+                <td><%= question.category.name %></td> <!-- Hiển thị danh mục câu hỏi -->
                 <td>
                   <span class="badge badge-secondary">
                     <%= question.question_type %>
                   </span>
                 </td>
-
                 <td>
                   <% correct_rate = question.correct_rate.to_i rescue 0 %>
                   <div class="progress" style="height: 10px;">
@@ -109,9 +105,7 @@
                     </div>
                   </div>
                 </td>
-
                 <td><%= question.created_at.strftime("%d/%m/%Y") %></td>
-
                 <td class="text-center">
                   <div class="btn-group">
                     <%= link_to admin_question_path(question),
@@ -120,14 +114,12 @@
                                 title: "Xem chi tiết" do %>
                       <i class="fas fa-eye"></i>
                     <% end %>
-
                     <%= link_to edit_admin_question_path(question),
                                 class: "btn btn-sm btn-warning",
                                 data: { toggle: "tooltip" },
                                 title: "Chỉnh sửa" do %>
                       <i class="fas fa-edit"></i>
                     <% end %>
-
                     <%= link_to admin_question_path(question),
                                 method: :delete,
                                 data: { confirm: "Bạn có chắc chắn muốn xóa?" },
@@ -143,9 +135,8 @@
         </table>
       </div>
 
-      <!-- Pagination (kaminari) -->
+      <!-- Phân trang (sử dụng Kaminari) -->
       <div class="d-flex justify-content-between align-items-center mt-4">
-        <!-- Hiển thị thông tin phân trang -->
         <div>
           Hiển thị
           <%= @questions.offset_value + 1 %> -
@@ -156,50 +147,6 @@
           <%= paginate @questions %>
         </nav>
       </div>
-    </div>
-  </div>
-</div>
-
-<!-- Add Question Modal -->
-<div class="modal fade" id="addQuestionModal" tabindex="-1" role="dialog" aria-labelledby="addQuestionModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="addQuestionModalLabel">Thêm mới câu hỏi</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Đóng">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <!-- Form thêm mới câu hỏi -->
-      <%= form_with url: admin_questions_path, method: :post, local: true, id: "addQuestionForm" do %>
-        <div class="modal-body">
-          <div class="form-group">
-            <label for="content">Nội dung câu hỏi</label>
-            <%= text_area_tag :content, nil, class: "form-control", rows: 3, placeholder: "Nhập nội dung câu hỏi", required: true %>
-          </div>
-          <div class="form-group">
-            <label for="question_type">Loại câu hỏi</label>
-            <%= select_tag :question_type,
-                options_for_select([
-                  ['Chọn loại câu hỏi', ''],
-                  ['Multiple Choice', 'multiple_choice'],
-                  ['True/False', 'true_false'],
-                  ['Essay', 'essay'],
-                  ['Matching', 'matching']
-                ]),
-                class: "form-control",
-                required: true %>
-          </div>
-          <div class="form-group">
-            <label for="correct_rate">Tỷ lệ trả lời đúng (%)</label>
-            <%= number_field_tag :correct_rate, 0, class: "form-control", min: 0, max: 100 %>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy bỏ</button>
-          <button type="submit" class="btn btn-primary">Lưu câu hỏi</button>
-        </div>
-      <% end %>
     </div>
   </div>
 </div>

@@ -1,173 +1,66 @@
-<!-- app/views/admin/questions/edit.html.erb -->
-<div class="container mt-4">
-  <div class="card">
-    <div class="card-header">
-      <h3>Chỉnh sửa Câu hỏi</h3>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Chỉnh sửa Câu hỏi</title>
+  <%= stylesheet_link_tag 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/css/bootstrap.min.css' %>
+  <%= stylesheet_link_tag 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css' %>
+</head>
+<body>
+<div class="container mt-5">
+  <h2>Chỉnh sửa câu hỏi</h2>
+  <%= form_with model: @question, url: admin_question_path(@question), method: :patch, local: true, multipart: true do |f| %>
+    <%= render 'form_content', f: f %>
+    <%= render 'form_answers', f: f %>
+
+    <div class="form-group">
+      <%= f.submit "Cập nhật câu hỏi", class: "btn btn-primary" %>
+      <%= link_to "Hủy", admin_questions_path, class: "btn btn-secondary" %>
     </div>
-    <div class="card-body">
-      <%= form_with model: [:admin, @question], local: true, html: { multipart: true } do |f| %>
-        <!-- Thông tin câu hỏi -->
-        <div class="form-group">
-          <%= f.label :category_id, "Chủ đề" %>
-          <!-- Nếu có collection của chủ đề, có thể dùng collection_select -->
-          <%= f.number_field :category_id, class: "form-control", required: true %>
-        </div>
-
-        <div class="form-group">
-          <%= f.label :content, "Nội dung câu hỏi" %>
-          <%= f.text_area :content, class: "form-control", rows: 3, required: true %>
-        </div>
-
-        <div class="form-group">
-          <%= f.label :question_type, "Loại câu hỏi" %>
-          <%= f.select :question_type, options_for_select([["One Choice", "one_choice"], ["True/False", "true_false"], ["Multi Choice", "multi_choice"]], @question.question_type), {}, class: "form-control", required: true %>
-        </div>
-
-        <div class="form-group">
-          <%= f.label :status, "Trạng thái" %>
-          <%= f.select :status, options_for_select([["Active", "active"], ["Inactive", "inactive"]], @question.status), {}, class: "form-control", required: true %>
-        </div>
-
-        <div class="form-group">
-          <%= f.label :explanation, "Giải thích" %>
-          <%= f.text_area :explanation, class: "form-control", rows: 3 %>
-        </div>
-
-        <div class="form-group">
-          <%= f.label :images, "Ảnh câu hỏi" %>
-          <%= f.file_field :images, multiple: true, accept: "image/*", class: "form-control" %>
-          <% if @question.images.attached? %>
-            <div class="mt-2">
-              <% @question.images.each do |img| %>
-                <div style="display:inline-block; margin-right: 10px;">
-                  <%= image_tag img, style: "max-width: 100px;" %>
-                  <div class="form-check">
-                    <%= check_box_tag "remove_question_images[]", img.id, false, class: "form-check-input" %>
-                    <%= label_tag "remove_question_images_#{img.id}", "Xóa", class: "form-check-label" %>
-                  </div>
-                </div>
-              <% end %>
-            </div>
-          <% end %>
-        </div>
-
-        <hr>
-        <h4>Đáp án</h4>
-        <div id="answers">
-          <%= f.fields_for :answers do |af| %>
-            <div class="answer-fields border p-3 mb-3">
-              <div class="form-group">
-                <%= af.label :body, "Nội dung đáp án" %>
-                <%= af.text_field :body, class: "form-control", required: true %>
-              </div>
-              <% if @question.question_type == "one_choice" %>
-                <!-- Nếu kiểu one_choice, sử dụng radio button ngoài để chọn đáp án đúng.
-                     (Lưu ý: Bạn cần xử lý chuyển radio button sang is_correct trong controller update) -->
-                <div class="form-group">
-                  <%= radio_button_tag "question[correct_answer_id]", af.object.id, af.object.is_correct, class: "form-check-input" %>
-                  <%= label_tag "question_correct_answer_#{af.object.id}", "Đánh dấu là đáp án đúng", class: "form-check-label" %>
-                </div>
-              <% else %>
-                <div class="form-group form-check">
-                  <%= af.check_box :is_correct, class: "form-check-input" %>
-                  <%= af.label :is_correct, "Đáp án đúng", class: "form-check-label" %>
-                </div>
-              <% end %>
-              <div class="form-group">
-                <%= af.label :images, "Ảnh đáp án" %>
-                <%= af.file_field :images, multiple: true, accept: "image/*", class: "form-control" %>
-                <% if af.object.images.attached? %>
-                  <div class="mt-2">
-                    <% af.object.images.each do |img| %>
-                      <div style="display:inline-block; margin-right: 10px;">
-                        <%= image_tag img, style: "max-width: 100px;" %>
-                        <div class="form-check">
-                          <%= check_box_tag "remove_answer_images[#{af.index}][]", img.id, false, class: "form-check-input" %>
-                          <%= label_tag "remove_answer_images_#{af.index}_#{img.id}", "Xóa", class: "form-check-label" %>
-                        </div>
-                      </div>
-                    <% end %>
-                  </div>
-                <% end %>
-              </div>
-              <%= af.hidden_field :id %>
-              <div class="form-group">
-                <%= link_to "Xóa đáp án", "#", class: "btn btn-danger remove-answer" %>
-                <%= af.check_box :_destroy, class: "d-none" %>
-              </div>
-            </div>
-          <% end %>
-        </div>
-        <div class="form-group">
-          <%= link_to "Thêm đáp án", "#", id: "add-answer", class: "btn btn-secondary" %>
-        </div>
-
-        <div class="form-group mt-4">
-          <%= f.submit "Cập nhật câu hỏi", class: "btn btn-primary" %>
-          <%= link_to "Hủy bỏ", admin_questions_path, class: "btn btn-secondary" %>
-        </div>
-      <% end %>
-    </div>
-  </div>
+  <% end %>
 </div>
 
-<!-- Template ẩn để thêm đáp án mới -->
-<div id="new-answer-template" class="d-none">
-  <div class="answer-fields border p-3 mb-3">
-    <div class="form-group">
-      <label>Nội dung đáp án</label>
-      <input type="text" name="question[answers_attributes][NEW_RECORD][body]" class="form-control" required>
-    </div>
-    <% if @question.question_type == "one_choice" %>
-      <div class="form-group">
-        <div class="form-check">
-          <input type="radio" name="question[correct_answer_id]" value="NEW_RECORD" class="form-check-input">
-          <label class="form-check-label">Đánh dấu là đáp án đúng</label>
-        </div>
-      </div>
-    <% else %>
-      <div class="form-group form-check">
-        <input type="checkbox" name="question[answers_attributes][NEW_RECORD][is_correct]" class="form-check-input">
-        <label class="form-check-label">Đáp án đúng</label>
-      </div>
-    <% end %>
-    <div class="form-group">
-      <label>Ảnh đáp án</label>
-      <input type="file" name="question[answers_attributes][NEW_RECORD][images][]" multiple accept="image/*" class="form-control">
-    </div>
-    <div class="form-group">
-      <a href="#" class="btn btn-danger remove-answer">Xóa đáp án</a>
-    </div>
-  </div>
-</div>
-
+<%= javascript_include_tag 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js' %>
+<%= javascript_include_tag 'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js' %>
+<%= javascript_include_tag 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/js/bootstrap.min.js' %>
+<%= javascript_include_tag 'https://cdnjs.cloudflare.com/ajax/libs/cocoon/1.2.14/cocoon.min.js' %>
+</body>
+</html>
+<%= javascript_include_tag 'https://cdnjs.cloudflare.com/ajax/libs/cocoon/1.2.14/cocoon.min.js' %>
 <script>
-  document.addEventListener("DOMContentLoaded", function(){
-    // Xử lý xóa đáp án đã có: đánh dấu _destroy và ẩn container
-    document.querySelectorAll(".remove-answer").forEach(function(link){
-      link.addEventListener("click", function(e){
-        e.preventDefault();
-        var container = this.closest(".answer-fields");
-        var destroyCheckbox = container.querySelector("input[type='checkbox'][name$='[_destroy]']");
-        if(destroyCheckbox) { destroyCheckbox.checked = true; }
-        container.style.display = "none";
-      });
+  $(document).ready(function() {
+    var answerIndex = $('.answer-fields').length;
+
+    $("#add-answer").click(function(e) {
+      e.preventDefault();
+      var newAnswer = `
+        <div class="card mb-3 answer-fields">
+          <div class="card-body">
+            <div class="form-group">
+              <label for="question_answers_attributes_${answerIndex}_body">Nội dung đáp án</label>
+              <input class="form-control" type="text" name="question[answers_attributes][${answerIndex}][body]" id="question_answers_attributes_${answerIndex}_body" placeholder="Nhập nội dung đáp án" required="required">
+            </div>
+            <div class="form-group form-check">
+              <input class="form-check-input" type="checkbox" name="question[answers_attributes][${answerIndex}][is_correct]" id="question_answers_attributes_${answerIndex}_is_correct" value="1">
+              <label class="form-check-label" for="question_answers_attributes_${answerIndex}_is_correct">Đáp án đúng</label>
+            </div>
+            <div class="form-group">
+              <label for="question_answers_attributes_${answerIndex}_image">Hình ảnh cho đáp án</label>
+              <input class="form-control-file" type="file" name="question[answers_attributes][${answerIndex}][image]" id="question_answers_attributes_${answerIndex}_image">
+            </div>
+            <button type="button" class="btn btn-danger btn-sm remove-answer">
+              <i class="fas fa-trash"></i> Xóa đáp án
+            </button>
+          </div>
+        </div>
+      `;
+      $("#answers").append(newAnswer);
+      answerIndex++;
     });
 
-    // Thêm đáp án mới
-    document.getElementById("add-answer").addEventListener("click", function(e){
+    $(document).on('click', '.remove-answer', function(e) {
       e.preventDefault();
-      var template = document.getElementById("new-answer-template").innerHTML;
-      var newId = new Date().getTime();
-      template = template.replace(/NEW_RECORD/g, newId);
-      var container = document.createElement("div");
-      container.innerHTML = template;
-      // Gắn sự kiện xóa cho nút trong template mới
-      container.querySelector(".remove-answer").addEventListener("click", function(e){
-        e.preventDefault();
-        container.remove();
-      });
-      document.getElementById("answers").appendChild(container);
+      $(this).closest('.answer-fields').remove();
     });
   });
 </script>

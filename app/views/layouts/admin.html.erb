@@ -195,16 +195,16 @@
                 <%= link_to 'Quản lý Câu hỏi', admin_questions_path %>
             </li>
             <li>
-                <%= link_to 'Lịch sử', '#' %>
+                <%= link_to 'Lịch sử', admin_histories_path %>
             </li>
             <li>
-                <%= link_to 'Quản lý Points', '#' %>
+                <%= link_to 'Quản lý Points', admin_points_path %>
             </li>
             <li>
-                <%= link_to 'Cài đặt', '#' %>
+                <%= link_to 'Cài đặt', admin_setting_path %>
             </li>
             <li>
-                <%= button_to 'Đăng xuất', destroy_user_session_path, method: :delete %>
+                <%= link_to 'Đăng xuất', destroy_user_session_path, method: :delete %>
             </li>
         </ul>
     </div>
@@ -212,7 +212,7 @@
     <!-- Content -->
     <div class="content">
         <div class="content-header d-flex justify-content-between align-items-center">
-            <h4>Admin Dashboard</h4>
+            <h4>Admin Bui Nguyen Binh</h4>
             <div>
                 <span class="me-3">Xin chào, <%= @admin_user&.name %></span>
                 <a href="profile" class="btn btn-sm btn-outline-primary">
@@ -229,5 +229,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
     <%= yield :javascripts %>
+    <%= javascript_include_tag "jquery" %>
 </body>
 </html>

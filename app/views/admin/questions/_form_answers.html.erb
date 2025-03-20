@@ -1,0 +1,13 @@
+<hr>
+<h4>Đáp án</h4>
+<div id="answers">
+  <%= f.fields_for :answers do |af| %>
+    <%= render 'answer_fields', ff: af %>
+  <% end %>
+</div>
+
+<div class="form-group">
+  <button type="button" class="btn btn-secondary" id="add-answer">
+    <i class="fas fa-plus"></i> Thêm đáp án
+  </button>
+</div>

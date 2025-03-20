@@ -1,0 +1,404 @@
+<!-- Settings Content -->
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body p-0">
+                        <div class="nav flex-column nav-pills" id="settings-tab" role="tablist">
+                            <button class="nav-link active text-start p-3" id="general-tab" data-bs-toggle="pill" data-bs-target="#general" type="button" role="tab">
+                                <i class="fas fa-sliders-h settings-icon"></i> Cài đặt chung
+                            </button>
+                            <button class="nav-link text-start p-3" id="appearance-tab" data-bs-toggle="pill" data-bs-target="#appearance" type="button" role="tab">
+                                <i class="fas fa-paint-brush settings-icon"></i> Giao diện
+                            </button>
+                            <button class="nav-link text-start p-3" id="notifications-tab" data-bs-toggle="pill" data-bs-target="#notifications" type="button" role="tab">
+                                <i class="fas fa-bell settings-icon"></i> Thông báo
+                            </button>
+                            <button class="nav-link text-start p-3" id="security-tab" data-bs-toggle="pill" data-bs-target="#security" type="button" role="tab">
+                                <i class="fas fa-shield-alt settings-icon"></i> Bảo mật
+                            </button>
+                            <button class="nav-link text-start p-3" id="backup-tab" data-bs-toggle="pill" data-bs-target="#backup" type="button" role="tab">
+                                <i class="fas fa-database settings-icon"></i> Sao lưu & Phục hồi
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="tab-content" id="settings-tabContent">
+                            <!-- General Settings -->
+                            <div class="tab-pane fade show active" id="general" role="tabpanel">
+                                <h5 class="mb-4">Cài đặt chung</h5>
+                                <form>
+                                    <div class="mb-3">
+                                        <label for="siteName" class="form-label">Tên hệ thống</label>
+                                        <input type="text" class="form-control" id="siteName" value="Quiz Game">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="siteDescription" class="form-label">Mô tả ngắn</label>
+                                        <textarea class="form-control" id="siteDescription" rows="3">Hệ thống trò chơi câu đố trực tuyến</textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="adminEmail" class="form-label">Email quản trị</label>
+                                        <input type="email" class="form-control" id="adminEmail" value="admin@quizgame.com">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="language" class="form-label">Ngôn ngữ mặc định</label>
+                                        <select class="form-select" id="language">
+                                            <option value="vi" selected>Tiếng Việt</option>
+                                            <option value="en">Tiếng Anh</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="timezone" class="form-label">Múi giờ</label>
+                                        <select class="form-select" id="timezone">
+                                            <option value="UTC+7" selected>UTC+7 (Việt Nam)</option>
+                                            <option value="UTC+8">UTC+8</option>
+                                            <option value="UTC+9">UTC+9</option>
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                                </form>
+                            </div>
+
+                            <!-- Appearance Settings -->
+                            <div class="tab-pane fade" id="appearance" role="tabpanel">
+                                <h5 class="mb-4">Cài đặt giao diện</h5>
+                                <form>
+                                    <div class="mb-4">
+                                        <label class="form-label">Giao diện màu</label>
+                                        <div class="row g-3">
+                                            <div class="col-md-3">
+                                                <div class="card">
+                                                    <div class="card-body p-0">
+                                                        <div class="p-3" style="background: linear-gradient(to bottom, #3a7bd5, #00d2ff); height: 60px; border-radius: 5px 5px 0 0;"></div>
+                                                        <div class="p-2 text-center">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="themeColor" id="blueTheme" checked>
+                                                                <label class="form-check-label" for="blueTheme">
+                                                                    Blue Ocean
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="card">
+                                                    <div class="card-body p-0">
+                                                        <div class="p-3" style="background: linear-gradient(to bottom, #11998e, #38ef7d); height: 60px; border-radius: 5px 5px 0 0;"></div>
+                                                        <div class="p-2 text-center">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="themeColor" id="greenTheme">
+                                                                <label class="form-check-label" for="greenTheme">
+                                                                    Green Forest
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="card">
+                                                    <div class="card-body p-0">
+                                                        <div class="p-3" style="background: linear-gradient(to bottom, #8E2DE2, #4A00E0); height: 60px; border-radius: 5px 5px 0 0;"></div>
+                                                        <div class="p-2 text-center">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="themeColor" id="purpleTheme">
+                                                                <label class="form-check-label" for="purpleTheme">
+                                                                    Purple Haze
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="card">
+                                                    <div class="card-body p-0">
+                                                        <div class="p-3" style="background: linear-gradient(to bottom, #FF512F, #F09819); height: 60px; border-radius: 5px 5px 0 0;"></div>
+                                                        <div class="p-2 text-center">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="themeColor" id="orangeTheme">
+                                                                <label class="form-check-label" for="orangeTheme">
+                                                                    Sunset
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="fontFamily" class="form-label">Font chữ</label>
+                                        <select class="form-select" id="fontFamily">
+                                            <option value="segoe" selected>Segoe UI</option>
+                                            <option value="roboto">Roboto</option>
+                                            <option value="poppins">Poppins</option>
+                                            <option value="opensans">Open Sans</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="logoUpload" class="form-label">Logo hệ thống</label>
+                                        <input class="form-control" type="file" id="logoUpload">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="faviconUpload" class="form-label">Favicon</label>
+                                        <input class="form-control" type="file" id="faviconUpload">
+                                    </div>
+
+                                    <div class="mb-3 form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="darkMode">
+                                        <label class="form-check-label" for="darkMode">Chế độ tối</label>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                                </form>
+                            </div>
+
+                            <!-- Notifications Settings -->
+                            <div class="tab-pane fade" id="notifications" role="tabpanel">
+                                <h5 class="mb-4">Cài đặt thông báo</h5>
+                                <form>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Thông báo Email</label>
+                                        <div class="mb-3 form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="newUserNotif" checked>
+                                            <label class="form-check-label" for="newUserNotif">Người dùng đăng ký mới</label>
+                                        </div>
+                                        <div class="mb-3 form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="newQuizNotif" checked>
+                                            <label class="form-check-label" for="newQuizNotif">Quiz mới được tạo</label>
+                                        </div>
+                                        <div class="mb-3 form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="reportNotif" checked>
+                                            <label class="form-check-label" for="reportNotif">Báo cáo từ người dùng</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Thông báo trong hệ thống</label>
+                                        <div class="mb-3 form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="systemNotif" checked>
+                                            <label class="form-check-label" for="systemNotif">Thông báo hệ thống</label>
+                                        </div>
+                                        <div class="mb-3 form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="userActivityNotif" checked>
+                                            <label class="form-check-label" for="userActivityNotif">Hoạt động người dùng</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="emailServer" class="form-label">Cấu hình máy chủ email</label>
+                                        <select class="form-select mb-3" id="emailServer">
+                                            <option value="smtp" selected>SMTP</option>
+                                            <option value="sendgrid">SendGrid</option>
+                                            <option value="mailgun">Mailgun</option>
+                                        </select>
+                                        <div class="mb-3">
+                                            <label for="smtpHost" class="form-label">SMTP Host</label>
+                                            <input type="text" class="form-control" id="smtpHost" value="smtp.example.com">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="smtpPort" class="form-label">SMTP Port</label>
+                                            <input type="text" class="form-control" id="smtpPort" value="587">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="smtpUsername" class="form-label">SMTP Username</label>
+                                            <input type="text" class="form-control" id="smtpUsername" value="username">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="smtpPassword" class="form-label">SMTP Password</label>
+                                            <input type="password" class="form-control" id="smtpPassword" value="password">
+                                        </div>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                                </form>
+                            </div>
+
+                            <!-- Security Settings -->
+                            <div class="tab-pane fade" id="security" role="tabpanel">
+                                <h5 class="mb-4">Cài đặt bảo mật</h5>
+                                <form>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Chính sách đăng nhập</label>
+                                        <div class="mb-3 form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="twoFactorAuth">
+                                            <label class="form-check-label" for="twoFactorAuth">Xác thực hai yếu tố</label>
+                                        </div>
+                                        <div class="mb-3 form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="loginLockout" checked>
+                                            <label class="form-check-label" for="loginLockout">Khóa đăng nhập sau nhiều lần thất bại</label>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="maxLoginAttempts" class="form-label">Số lần đăng nhập tối đa</label>
+                                            <input type="number" class="form-control" id="maxLoginAttempts" value="5">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="sessionTimeout" class="form-label">Thời gian hết hạn phiên (phút)</label>
+                                            <input type="number" class="form-control" id="sessionTimeout" value="30">
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Chính sách mật khẩu</label>
+                                        <div class="mb-3 form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="requireStrongPassword" checked>
+                                            <label class="form-check-label" for="requireStrongPassword">Yêu cầu mật khẩu mạnh</label>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="minPasswordLength" class="form-label">Độ dài tối thiểu</label>
+                                            <input type="number" class="form-control" id="minPasswordLength" value="8">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="passwordExpiration" class="form-label">Thời gian hết hạn mật khẩu (ngày)</label>
+                                            <input type="number" class="form-control" id="passwordExpiration" value="90">
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Truy cập API</label>
+                                        <div class="mb-3 form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="enableApiAccess" checked>
+                                            <label class="form-check-label" for="enableApiAccess">Cho phép truy cập API</label>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="apiKey" class="form-label">API Key</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="apiKey" value="a1b2c3d4e5f6g7h8i9j0" readonly>
+                                                <button class="btn btn-outline-secondary" type="button">Tạo mới</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                                </form>
+                            </div>
+
+                            <!-- Backup Settings -->
+                            <div class="tab-pane fade" id="backup" role="tabpanel">
+                                <h5 class="mb-4">Sao lưu & Phục hồi</h5>
+                                <form>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Sao lưu tự động</label>
+                                        <div class="mb-3 form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="enableAutoBackup" checked>
+                                            <label class="form-check-label" for="enableAutoBackup">Bật sao lưu tự động</label>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="backupFrequency" class="form-label">Tần suất sao lưu</label>
+                                            <select class="form-select" id="backupFrequency">
+                                                <option value="daily">Hàng ngày</option>
+                                                <option value="weekly" selected>Hàng tuần</option>
+                                                <option value="monthly">Hàng tháng</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="backupRetention" class="form-label">Thời gian lưu trữ (ngày)</label>
+                                            <input type="number" class="form-control" id="backupRetention" value="30">
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Vị trí lưu trữ</label>
+                                        <div class="mb-3 form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="localBackup" checked>
+                                            <label class="form-check-label" for="localBackup">Lưu trữ cục bộ</label>
+                                        </div>
+                                        <div class="mb-3 form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="cloudBackup">
+                                            <label class="form-check-label" for="cloudBackup">Lưu trữ đám mây</label>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="cloudProvider" class="form-label">Nhà cung cấp đám mây</label>
+                                            <select class="form-select" id="cloudProvider">
+                                                <option value="s3" selected>Amazon S3</option>
+                                                <option value="drive">Google Drive</option>
+                                                <option value="dropbox">Dropbox</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-4">
+                                        <div class="col-md-6">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <h6 class="card-title">Sao lưu thủ công</h6>
+                                                    <p class="card-text text-muted">Tạo bản sao lưu toàn bộ hệ thống</p>
+                                                    <button type="button" class="btn btn-primary">Tạo sao lưu</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <h6 class="card-title">Phục hồi hệ thống</h6>
+                                                    <p class="card-text text-muted">Phục hồi từ bản sao lưu</p>
+                                                    <div class="input-group">
+                                                        <input type="file" class="form-control" id="restoreFile">
+                                                        <button class="btn btn-primary" type="button">Phục hồi</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="table-responsive mb-3">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Bản sao lưu</th>
+                                                    <th>Kích thước</th>
+                                                    <th>Ngày tạo</th>
+                                                    <th>Trạng thái</th>
+                                                    <th>Hành động</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>backup_2025-03-17.zip</td>
+                                                                                                        <td>15 MB</td>
+                                                    <td>2025-03-17</td>
+                                                    <td>Đã hoàn thành</td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-sm btn-info">Tải xuống</button>
+                                                        <button type="button" class="btn btn-sm btn-danger">Xóa</button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>backup_2025-03-14.zip</td>
+                                                    <td>12 MB</td>
+                                                    <td>2025-03-14</td>
+                                                    <td>Đã hoàn thành</td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-sm btn-info">Tải xuống</button>
+                                                        <button type="button" class="btn btn-sm btn-danger">Xóa</button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>backup_2025-03-10.zip</td>
+                                                    <td>14 MB</td>
+                                                    <td>2025-03-10</td>
+                                                    <td>Đang chờ</td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-sm btn-info">Tải xuống</button>
+                                                        <button type="button" class="btn btn-sm btn-danger">Xóa</button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>

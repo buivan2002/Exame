@@ -50,3 +50,5 @@ Rails.start();
 //= require rails-ujs
 //= require turbolinks
 //= require_tree .
+import "@nathanvda/cocoon";
+//= require cocoon

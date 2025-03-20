@@ -39,5 +39,8 @@ Rails.application.routes.draw do
     resources :quiz_results
     resources :leader_boards
     resources :notifications
+    get "histories" => "histories#index"
+    get "points" => "points#index"
+    get "setting" => "setting#index"
   end
 end

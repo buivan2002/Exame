@@ -1,4 +1,3 @@
-<!-- app/views/admin/questions/show.html.erb -->
 <div class="container mt-4">
   <div class="card">
     <div class="card-header">
@@ -9,6 +8,31 @@
       <p><strong>Nội dung câu hỏi:</strong> <%= @question.content %></p>
       <p><strong>Loại câu hỏi:</strong> <%= @question.question_type %></p>
       <p><strong>Ngày tạo:</strong> <%= @question.created_at.strftime("%d/%m/%Y %H:%M") %></p>
+
+      <!-- Thêm thông tin về danh mục -->
+      <p><strong>Danh mục:</strong> <%= @question.category.name %></p>
+
+      <!-- Thêm thông tin về giải thích -->
+      <p><strong>Giải thích:</strong> <%= @question.explanation.present? ? @question.explanation : "Không có giải thích" %></p>
+
+      <!-- Thêm thông tin về mức độ -->
+      <p><strong>Mức độ:</strong> <%= @question.difficulty.capitalize %></p>
+
+      <!-- Thêm thông tin về trạng thái -->
+      <p><strong>Trạng thái:</strong>
+        <span class="badge <%= @question.status == 'active' ? 'badge-success' : 'badge-secondary' %>" style="color: black;">
+          <%= @question.status.capitalize %>
+        </span>
+      </p>
+
+      <!-- Thêm ảnh câu hỏi -->
+      <p><strong>Ảnh câu hỏi:</strong>
+        <% if @question.image_url.present? %>
+          <%= image_tag @question.image_url, alt: "Ảnh câu hỏi", style: "max-width: 100px;" %>
+        <% else %>
+          <em>Không có ảnh</em>
+        <% end %>
+      </p>
 
       <!-- Danh sách câu trả lời -->
       <h5 class="mt-4">Danh sách câu trả lời</h5>
@@ -23,7 +47,7 @@
         </thead>
         <tbody>
           <% @question.answers.each_with_index do |answer, index| %>
-            <tr>
+            <tr class="<%= answer.is_correct ? 'table-success' : 'table-danger' %>">
               <td><%= index + 1 %></td>
               <td><%= answer.body %></td>
               <td>
