@@ -1,12 +1,18 @@
 <div class="nested-fields">
-  <%= f.label :body, "Nội dung đáp án" %>
-  <%= f.text_area :body, rows: 2, class: "form-control" %>
+  <div class="field">
+    <%= f.label :body, "Nội dung đáp án" %>
+    <%= f.text_area :body, rows: 2 %>
+  </div>
 
-  <%= f.label :is_correct, "Đáp án đúng?" %>
-  <%= f.check_box :is_correct %>
+  <div class="field">
+    <%= f.label :is_correct, "Đáp án đúng?" %>
+    <%= f.check_box :is_correct %>
+  </div>
 
-  <%= f.label :image_url, "Đường dẫn ảnh của đáp án" %>
-  <%= f.text_field :image_url, class: "form-control" %>
+  <div class="field">
+    <%= f.label :image_url, "URL Ảnh (nếu có)" %>
+    <%= f.text_field :image_url %>
+  </div>
 
-  <%= link_to_remove_association "Xóa đáp án", f, class: "btn btn-danger" %>
+  <%= link_to_remove_association "Xóa", f, class: "btn btn-danger" %>
 </div>

@@ -1,44 +1,50 @@
-<%= form_with(model: @question, url: admin_questions_path, local: true) do |form| %>
-  <div class="form-group">
-    <%= form.label :category_id, "Chọn chủ đề" %>
-    <%= form.collection_select :category_id, Category.all, :id, :name, prompt: "Chọn chủ đề" %>
+<%= form_with model: @question, url: admin_questions_path do |f| %>
+  <div class="field">
+    <%= f.label :category_id, "Chọn danh mục" %>
+    <%= f.collection_select :category_id, Category.all, :id, :name, prompt: "Chọn danh mục" %>
   </div>
 
-  <div class="form-group">
-    <%= form.label :content, "Nội dung câu hỏi" %>
-    <%= form.text_area :content, rows: 3, class: "form-control" %>
+  <div class="field">
+    <%= f.label :content, "Nội dung câu hỏi" %>
+    <%= f.text_area :content, rows: 3 %>
   </div>
 
-  <div class="form-group">
-    <%= form.label :question_type, "Loại câu hỏi" %>
-    <%= form.select :question_type, [['One Choice', 'one_choice'], ['True/False', 'true/false'], ['Multi Choice', 'multi_choice']], class: "form-control" %>
+  <div class="field">
+    <%= f.label :question_type, "Loại câu hỏi" %>
+    <%= f.select :question_type, [['Một đáp án', 'one_choice'],
+                                  ['Nhiều đáp án', 'multi_choice'],
+                                  ['Đúng/Sai', 'true_false']], prompt: "Chọn loại câu hỏi" %>
   </div>
 
-  <div class="form-group">
-    <%= form.label :status, "Trạng thái" %>
-    <%= form.select :status, [['Active', 'active'], ['Inactive', 'inactive']], class: "form-control" %>
+  <div class="field">
+    <%= f.label :difficulty, "Độ khó" %>
+    <%= f.select :difficulty, [['Dễ', 'easy'], ['Trung bình', 'medium'], ['Khó', 'hard']], prompt: "Chọn độ khó" %>
   </div>
 
-  <div class="form-group">
-    <%= form.label :explanation, "Giải thích câu hỏi" %>
-    <%= form.text_area :explanation, rows: 3, class: "form-control" %>
+  <div class="field">
+    <%= f.label :status, "Trạng thái" %>
+    <%= f.select :status, [['Hoạt động', 'active'], ['Không hoạt động', 'inactive']], prompt: "Chọn trạng thái" %>
   </div>
 
-  <div class="form-group">
-    <%= form.label :image_url, "Đường dẫn ảnh câu hỏi" %>
-    <%= form.text_field :image_url, class: "form-control" %>
+  <div class="field">
+    <%= f.label :explanation, "Giải thích (nếu có)" %>
+    <%= f.text_area :explanation, rows: 3 %>
   </div>
 
-  <div class="form-group">
-    <%= form.fields_for :answers do |answer_fields| %>
-      <%= render 'answer_fields', f: answer_fields %>
+  <div class="field">
+    <%= f.label :image_url, "URL Ảnh (nếu có)" %>
+    <%= f.text_field :image_url %>
+  </div>
+
+  <h3>Đáp án:</h3>
+  <div id="answers">
+    <%= f.fields_for :answers do |answer| %>
+      <%= render 'answer_fields', f: answer %>
     <% end %>
-    <div class="nested-fields">
-      <%= link_to_add_association 'Thêm đáp án', form, :answers, class: "btn btn-primary" %>
-    </div>
+    <%= link_to_add_association 'Thêm đáp án', f, :answers, class: "btn btn-success" %>
   </div>
 
-  <div class="form-group">
-    <%= form.submit "Tạo câu hỏi", class: "btn btn-success" %>
+  <div class="actions">
+    <%= f.submit "Lưu câu hỏi", class: "btn btn-primary" %>
   </div>
 <% end %>

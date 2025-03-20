@@ -14,14 +14,13 @@ class Admin::QuestionsController < Admin::ApplicationController
 
   def new
     @question = Question.new
-    @question.answers.build  # Tạo một đối tượng đáp án mới mặc định
+    2.times { @question.answers.build }
   end
 
   def create
     @question = Question.new(question_params)
-
     if @question.save
-      redirect_to admin_questions_path, notice: 'Câu hỏi và đáp án đã được thêm thành công.'
+      redirect_to admin_questions_path, notice: "Câu hỏi đã được tạo thành công."
     else
       render :new
     end
@@ -57,10 +56,12 @@ class Admin::QuestionsController < Admin::ApplicationController
       :category_id,
       :content,
       :question_type,
+      :difficulty,
       :status,
       :explanation,
       :image_url,
       answers_attributes: [:id, :body, :is_correct, :image_url, :_destroy]
     )
   end
+
 end

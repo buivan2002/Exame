@@ -6,7 +6,4 @@ class Question < ApplicationRecord
   has_many :user_answers, dependent: :destroy
   accepts_nested_attributes_for :answers, reject_if: :all_blank, allow_destroy: true
 
-  validates :content, presence: true
-  validates :question_type, inclusion: { in: ['one_choice', 'true/false', 'multi_choice'] }
-  validates :status, inclusion: { in: ['active', 'inactive'] }
 end
