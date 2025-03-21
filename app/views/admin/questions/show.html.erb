@@ -1,78 +1,132 @@
-<div class="container mt-4">
-  <div class="card">
-    <div class="card-header">
-      <h3>Chi tiết câu hỏi</h3>
-    </div>
-    <div class="card-body">
-      <!-- Thông tin câu hỏi -->
-      <p><strong>Nội dung câu hỏi:</strong> <%= @question.content %></p>
-      <p><strong>Loại câu hỏi:</strong> <%= @question.question_type %></p>
-      <p><strong>Ngày tạo:</strong> <%= @question.created_at.strftime("%d/%m/%Y %H:%M") %></p>
-
-      <!-- Thêm thông tin về danh mục -->
-      <p><strong>Danh mục:</strong> <%= @question.category.name %></p>
-
-      <!-- Thêm thông tin về giải thích -->
-      <p><strong>Giải thích:</strong> <%= @question.explanation.present? ? @question.explanation : "Không có giải thích" %></p>
-
-      <!-- Thêm thông tin về mức độ -->
-      <p><strong>Mức độ:</strong> <%= @question.difficulty.capitalize %></p>
-
-      <!-- Thêm thông tin về trạng thái -->
-      <p><strong>Trạng thái:</strong>
-        <span class="badge <%= @question.status == 'active' ? 'badge-success' : 'badge-secondary' %>" style="color: black;">
-          <%= @question.status.capitalize %>
-        </span>
-      </p>
-
-      <!-- Thêm ảnh câu hỏi -->
-      <p><strong>Ảnh câu hỏi:</strong>
-        <% if @question.image_url.present? %>
-          <%= image_tag @question.image_url, alt: "Ảnh câu hỏi", style: "max-width: 100px;" %>
-        <% else %>
-          <em>Không có ảnh</em>
+<!-- app/views/admin/questions/edit.html.erb -->
+<div class="container py-4">
+  <div class="card shadow">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+      <h3 class="mb-0">Chỉnh sửa câu hỏi</h3>
+      <div>
+        <%= link_to admin_question_path(@question), class: "btn btn-light" do %>
+          <i class="bi bi-eye"></i> Xem chi tiết
         <% end %>
-      </p>
-
-      <!-- Danh sách câu trả lời -->
-      <h5 class="mt-4">Danh sách câu trả lời</h5>
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <th>STT</th>
-            <th>Nội dung</th>
-            <th>Ảnh</th>
-            <th>Đáp án đúng?</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @question.answers.each_with_index do |answer, index| %>
-            <tr class="<%= answer.is_correct ? 'table-success' : 'table-danger' %>">
-              <td><%= index + 1 %></td>
-              <td><%= answer.body %></td>
-              <td>
-                <% if answer.image_url.present? %>
-                  <%= image_tag answer.image_url, alt: "Ảnh đáp án", style: "max-width: 100px;" %>
-                <% else %>
-                  <em>Không có ảnh</em>
-                <% end %>
-              </td>
-              <td>
-                <% if answer.is_correct %>
-                  <span class="badge badge-success" style="color: black;">Đúng</span>
-                <% else %>
-                  <span class="badge badge-secondary" style="color: black;">Sai</span>
-                <% end %>
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-
-      <!-- Nút quay lại danh sách (tùy route) -->
-      <div class="mt-3">
-        <%= link_to "Quay lại danh sách", admin_questions_path, class: "btn btn-secondary" %>
       </div>
+    </div>
+
+    <div class="card-body">
+      <%= form_with model: @question, url: admin_question_path(@question), method: :patch, class: "needs-validation" do |f| %>
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <div class="form-group mb-3">
+              <%= f.label :category_id, "Danh mục", class: "form-label fw-bold" %>
+              <%= f.collection_select :category_id, Category.all, :id, :name,
+                  { prompt: "Chọn danh mục" },
+                  { class: "form-select" } %>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group mb-3">
+              <%= f.label :question_type, "Loại câu hỏi", class: "form-label fw-bold" %>
+              <%= f.select :question_type,
+                  [['Một đáp án', 'one_choice'],
+                  ['Nhiều đáp án', 'multi_choice'],
+                  ['Đúng/Sai', 'true_false']],
+                  { prompt: "Chọn loại câu hỏi" },
+                  { class: "form-select" } %>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <div class="form-group mb-3">
+              <%= f.label :difficulty, "Độ khó", class: "form-label fw-bold" %>
+              <%= f.select :difficulty,
+                  [['Dễ', 'easy'], ['Trung bình', 'medium'], ['Khó', 'hard']],
+                  { prompt: "Chọn độ khó" },
+                  { class: "form-select" } %>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group mb-3">
+              <%= f.label :status, "Trạng thái", class: "form-label fw-bold" %>
+              <%= f.select :status,
+                  [['Hoạt động', 'active'], ['Không hoạt động', 'inactive']],
+                  { prompt: "Chọn trạng thái" },
+                  { class: "form-select" } %>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group mb-3">
+          <%= f.label :content, "Nội dung câu hỏi", class: "form-label fw-bold" %>
+          <%= f.text_area :content, rows: 3, class: "form-control", placeholder: "Nhập nội dung câu hỏi ở đây..." %>
+        </div>
+
+        <div class="form-group mb-3">
+          <%= f.label :explanation, "Giải thích (nếu có)", class: "form-label fw-bold" %>
+          <%= f.text_area :explanation, rows: 3, class: "form-control", placeholder: "Nhập giải thích cho đáp án đúng..." %>
+        </div>
+
+        <div class="form-group mb-3">
+          <%= f.label :image_url, "URL Ảnh (nếu có)", class: "form-label fw-bold" %>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-image"></i></span>
+            <%= f.text_field :image_url, class: "form-control", placeholder: "Nhập URL hình ảnh" %>
+          </div>
+          <% if @question.image_url.present? %>
+            <div class="mt-2">
+              <img src="<%= @question.image_url %>" alt="Preview" class="img-thumbnail" style="max-height: 150px;">
+            </div>
+          <% end %>
+        </div>
+
+        <div class="card mb-4 border-success">
+          <div class="card-header bg-light">
+            <div class="d-flex justify-content-between align-items-center">
+              <h4 class="mb-0 text-success">Đáp án</h4>
+              <%= link_to_add_association 'Thêm đáp án', f, :answers,
+                  class: "btn btn-success btn-sm",
+                  data: {
+                    association_insertion_node: '#answers',
+                    association_insertion_method: 'append'
+                  } %>
+            </div>
+          </div>
+          <div class="card-body">
+            <div id="answers">
+              <%= f.fields_for :answers do |answer| %>
+                <%= render 'answer_fields', f: answer %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-between mt-4">
+          <%= link_to admin_question_path(@question), class: "btn btn-outline-secondary" do %>
+            <i class="bi bi-x-lg"></i> Hủy
+          <% end %>
+          <%= f.submit "Cập nhật câu hỏi", class: "btn btn-primary px-4" %>
+        </div>
+      <% end %>
     </div>
   </div>
 </div>
+
+<style>
+  .card {
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .form-control:focus, .form-select:focus {
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+  }
+
+  .nested-fields {
+    transition: all 0.3s ease;
+  }
+
+  .nested-fields:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+</style>

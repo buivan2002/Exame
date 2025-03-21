@@ -294,6 +294,16 @@ puts "Tạo 30 bản ghi trong bảng Statistics."
     required_quiz: 10
   )
 end
+
+#23. Tạo 5 bản ghi cho bảng LevelConfigs
+LevelConfig.create!([
+  { level: 1, name: "Tân binh", required_points: 0, quiz_reward: 10, login_reward: 5, status: true },
+  { level: 2, name: "Người học", required_points: 100, quiz_reward: 15, login_reward: 7, status: true },
+  { level: 3, name: "Học viên tích cực", required_points: 250, quiz_reward: 20, login_reward: 10, status: true },
+  { level: 4, name: "Chuyên gia", required_points: 500, quiz_reward: 25, login_reward: 12, status: true },
+  { level: 5, name: "Bậc thầy", required_points: 1000, quiz_reward: 30, login_reward: 15, status: true }
+])
+
 puts "Tạo 30 bản ghi trong bảng UnlockedLevels."
 
 puts "Seed dữ liệu hoàn tất!"

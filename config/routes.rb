@@ -42,5 +42,7 @@ Rails.application.routes.draw do
     get "histories" => "histories#index"
     get "points" => "points#index"
     get "setting" => "setting#index"
+
+    post "points/level_configs/add" => "level_configs#create", as: "add_level_config"
   end
 end

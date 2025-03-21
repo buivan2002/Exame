@@ -1,66 +1,132 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-  <meta charset="UTF-8">
-  <title>Chỉnh sửa Câu hỏi</title>
-  <%= stylesheet_link_tag 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/css/bootstrap.min.css' %>
-  <%= stylesheet_link_tag 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css' %>
-</head>
-<body>
-<div class="container mt-5">
-  <h2>Chỉnh sửa câu hỏi</h2>
-  <%= form_with model: @question, url: admin_question_path(@question), method: :patch, local: true, multipart: true do |f| %>
-    <%= render 'form_content', f: f %>
-    <%= render 'form_answers', f: f %>
-
-    <div class="form-group">
-      <%= f.submit "Cập nhật câu hỏi", class: "btn btn-primary" %>
-      <%= link_to "Hủy", admin_questions_path, class: "btn btn-secondary" %>
+<!-- app/views/admin/questions/edit.html.erb -->
+<div class="container py-4">
+  <div class="card shadow">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+      <h3 class="mb-0">Chỉnh sửa câu hỏi</h3>
+      <div>
+        <%= link_to admin_question_path(@question), class: "btn btn-light" do %>
+          <i class="bi bi-eye"></i> Xem chi tiết
+        <% end %>
+      </div>
     </div>
-  <% end %>
-</div>
 
-<%= javascript_include_tag 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js' %>
-<%= javascript_include_tag 'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js' %>
-<%= javascript_include_tag 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/js/bootstrap.min.js' %>
-<%= javascript_include_tag 'https://cdnjs.cloudflare.com/ajax/libs/cocoon/1.2.14/cocoon.min.js' %>
-</body>
-</html>
-<%= javascript_include_tag 'https://cdnjs.cloudflare.com/ajax/libs/cocoon/1.2.14/cocoon.min.js' %>
-<script>
-  $(document).ready(function() {
-    var answerIndex = $('.answer-fields').length;
+    <div class="card-body">
+      <%= form_with model: @question, url: admin_question_path(@question), method: :patch, class: "needs-validation" do |f| %>
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <div class="form-group mb-3">
+              <%= f.label :category_id, "Danh mục", class: "form-label fw-bold" %>
+              <%= f.collection_select :category_id, Category.all, :id, :name,
+                  { prompt: "Chọn danh mục" },
+                  { class: "form-select" } %>
+            </div>
+          </div>
 
-    $("#add-answer").click(function(e) {
-      e.preventDefault();
-      var newAnswer = `
-        <div class="card mb-3 answer-fields">
-          <div class="card-body">
-            <div class="form-group">
-              <label for="question_answers_attributes_${answerIndex}_body">Nội dung đáp án</label>
-              <input class="form-control" type="text" name="question[answers_attributes][${answerIndex}][body]" id="question_answers_attributes_${answerIndex}_body" placeholder="Nhập nội dung đáp án" required="required">
+          <div class="col-md-6">
+            <div class="form-group mb-3">
+              <%= f.label :question_type, "Loại câu hỏi", class: "form-label fw-bold" %>
+              <%= f.select :question_type,
+                  [['Một đáp án', 'one_choice'],
+                  ['Nhiều đáp án', 'multi_choice'],
+                  ['Đúng/Sai', 'true_false']],
+                  { prompt: "Chọn loại câu hỏi" },
+                  { class: "form-select" } %>
             </div>
-            <div class="form-group form-check">
-              <input class="form-check-input" type="checkbox" name="question[answers_attributes][${answerIndex}][is_correct]" id="question_answers_attributes_${answerIndex}_is_correct" value="1">
-              <label class="form-check-label" for="question_answers_attributes_${answerIndex}_is_correct">Đáp án đúng</label>
-            </div>
-            <div class="form-group">
-              <label for="question_answers_attributes_${answerIndex}_image">Hình ảnh cho đáp án</label>
-              <input class="form-control-file" type="file" name="question[answers_attributes][${answerIndex}][image]" id="question_answers_attributes_${answerIndex}_image">
-            </div>
-            <button type="button" class="btn btn-danger btn-sm remove-answer">
-              <i class="fas fa-trash"></i> Xóa đáp án
-            </button>
           </div>
         </div>
-      `;
-      $("#answers").append(newAnswer);
-      answerIndex++;
-    });
 
-    $(document).on('click', '.remove-answer', function(e) {
-      e.preventDefault();
-      $(this).closest('.answer-fields').remove();
-    });
-  });
-</script>
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <div class="form-group mb-3">
+              <%= f.label :difficulty, "Độ khó", class: "form-label fw-bold" %>
+              <%= f.select :difficulty,
+                  [['Dễ', 'easy'], ['Trung bình', 'medium'], ['Khó', 'hard']],
+                  { prompt: "Chọn độ khó" },
+                  { class: "form-select" } %>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group mb-3">
+              <%= f.label :status, "Trạng thái", class: "form-label fw-bold" %>
+              <%= f.select :status,
+                  [['Hoạt động', 'active'], ['Không hoạt động', 'inactive']],
+                  { prompt: "Chọn trạng thái" },
+                  { class: "form-select" } %>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group mb-3">
+          <%= f.label :content, "Nội dung câu hỏi", class: "form-label fw-bold" %>
+          <%= f.text_area :content, rows: 3, class: "form-control", placeholder: "Nhập nội dung câu hỏi ở đây..." %>
+        </div>
+
+        <div class="form-group mb-3">
+          <%= f.label :explanation, "Giải thích (nếu có)", class: "form-label fw-bold" %>
+          <%= f.text_area :explanation, rows: 3, class: "form-control", placeholder: "Nhập giải thích cho đáp án đúng..." %>
+        </div>
+
+        <div class="form-group mb-3">
+          <%= f.label :image_url, "URL Ảnh (nếu có)", class: "form-label fw-bold" %>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-image"></i></span>
+            <%= f.text_field :image_url, class: "form-control", placeholder: "Nhập URL hình ảnh" %>
+          </div>
+          <% if @question.image_url.present? %>
+            <div class="mt-2">
+              <img src="<%= @question.image_url %>" alt="Preview" class="img-thumbnail" style="max-height: 150px;">
+            </div>
+          <% end %>
+        </div>
+
+        <div class="card mb-4 border-success">
+          <div class="card-header bg-light">
+            <div class="d-flex justify-content-between align-items-center">
+              <h4 class="mb-0 text-success">Đáp án</h4>
+              <%= link_to_add_association 'Thêm đáp án', f, :answers,
+                  class: "btn btn-success btn-sm",
+                  data: {
+                    association_insertion_node: '#answers',
+                    association_insertion_method: 'append'
+                  } %>
+            </div>
+          </div>
+          <div class="card-body">
+            <div id="answers">
+              <%= f.fields_for :answers do |answer| %>
+                <%= render 'answer_fields', f: answer %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-between mt-4">
+          <%= link_to admin_question_path(@question), class: "btn btn-outline-secondary" do %>
+            <i class="bi bi-x-lg"></i> Hủy
+          <% end %>
+          <%= f.submit "Cập nhật câu hỏi", class: "btn btn-primary px-4" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<style>
+  .card {
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .form-control:focus, .form-select:focus {
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+  }
+
+  .nested-fields {
+    transition: all 0.3s ease;
+  }
+
+  .nested-fields:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+</style>

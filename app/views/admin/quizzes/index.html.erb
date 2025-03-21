@@ -137,7 +137,7 @@
                     <%= link_to edit_admin_quiz_path(quiz), class: "btn btn-sm btn-warning", title: "Chỉnh sửa" do %>
                       <i class="fas fa-edit"></i>
                     <% end %>
-                    <%= button_to admin_quiz_path(quiz), method: :delete, data: { confirm: "Bạn có chắc muốn xóa bài quiz này?" }, class: "btn btn-sm btn-danger", title: "Xóa" do %>
+                    <%= link_to admin_quiz_path(quiz), data: { turbo_method: :delete, confirm: "Bạn có chắc muốn xóa bài quiz này?" }, class: "btn btn-sm btn-danger", title: "Xóa" do %>
                       <i class="fas fa-trash"></i>
                     <% end %>
                   </div>

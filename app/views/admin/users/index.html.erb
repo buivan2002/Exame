@@ -93,7 +93,7 @@
                     <%= link_to edit_admin_user_path(user), class: "btn btn-sm btn-warning", data: { toggle: "tooltip" }, title: "Chỉnh sửa" do %>
                       <i class="fas fa-edit"></i>
                     <% end %>
-                    <%= button_to admin_user_path(user), method: :delete, data: { confirm: "Bạn có chắc chắn muốn xóa?" }, class: "btn btn-sm btn-danger", data: { toggle: "tooltip" }, title: "Xóa" do %>
+                    <%= link_to admin_user_path(user), data: { turbo_method: :delete, confirm: "Bạn có chắc chắn muốn xóa?" }, class: "btn btn-sm btn-danger", data: { toggle: "tooltip" }, title: "Xóa" do %>
                       <i class="fas fa-trash"></i>
                     <% end %>
                     <%# <%= link_to reset_password_admin_user_path(user), method: :post, class: "btn btn-sm btn-secondary", data: { toggle: "tooltip" }, title: "Reset mật khẩu" do %>

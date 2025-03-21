@@ -1,50 +1,119 @@
-<%= form_with model: @question, url: admin_questions_path do |f| %>
-  <div class="field">
-    <%= f.label :category_id, "Chọn danh mục" %>
-    <%= f.collection_select :category_id, Category.all, :id, :name, prompt: "Chọn danh mục" %>
-  </div>
+<!-- app/views/admin/questions/new.html.erb -->
+<div class="container py-4">
+  <div class="card shadow">
+    <div class="card-header bg-primary text-white">
+      <h3 class="mb-0">Thêm câu hỏi mới</h3>
+    </div>
+    <div class="card-body">
+      <%= form_with model: @question, url: admin_questions_path, class: "needs-validation" do |f| %>
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <div class="form-group mb-3">
+              <%= f.label :category_id, "Danh mục", class: "form-label fw-bold" %>
+              <%= f.collection_select :category_id, Category.all, :id, :name,
+                  { prompt: "Chọn danh mục" },
+                  { class: "form-select" } %>
+            </div>
+          </div>
 
-  <div class="field">
-    <%= f.label :content, "Nội dung câu hỏi" %>
-    <%= f.text_area :content, rows: 3 %>
-  </div>
+          <div class="col-md-6">
+            <div class="form-group mb-3">
+              <%= f.label :question_type, "Loại câu hỏi", class: "form-label fw-bold" %>
+              <%= f.select :question_type,
+                  [['Một đáp án', 'one_choice'],
+                  ['Nhiều đáp án', 'multi_choice'],
+                  ['Đúng/Sai', 'true_false']],
+                  { prompt: "Chọn loại câu hỏi" },
+                  { class: "form-select" } %>
+            </div>
+          </div>
+        </div>
 
-  <div class="field">
-    <%= f.label :question_type, "Loại câu hỏi" %>
-    <%= f.select :question_type, [['Một đáp án', 'one_choice'],
-                                  ['Nhiều đáp án', 'multi_choice'],
-                                  ['Đúng/Sai', 'true_false']], prompt: "Chọn loại câu hỏi" %>
-  </div>
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <div class="form-group mb-3">
+              <%= f.label :difficulty, "Độ khó", class: "form-label fw-bold" %>
+              <%= f.select :difficulty,
+                  [['Dễ', 'easy'], ['Trung bình', 'medium'], ['Khó', 'hard']],
+                  { prompt: "Chọn độ khó" },
+                  { class: "form-select" } %>
+            </div>
+          </div>
 
-  <div class="field">
-    <%= f.label :difficulty, "Độ khó" %>
-    <%= f.select :difficulty, [['Dễ', 'easy'], ['Trung bình', 'medium'], ['Khó', 'hard']], prompt: "Chọn độ khó" %>
-  </div>
+          <div class="col-md-6">
+            <div class="form-group mb-3">
+              <%= f.label :status, "Trạng thái", class: "form-label fw-bold" %>
+              <%= f.select :status,
+                  [['Hoạt động', 'active'], ['Không hoạt động', 'inactive']],
+                  { prompt: "Chọn trạng thái" },
+                  { class: "form-select" } %>
+            </div>
+          </div>
+        </div>
 
-  <div class="field">
-    <%= f.label :status, "Trạng thái" %>
-    <%= f.select :status, [['Hoạt động', 'active'], ['Không hoạt động', 'inactive']], prompt: "Chọn trạng thái" %>
-  </div>
+        <div class="form-group mb-3">
+          <%= f.label :content, "Nội dung câu hỏi", class: "form-label fw-bold" %>
+          <%= f.text_area :content, rows: 3, class: "form-control", placeholder: "Nhập nội dung câu hỏi ở đây..." %>
+        </div>
 
-  <div class="field">
-    <%= f.label :explanation, "Giải thích (nếu có)" %>
-    <%= f.text_area :explanation, rows: 3 %>
-  </div>
+        <div class="form-group mb-3">
+          <%= f.label :explanation, "Giải thích (nếu có)", class: "form-label fw-bold" %>
+          <%= f.text_area :explanation, rows: 3, class: "form-control", placeholder: "Nhập giải thích cho đáp án đúng..." %>
+        </div>
 
-  <div class="field">
-    <%= f.label :image_url, "URL Ảnh (nếu có)" %>
-    <%= f.text_field :image_url %>
-  </div>
+        <div class="form-group mb-3">
+          <%= f.label :image_url, "URL Ảnh (nếu có)", class: "form-label fw-bold" %>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-image"></i></span>
+            <%= f.text_field :image_url, class: "form-control", placeholder: "Nhập URL hình ảnh" %>
+          </div>
+        </div>
 
-  <h3>Đáp án:</h3>
-  <div id="answers">
-    <%= f.fields_for :answers do |answer| %>
-      <%= render 'answer_fields', f: answer %>
-    <% end %>
-    <%= link_to_add_association 'Thêm đáp án', f, :answers, class: "btn btn-success" %>
-  </div>
+        <div class="card mb-4 border-success">
+          <div class="card-header bg-light">
+            <div class="d-flex justify-content-between align-items-center">
+              <h4 class="mb-0 text-success">Đáp án</h4>
+              <%= link_to_add_association 'Thêm đáp án', f, :answers,
+                  class: "btn btn-success btn-sm",
+                  data: {
+                    association_insertion_node: '#answers',
+                    association_insertion_method: 'append'
+                  } %>
+            </div>
+          </div>
+          <div class="card-body">
+            <div id="answers">
+              <%= f.fields_for :answers do |answer| %>
+                <%= render 'answer_fields', f: answer %>
+              <% end %>
+            </div>
+          </div>
+        </div>
 
-  <div class="actions">
-    <%= f.submit "Lưu câu hỏi", class: "btn btn-primary" %>
+        <div class="d-flex justify-content-between mt-4">
+          <%= link_to "Quay lại", admin_questions_path, class: "btn btn-outline-secondary" %>
+          <%= f.submit "Lưu câu hỏi", class: "btn btn-primary px-4" %>
+        </div>
+      <% end %>
+    </div>
   </div>
-<% end %>
+</div>
+
+<style>
+  .card {
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .form-control:focus, .form-select:focus {
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+  }
+
+  .nested-fields {
+    transition: all 0.3s ease;
+  }
+
+  .nested-fields:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+</style>

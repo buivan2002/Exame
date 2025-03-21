@@ -19,28 +19,28 @@
     <div class="col-md-3">
         <div class="stats-card">
             <i class="fas fa-star"></i>
-            <div class="stats-number">124,580</div>
+            <div class="stats-number"><%= @total_points %></div>
             <div class="stats-title">Tổng point trong hệ thống</div>
         </div>
     </div>
     <div class="col-md-3">
         <div class="stats-card">
             <i class="fas fa-users"></i>
-            <div class="stats-number">4,285</div>
+            <div class="stats-number"><%= @users_with_points %></div>
             <div class="stats-title">Người dùng có point</div>
         </div>
     </div>
     <div class="col-md-3">
         <div class="stats-card">
             <i class="fas fa-trophy"></i>
-            <div class="stats-number">5,200</div>
+            <div class="stats-number"><%= @total_points_last_30_days %></div>
             <div class="stats-title">Point cấp trong 30 ngày</div>
         </div>
     </div>
     <div class="col-md-3">
         <div class="stats-card">
             <i class="fas fa-medal"></i>
-            <div class="stats-number">2,100</div>
+            <div class="stats-number"><%= @total_points_redeemed_last_30_days %></div>
             <div class="stats-title">Point đổi trong 30 ngày</div>
         </div>
     </div>
@@ -99,56 +99,18 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <% @point_histories.each do |ph| %>
                     <tr>
-                        <td>1</td>
-                        <td>Nguyễn Văn A</td>
-                        <td>Hoàn thành quiz</td>
-                        <td><span class="text-success">+50</span></td>
-                        <td>350</td>
-                        <td>3</td>
-                        <td>19/03/2025 09:45:30</td>
-                        <td>Quiz: Toán học cơ bản (90/100)</td>
+                        <td><%= ph.id %></td>
+                        <td><%= ph.user_name %></td>
+                        <td><%= ph.reason %></td>
+                        <td><%= ph.point %></td>
+                        <td><%= ph.total_point || "N/A" %></td>
+                        <td><%= ph.level || "N/A" %></td>
+                        <td><%= ph.created_at.strftime("%d-%m-%Y %H:%M") %></td>
+                        <td><%= ph.reason %></td>
                     </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Trần Thị B</td>
-                        <td>Đổi quà</td>
-                        <td><span class="text-danger">-100</span></td>
-                        <td>200</td>
-                        <td>2</td>
-                        <td>19/03/2025 10:25:45</td>
-                        <td>Đổi voucher giảm giá 20%</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>Lê Văn C</td>
-                        <td>Hoàn thành quiz</td>
-                        <td><span class="text-success">+75</span></td>
-                        <td>525</td>
-                        <td>5</td>
-                        <td>19/03/2025 12:15:20</td>
-                        <td>Quiz: Lập trình Python (95/100)</td>
-                    </tr>
-                    <tr>
-                        <td>4</td>
-                        <td>Phạm Thị D</td>
-                        <td>Điều chỉnh</td>
-                        <td><span class="text-danger">-25</span></td>
-                        <td>150</td>
-                        <td>2</td>
-                        <td>19/03/2025 13:30:15</td>
-                        <td>Điều chỉnh bởi Admin</td>
-                    </tr>
-                    <tr>
-                        <td>5</td>
-                        <td>Hoàng Văn E</td>
-                        <td>Thưởng đăng nhập</td>
-                        <td><span class="text-success">+10</span></td>
-                        <td>320</td>
-                        <td>3</td>
-                        <td>19/03/2025 14:45:30</td>
-                        <td>Đăng nhập liên tục 7 ngày</td>
-                    </tr>
+                    <% end %>
                 </tbody>
             </table>
             <nav aria-label="Page navigation">
@@ -174,7 +136,7 @@
                 <div class="table-container">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h5>Cấu hình cộng point theo level</h5>
-                        <button class="btn btn-sm btn-primary">
+                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addLevelConfigModal">
                             <i class="fas fa-plus"></i> Thêm cấu hình mới
                         </button>
                     </div>
@@ -191,66 +153,31 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>Tân binh</td>
-                                <td>0</td>
-                                <td>10</td>
-                                <td>5</td>
-                                <td><span class="badge bg-success">Kích hoạt</span></td>
-                                <td>
-                                    <button class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-edit"></i></button>
-                                    <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>Người học</td>
-                                <td>100</td>
-                                <td>15</td>
-                                <td>7</td>
-                                <td><span class="badge bg-success">Kích hoạt</span></td>
-                                <td>
-                                    <button class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-edit"></i></button>
-                                    <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>Học viên tích cực</td>
-                                <td>250</td>
-                                <td>20</td>
-                                <td>10</td>
-                                <td><span class="badge bg-success">Kích hoạt</span></td>
-                                <td>
-                                    <button class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-edit"></i></button>
-                                    <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td>Chuyên gia</td>
-                                <td>500</td>
-                                <td>25</td>
-                                <td>12</td>
-                                <td><span class="badge bg-success">Kích hoạt</span></td>
-                                <td>
-                                    <button class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-edit"></i></button>
-                                    <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>5</td>
-                                <td>Bậc thầy</td>
-                                <td>1000</td>
-                                <td>30</td>
-                                <td>15</td>
-                                <td><span class="badge bg-success">Kích hoạt</span></td>
-                                <td>
-                                    <button class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-edit"></i></button>
-                                    <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
-                                </td>
-                            </tr>
+                            <% @level_configs.each do |level| %>
+                                <tr>
+                                    <td><%= level.level %></td>
+                                    <td><%= level.name %></td>
+                                    <td><%= level.required_points %></td>
+                                    <td><%= level.quiz_reward %></td>
+                                    <td><%= level.login_reward %></td>
+                                    <td>
+                                        <% if level.status %>
+                                            <span class="badge bg-success">Kích hoạt</span>
+                                        <% else %>
+                                            <span class="badge bg-danger">Tắt</span>
+                                        <% end %>
+                                    </td>
+                                    <td>
+                                        <%= link_to "#", class: "btn btn-sm btn-primary" do %>
+                                            <i class="fas fa-edit"></i>
+                                        <% end %>
+
+                                        <%= link_to "#", method: :delete, data: { confirm: "Bạn có chắc muốn xóa?" }, class: "btn btn-sm btn-danger" do %>
+                                            <i class="fas fa-trash"></i>
+                                        <% end %>
+                                    </td>
+                                </tr>
+                            <% end %>
                         </tbody>
                     </table>
                 </div>
@@ -508,6 +435,57 @@
         </div>
     </div>
 </div>
+
+
+<!-- Thêm vào cuối file, trước thẻ </body> -->
+
+<!-- Modal Thêm mới cấu hình level -->
+<div class="modal fade" id="addLevelConfigModal" tabindex="-1" aria-labelledby="addLevelConfigModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addLevelConfigModalLabel">Thêm cấu hình level mới</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="addLevelConfigForm" action="<%= admin_add_level_config_path %>" method="post">
+          <div class="mb-3">
+            <label class="form-label">Level</label>
+            <input type="number" class="form-control" name="level_config[level]" placeholder="Nhập level" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Tên level</label>
+            <input type="text" class="form-control" name="level_config[name]" placeholder="Nhập tên level" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Point cần đạt</label>
+            <input type="number" class="form-control" name="level_config[required_points]" placeholder="Nhập số point cần đạt" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Point thưởng mỗi quiz</label>
+            <input type="number" class="form-control" name="level_config[quiz_reward]" placeholder="Nhập point thưởng mỗi quiz" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Point thưởng đăng nhập</label>
+            <input type="number" class="form-control" name="level_config[login_reward]" placeholder="Nhập point thưởng đăng nhập" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Trạng thái</label>
+            <select class="form-select" name="level_config[status]">
+              <option value="true" selected>Kích hoạt</option>
+              <option value="false">Vô hiệu hóa</option>
+            </select>
+          </div>
+          <div class="modal-footer px-0 pb-0">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+            <button type="submit" class="btn btn-primary">Lưu cấu hình</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <!-- Thêm mã JavaScript cho quản lý point -->
 <script>

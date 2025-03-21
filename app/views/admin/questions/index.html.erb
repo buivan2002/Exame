@@ -114,15 +114,14 @@
                                 title: "Xem chi tiết" do %>
                       <i class="fas fa-eye"></i>
                     <% end %>
-                    <%= link_to edit_admin_question_path(question),
+                    <%= link_to admin_question_path(question),
                                 class: "btn btn-sm btn-warning",
                                 data: { toggle: "tooltip" },
                                 title: "Chỉnh sửa" do %>
                       <i class="fas fa-edit"></i>
                     <% end %>
                     <%= link_to admin_question_path(question),
-                                method: :delete,
-                                data: { confirm: "Bạn có chắc chắn muốn xóa?" },
+                                data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
                                 class: "btn btn-sm btn-danger",
                                 title: "Xóa" do %>
                       <i class="fas fa-trash"></i>
