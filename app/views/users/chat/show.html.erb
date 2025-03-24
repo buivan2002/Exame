@@ -1,0 +1,104 @@
+<div class="container my-5">
+  <h2 class="text-center mb-4 fw-bold">Nhắn tin với <%= @user.email %></h2>
+  
+  <div class="card shadow-lg border-0 rounded-4">
+    <div class="card-body p-4">
+      <!-- Khung chat -->
+      <div id="chat-box" class="border rounded-3 p-3 mb-4 overflow-auto" 
+           style="height: 400px; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+        <!-- Tin nhắn mẫu với avatar -->
+        <div class="d-flex mb-3">
+          
+          <div class="bg-white p-2 rounded-3 shadow-sm">
+           
+          </div>
+        </div>
+        <!-- Tin nhắn sẽ được thêm động ở đây -->
+      </div>
+
+      <!-- Thanh nhập tin nhắn -->
+      <div class="input-group">
+        <input type="text" id="message-input" 
+               class="form-control rounded-pill py-2 px-4" 
+               placeholder="Nhập tin nhắn..." 
+               style="border: 1px solid #ced4da;">
+        <button id="send-btn" 
+                class="btn btn-primary rounded-pill ms-2 px-4 py-2 fw-medium" 
+                style="background: linear-gradient(45deg, #007bff, #00b4ff); border: none;">
+          <i class="bi bi-send me-1"></i> Gửi
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const user1Id = "<%= current_user.id %>";
+  const user2Id = "<%= @user.id %>";
+  const roomId = [user1Id, user2Id].sort().join("_"); // ID lớn _ ID nhỏ 
+
+  console.log("Room ID:", roomId);
+  const userName = "<%= current_user.email %>";
+
+  const chatBox = document.getElementById("chat-box");
+  const messageInput = document.getElementById("message-input");
+  const sendBtn = document.getElementById("send-btn");
+    console.log(userName);
+    console.log(roomId);
+
+  const socket = new WebSocket(`ws://${window.location.host}/cable`);
+  socket.onopen = function() {
+    socket.send(JSON.stringify({
+      command: "subscribe",
+      identifier: JSON.stringify({ channel: "ChatChannel", room_id: roomId })
+    }));
+  };
+ socket.onmessage = function(event) {
+    const response = JSON.parse(event.data);
+    console.log("Received:", response); // Debug
+    const messageElement = document.createElement("div");
+
+    // Bỏ qua ping để không làm rác console
+    if (response.type === "ping") return;
+
+    if (response.identifier) {
+        const identifierData = JSON.parse(response.identifier);
+        console.log("Nhận tin nhắn từ room:", identifierData.room_id); // Debug
+        // Kiểm tra đúng channel và đúng room_id
+        if (identifierData.channel === "ChatChannel" && identifierData.room_id === roomId) {
+             if (response.message.user === userName) {
+                messageElement.classList.add("text-end"); // Canh phải
+                messageElement.innerHTML = `
+                    <div class="d-inline-block bg-primary text-white rounded p-2 mb-1" style="max-width: 75%;">
+                        ${response.message.text}
+                    </div>
+                `;
+            } else {
+                messageElement.classList.add("text-start"); // Canh trái
+                messageElement.innerHTML = `
+                    <div class="d-inline-block bg-secondary text-white rounded p-2 mb-1" style="max-width: 75%;">
+                        <small class="d-block fw-bold">${response.message.user}</small>
+                        ${response.message.text}
+                    </div>
+                `;
+            }
+
+    chatBox.appendChild(messageElement);
+    chatBox.scrollTop = chatBox.scrollHeight; // Cuộn xuống tin nhắn mới nhất
+        }
+    }
+};
+
+
+  sendBtn.onclick = function() {
+    const message = messageInput.value;
+    if (message.trim() !== "") {
+      socket.send(JSON.stringify({
+        command: "message",
+        identifier: JSON.stringify({ channel: "ChatChannel", room_id: roomId }),
+        data: JSON.stringify({ user: userName, text: message })
+      }));
+      messageInput.value = "";
+    }
+  };
+</script>

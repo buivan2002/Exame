@@ -24,6 +24,7 @@ Rails.application.routes.draw do
   post 'users/notifications/:id/mark_as_read', to: 'users/notifications#mark_as_read'
   get "/users/:id/search", to: "users/search#elastic"
   get "/users/search/detail", to: "users/search#detail"
+  get "/users/chat/:id", to: "users/chat#show", as: 'chat'
   
 
 
