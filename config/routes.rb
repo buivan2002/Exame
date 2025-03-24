@@ -44,5 +44,8 @@ Rails.application.routes.draw do
     get "setting" => "setting#index"
 
     post "points/level_configs/add" => "level_configs#create", as: "add_level_config"
+    delete "points/level_configs/:id" => "level_configs#destroy", as: "delete_level_config"
+    get "points/level_configs/:id/edit" => "level_configs#edit", as: "edit_level_config"
+    patch "points/level_configs/:id" => "level_configs#update", as: "update_level_config"
   end
 end

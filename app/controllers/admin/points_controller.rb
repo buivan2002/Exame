@@ -16,5 +16,9 @@ class Admin::PointsController < Admin::ApplicationController
     .order('point_histories.created_at DESC')
 
     @level_configs = LevelConfig.order(:level)
+    @level_config = LevelConfig.first
+
+    @point_rewards = PointReward.order(:id)
+    @point_reward = PointReward.new
   end
 end

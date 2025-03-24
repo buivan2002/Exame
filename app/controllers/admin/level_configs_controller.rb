@@ -16,6 +16,27 @@ class Admin::LevelConfigsController < Admin::ApplicationController
     end
   end
 
+  def destroy
+    @level_config = LevelConfig.find(params[:id])
+    @level_config.destroy
+    respond_to do |format|
+      format.html { redirect_to admin_points_path(anchor: "points-award"), notice: "Xoa cau hinh thanh cong" }
+      format.json { render json: {success: true, message: "Xoa cau hinh thanh cong"}, status: :ok }
+    rescue ActiveRecord::RecordNotFound
+      format.html { redirect_to admin_points_path(anchor: "points-award"), notice: "Khong tim thay cau hinh" }
+      format.json { render json: {success: false, message: "Khong tim thay cau hinh"}, status: :not_found }
+    end
+  end
+  
+  def update
+    @level_config = LevelConfig.find(params[:id])
+    if @level_config.update(level_config_params)
+      redirect_to admin_points_path(anchor: "points-award"), notice: "Cập nhật thành công"
+    else
+      redirect_to admin_points_path(anchor: "points-award"), alert: "Cập nhật thất bại"
+    end
+  end
+
   private
 
   def level_config_params

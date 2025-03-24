@@ -168,11 +168,21 @@
                                         <% end %>
                                     </td>
                                     <td>
-                                        <%= link_to "#", class: "btn btn-sm btn-primary" do %>
+                                        <%= link_to "#", class: "btn btn-sm btn-primary", data: {
+                                                bs_toggle: "modal",
+                                                bs_target: "#editLevelConfigModal",
+                                                level_id: level.id,
+                                                level_level: level.level,
+                                                level_name: level.name,
+                                                level_required: level.required_points,
+                                                level_quiz: level.quiz_reward,
+                                                level_login: level.login_reward,
+                                                level_status: level.status
+                                                } do %>
                                             <i class="fas fa-edit"></i>
                                         <% end %>
 
-                                        <%= link_to "#", method: :delete, data: { confirm: "Bạn có chắc muốn xóa?" }, class: "btn btn-sm btn-danger" do %>
+                                        <%= link_to admin_delete_level_config_path(level), data: { turbo_method: :delete, confirm: "Bạn có chắc muốn xóa?" }, class: "btn btn-sm btn-danger" do %>
                                             <i class="fas fa-trash"></i>
                                         <% end %>
                                     </td>
@@ -180,48 +190,6 @@
                             <% end %>
                         </tbody>
                     </table>
-                </div>
-            </div>
-            <div class="col-md-5">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0">Chỉnh sửa level</h5>
-                    </div>
-                    <div class="card-body">
-                        <form>
-                            <div class="mb-3">
-                                <label class="form-label">Level</label>
-                                <input type="number" class="form-control" value="3">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Tên level</label>
-                                <input type="text" class="form-control" value="Học viên tích cực">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Point cần đạt</label>
-                                <input type="number" class="form-control" value="250">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Point thưởng mỗi quiz</label>
-                                <input type="number" class="form-control" value="20">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Point thưởng đăng nhập</label>
-                                <input type="number" class="form-control" value="10">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Trạng thái</label>
-                                <select class="form-select">
-                                    <option selected>Kích hoạt</option>
-                                    <option>Vô hiệu hóa</option>
-                                </select>
-                            </div>
-                            <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
-                                <button type="button" class="btn btn-outline-secondary">Hủy</button>
-                            </div>
-                        </form>
-                    </div>
                 </div>
             </div>
         </div>
@@ -252,84 +220,35 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>Voucher giảm giá 10%</td>
-                                <td>Áp dụng cho khóa học online</td>
-                                <td>50</td>
-                                <td>100</td>
-                                <td>35</td>
-                                <td><span class="badge bg-success">Có sẵn</span></td>
+                            <% @point_rewards.each do |reward| %>
+                                <tr>
+                                <td><%= reward.id %></td>
+                                <td><%= reward.name %></td>
+                                <td><%= reward.description %></td>
+                                <td><%= reward.required_points %></td>
+                                <td><%= reward.quantity %></td>
+                                <td><%= reward.redeemed %></td>
                                 <td>
-                                    <button class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-edit"></i></button>
-                                    <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                    <% if reward.status == "available" %>
+                                    <span class="badge bg-success">Có sẵn</span>
+                                    <% elsif reward.status == "out_of_stock" %>
+                                    <span class="badge bg-secondary">Hết hàng</span>
+                                    <% elsif reward.status == "almost_gone" %>
+                                    <span class="badge bg-warning">Sắp hết</span>
+                                    <% else %>
+                                    <span class="badge bg-dark"><%= reward.status %></span>
+                                    <% end %>
                                 </td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>Voucher giảm giá 20%</td>
-                                <td>Áp dụng cho khóa học online</td>
-                                <td>100</td>
-                                <td>50</td>
-                                <td>22</td>
-                                <td><span class="badge bg-success">Có sẵn</span></td>
                                 <td>
-                                    <button class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-edit"></i></button>
-                                    <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                    <%= link_to "#", class: "btn btn-sm btn-outline-primary me-1" do %>
+                                    <i class="fas fa-edit"></i>
+                                    <% end %>
+                                    <%= link_to "#", method: :delete, data: { turbo_confirm: "Bạn có chắc muốn xóa phần thưởng này?" }, class: "btn btn-sm btn-outline-danger" do %>
+                                    <i class="fas fa-trash"></i>
+                                    <% end %>
                                 </td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>Mở khóa 1 quiz cao cấp</td>
-                                <td>Mở khóa quiz bất kỳ trong danh mục premium</td>
-                                <td>150</td>
-                                <td>200</td>
-                                <td>78</td>
-                                <td><span class="badge bg-success">Có sẵn</span></td>
-                                <td>
-                                    <button class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-edit"></i></button>
-                                    <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td>Tài liệu học tập PDF</td>
-                                <td>Bộ tài liệu học tập chuyên sâu</td>
-                                <td>200</td>
-                                <td>100</td>
-                                <td>45</td>
-                                <td><span class="badge bg-success">Có sẵn</span></td>
-                                <td>
-                                    <button class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-edit"></i></button>
-                                    <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>5</td>
-                                <td>Voucher giảm giá 50%</td>
-                                <td>Áp dụng cho một khóa học bất kỳ</td>
-                                <td>500</td>
-                                <td>20</td>
-                                <td>8</td>
-                                <td><span class="badge bg-success">Có sẵn</span></td>
-                                <td>
-                                    <button class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-edit"></i></button>
-                                    <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>6</td>
-                                <td>Khóa học miễn phí</td>
-                                <td>Một khóa học miễn phí bất kỳ</td>
-                                <td>1000</td>
-                                <td>10</td>
-                                <td>2</td>
-                                <td><span class="badge bg-warning">Sắp hết</span></td>
-                                <td>
-                                    <button class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-edit"></i></button>
-                                    <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
-                                </td>
-                            </tr>
+                                </tr>
+                            <% end %>
                         </tbody>
                     </table>
                     <nav aria-label="Page navigation">
@@ -353,45 +272,19 @@
                     </div>
                     <div class="card-body p-0">
                         <ul class="list-group list-group-flush">
+                        <% @point_histories.select { |ph| ph.point < 0 }.first(5).each do |ph| %>
                             <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                                <div>
-                                    <h6 class="mb-0">Nguyễn Văn A</h6>
-                                    <small class="text-muted">Voucher giảm giá 20%</small>
-                                </div>
-                                <span class="badge bg-primary rounded-pill">-100</span>
+                            <div>
+                                <h6 class="mb-0"><%= ph.user_name %></h6>
+                                <small class="text-muted"><%= ph.reason %></small>
+                            </div>
+                            <span class="badge bg-primary rounded-pill"><%= ph.point %></span>
                             </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                                <div>
-                                    <h6 class="mb-0">Trần Thị B</h6>
-                                    <small class="text-muted">Mở khóa 1 quiz cao cấp</small>
-                                </div>
-                                <span class="badge bg-primary rounded-pill">-150</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                                <div>
-                                    <h6 class="mb-0">Lê Văn C</h6>
-                                    <small class="text-muted">Tài liệu học tập PDF</small>
-                                </div>
-                                <span class="badge bg-primary rounded-pill">-200</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                                <div>
-                                    <h6 class="mb-0">Hoàng Văn E</h6>
-                                    <small class="text-muted">Voucher giảm giá 10%</small>
-                                </div>
-                                <span class="badge bg-primary rounded-pill">-50</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                                <div>
-                                    <h6 class="mb-0">Nguyễn Thị F</h6>
-                                    <small class="text-muted">Voucher giảm giá 50%</small>
-                                </div>
-                                <span class="badge bg-primary rounded-pill">-500</span>
-                            </li>
+                        <% end %>
                         </ul>
                     </div>
                     <div class="card-footer text-center">
-                        <a href="#" class="text-decoration-none">Xem tất cả</a>
+                        <%= link_to "Xem tất cả", "#", class: "text-decoration-none" %>
                     </div>
                 </div>
 
@@ -449,6 +342,7 @@
       </div>
       <div class="modal-body">
         <form id="addLevelConfigForm" action="<%= admin_add_level_config_path %>" method="post">
+          <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
           <div class="mb-3">
             <label class="form-label">Level</label>
             <input type="number" class="form-control" name="level_config[level]" placeholder="Nhập level" required>
@@ -486,11 +380,90 @@
   </div>
 </div>
 
+<!-- Modal Chỉnh sửa cấu hình level -->
+<div class="modal fade" id="editLevelConfigModal" tabindex="-1" aria-labelledby="editLevelConfigModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editLevelConfigModalLabel">Chỉnh sửa cấu hình level</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+      </div>
+      <div class="modal-body">
+        <form id="editLevelConfigForm" action="<%= admin_update_level_config_path(@level_config) %>" method="post">
+          <!-- PATCH method -->
+          <input type="hidden" name="_method" value="patch">
+          <!-- CSRF token -->
+          <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+
+          <div class="mb-3">
+            <label class="form-label">Level</label>
+            <input type="number" class="form-control" name="level_config[level]" value="<%= @level_config.level %>" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Tên level</label>
+            <input type="text" class="form-control" name="level_config[name]" value="<%= @level_config.name %>" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Point cần đạt</label>
+            <input type="number" class="form-control" name="level_config[required_points]" value="<%= @level_config.required_points %>" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Point thưởng mỗi quiz</label>
+            <input type="number" class="form-control" name="level_config[quiz_reward]" value="<%= @level_config.quiz_reward %>" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Point thưởng đăng nhập</label>
+            <input type="number" class="form-control" name="level_config[login_reward]" value="<%= @level_config.login_reward %>" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Trạng thái</label>
+            <select class="form-select" name="level_config[status]">
+              <option value="true" <%= @level_config.status ? 'selected' : '' %>>Kích hoạt</option>
+              <option value="false" <%= !@level_config.status ? 'selected' : '' %>>Vô hiệu hóa</option>
+            </select>
+          </div>
+
+          <div class="modal-footer px-0 pb-0">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+            <button type="submit" class="btn btn-primary">Cập nhật</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <!-- Thêm mã JavaScript cho quản lý point -->
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Mã giả để xử lý các chức năng quản lý point
+document.addEventListener('DOMContentLoaded', function () {
+  const editModal = document.getElementById('editLevelConfigModal');
+  editModal.addEventListener('show.bs.modal', function (event) {
+    const button = event.relatedTarget;
+
+    const id = button.getAttribute('data-level-id');
+    const level = button.getAttribute('data-level-level');
+    const name = button.getAttribute('data-level-name');
+    const required = button.getAttribute('data-level-required');
+    const quiz = button.getAttribute('data-level-quiz');
+    const login = button.getAttribute('data-level-login');
+    const status = button.getAttribute('data-level-status');
+
+    // Gán giá trị vào input form
+    editModal.querySelector('form').action = `/admin/points/level_configs/${id}`;
+    editModal.querySelector('input[name="level_config[level]"]').value = level;
+    editModal.querySelector('input[name="level_config[name]"]').value = name;
+    editModal.querySelector('input[name="level_config[required_points]"]').value = required;
+    editModal.querySelector('input[name="level_config[quiz_reward]"]').value = quiz;
+    editModal.querySelector('input[name="level_config[login_reward]"]').value = login;
+    editModal.querySelector('select[name="level_config[status]"]').value = status === "true" ? "true" : "false";
     console.log('Points management UI loaded successfully');
+  });
 });
+
 </script>
