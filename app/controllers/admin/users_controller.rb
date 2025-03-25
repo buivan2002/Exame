@@ -52,6 +52,7 @@ class Admin::UsersController < Admin::ApplicationController
 
       redirect_to admin_users_path, notice: 'User was successfully created.'
     else
+      puts @user.errors.full_messages
       render :new
     end
   end
@@ -72,10 +73,21 @@ class Admin::UsersController < Admin::ApplicationController
   end
 
   def destroy
+    @user = User.find(params[:id])
     @user.destroy
-    redirect_to admin_users_path, notice: 'User was successfully destroyed.'
+    redirect_to admin_users_path, notice: "Người dùng đã được xóa (soft delete)."
   end
 
+  def reset_password
+    @user = User.find(params[:id])
+    new_password = "12345678"
+
+    if @user.update(password: new_password)
+      redirect_to admin_user_path(@user), notice: "User was successfully reset password."
+    else
+      redirect_to admin_user_path(@user), notice: "User was not reset password."
+    end
+  end
   private
 
   def set_user
@@ -83,7 +95,7 @@ class Admin::UsersController < Admin::ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:name, :email, :password, :password_confirmation, :role)
+    params.require(:user).permit(:name, :email, :password, :password_confirmation, :role, :phone)
   end
 
 end

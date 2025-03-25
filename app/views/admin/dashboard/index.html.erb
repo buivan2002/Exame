@@ -67,7 +67,7 @@
                         <div>
                             <i class="fas fa-user-clock me-2"></i> Users đăng nhập gần đây
                         </div>
-                        <a href="#all" class="btn btn-sm btn-primary">Xem tất cả</a>
+                        <a href="histories" class="btn btn-sm btn-primary">Xem tất cả</a>
 
                     </div>
                     <div class="card-body">
@@ -112,7 +112,7 @@
                         <div>
                             <i class="fas fa-trophy me-2"></i> Top điểm cao nhất
                         </div>
-                        <a href="#all-scores" class="btn btn-sm btn-primary">Xem tất cả</a>
+                        <%= link_to "Xem tất cả", admin_dashboard_all_score_path, class: "btn btn-sm btn-primary" %>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -161,12 +161,12 @@
                     </div>
                     <div class="card-body">
                         <div class="d-grid gap-2">
-                            <a href="#add-user" class="btn btn-outline-primary">
+                            <%= link_to new_admin_user_path, class: "btn btn-outline-primary" do %>
                                 <i class="fas fa-user-plus me-2"></i> Thêm User mới
-                            </a>
-                            <a href="#add-question" class="btn btn-outline-primary">
-                                <i class="fas fa-plus-circle me-2"></i> Thêm Câu hỏi mới
-                            </a>
+                            <% end %>
+                            <%= link_to new_admin_question_path, class: "btn btn-outline-primary" do %>
+                                <i class="fas fa-user-plus me-2"></i> Thêm Câu hỏi mới
+                            <% end %>
                             <a href="#add-category" class="btn btn-outline-primary">
                                 <i class="fas fa-folder-plus me-2"></i> Thêm Chủ đề mới
                             </a>
@@ -185,45 +185,30 @@
                     </div>
                     <div class="card-body">
                         <ul class="list-group list-group-flush">
+                            <% @recent_notifications.each do |notification| %>
+                            <% icon_class = case notification.notification_type
+                                when "user_signup" then "fas fa-user-plus text-success"
+                                when "quiz_finish" then "fas fa-clipboard-check text-primary"
+                                when "admin_action" then "fas fa-edit text-warning"
+                                when "high_score" then "fas fa-trophy text-danger"
+                                when "new_topic" then "fas fa-folder-plus text-info"
+                                else "fas fa-bell text-secondary"
+                            end %>
+
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 <div>
-                                    <i class="fas fa-user-plus text-success me-2"></i>
-                                    <span>Nguyễn Văn A đã đăng ký tài khoản mới</span>
+                                <i class="<%= icon_class %> me-2"></i>
+                                <span><%= notification.message %></span>
                                 </div>
-                                <small class="text-muted">5 phút trước</small>
+                                <small class="text-muted"><%= time_ago_in_words(notification.created_at) %> trước</small>
                             </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                <div>
-                                    <i class="fas fa-clipboard-check text-primary me-2"></i>
-                                    <span>Trần Thị B đã hoàn thành bài test "Khoa học xã hội"</span>
-                                </div>
-                                <small class="text-muted">10 phút trước</small>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                <div>
-                                    <i class="fas fa-edit text-warning me-2"></i>
-                                    <span>Admin đã thêm 5 câu hỏi mới vào chủ đề "Khoa học tự nhiên"</span>
-                                </div>
-                                <small class="text-muted">30 phút trước</small>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                <div>
-                                    <i class="fas fa-trophy text-danger me-2"></i>
-                                    <span>Lê Văn C đã đạt điểm cao nhất trong chủ đề "Khoa học tự nhiên"</span>
-                                </div>
-                                <small class="text-muted">1 giờ trước</small>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                <div>
-                                    <i class="fas fa-folder-plus text-info me-2"></i>
-                                    <span>Admin đã tạo chủ đề mới "Lịch sử Việt Nam"</span>
-                                </div>
-                                <small class="text-muted">2 giờ trước</small>
-                            </li>
+                            <% end %>
                         </ul>
                     </div>
                 </div>
             </div>
+
+
         </div>
 
 <!-- Tích hợp Chart.js qua CDN -->

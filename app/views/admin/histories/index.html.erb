@@ -1,0 +1,278 @@
+<!-- HISTORY MANAGEMENT SECTION -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5>Quản lý lịch sử</h5>
+                <div>
+                    <button class="btn btn-sm btn-primary">
+                        <i class="fas fa-download"></i> Xuất báo cáo
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="stats-card">
+            <i class="fas fa-sign-in-alt"></i>
+            <div class="stats-number"><%= @total_user.count %></div>
+            <div class="stats-title">Tổng đăng nhập tháng này</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stats-card">
+            <i class="fas fa-clipboard-list"></i>
+            <div class="stats-number"><%=@quiz_comple.count%></div>
+            <div class="stats-title">Bài làm hoàn thành</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stats-card">
+            <i class="fas fa-trophy"></i>
+            <div class="stats-number"><%=@quiz_hightscore.count %></div>
+            <div class="stats-title">Tỉ lệ đạt điểm cao</div>
+        </div>
+    </div>
+</div>
+
+<!-- Tabs Navigation -->
+<ul class="nav nav-tabs mb-3" id="historyTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login-history" type="button" role="tab" aria-controls="login-history" aria-selected="true">
+            <i class="fas fa-sign-in-alt me-2"></i>Lịch sử đăng nhập
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="quiz-tab" data-bs-toggle="tab" data-bs-target="#quiz-history" type="button" role="tab" aria-controls="quiz-history" aria-selected="false">
+            <i class="fas fa-clipboard-list me-2"></i>Lịch sử làm bài
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="top-tab" data-bs-toggle="tab" data-bs-target="#top-scores" type="button" role="tab" aria-controls="top-scores" aria-selected="false">
+            <i class="fas fa-trophy me-2"></i>Điểm cao nhất
+        </button>
+    </li>
+</ul>
+
+<!-- Tabs Content -->
+<div class="tab-content" id="historyTabsContent">
+    <!-- Login History Tab -->
+    <div class="tab-pane fade show active" id="login-history" role="tabpanel" aria-labelledby="login-tab">
+        <div class="table-container">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5>Lịch sử đăng nhập của users vào hệ thống</h5>
+                <div class="d-flex">
+                    <input type="text" class="form-control form-control-sm me-2" placeholder="Tìm kiếm...">
+                    <%= form_with url: admin_histories_path, method: :get, local: true do %>
+                <select name="filter" class="form-select form-select-sm me-2" style="width: 100px;" onchange="this.form.submit();">
+                    <option value="all" <%= "selected" if params[:filter] == "all" %>>Tất cả</option>
+                    <option value="today" <%= "selected" if params[:filter] == "today" %>>Hôm nay</option>
+                    <option value="week" <%= "selected" if params[:filter] == "week" %>>Tuần này</option>
+                    <option value="month" <%= "selected" if params[:filter] == "month" %>>Tháng này</option>
+                </select>
+                <% end %>
+
+                </div>
+            </div>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên người dùng</th>
+                        <th>Email</th>
+                        <th>Thời gian đăng nhập</th>
+                        <th>IP</th>
+                        <th>Thiết bị</th>
+                        <th>Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <% @users.each_with_index do |user, index| %>
+            <tr>
+                <td><%= index + 1 %></td>
+                <td><%= user.name %></td>
+                <td><%= user.email %></td>
+                <td><%= user.last_login_at.strftime('%d/%m/%Y %H:%M:%S') if user.last_login_at %></td>
+                <td><%=  "N/A" %></td>
+                <td><%=  "N/A" %></td>
+
+                <td>
+                    <% if user.last_login_at %>
+                        <span class="badge bg-success">Thành công</span>
+                    <% else %>
+                        <span class="badge bg-danger">Thất bại</span>
+                    <% end %>
+                    </td>
+                 </tr>
+                 <% end %>
+                </tbody>
+            </table>
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-end">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1">Trước</a>
+                    </li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">Tiếp</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Quiz History Tab -->
+    <div class="tab-pane fade" id="quiz-history" role="tabpanel" aria-labelledby="quiz-tab">
+        <div class="table-container">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5>Quản lý lịch sử các bài làm của users</h5>
+                <div class="d-flex">
+                    <input type="text" class="form-control form-control-sm me-2" placeholder="Tìm kiếm...">
+                    <select class="form-select form-select-sm me-2" style="width: 150px;">
+                        <option>Tất cả danh mục</option>
+                        <option>Toán học</option>
+                        <option>Tin học</option>
+                        <option>Tiếng Anh</option>
+                    </select>
+                </div>
+            </div>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên người dùng</th>
+                        <th>Tên bài quiz</th>
+                        <th>Danh mục</th>
+                        <th>Thời gian bắt đầu</th>
+                        <th>Thời gian hoàn thành</th>
+                        <th>Điểm số</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% @quiz_results.each_with_index do |result, index| %>
+                    <tr>
+                        <td><%= index + 1 %></td>
+                        <td><%= result.user.name %></td>
+                        <td><%= result.quiz.title %></td>
+                        <td><%= result.category.name %></td>
+                        <td><%= result.start_time.strftime('%d/%m/%Y %H:%M:%S') if result.start_time %></td>
+                        <td><%= result.end_time.strftime('%d/%m/%Y %H:%M:%S') if result.end_time %></td>
+                        <td><%= "#{result.score}/100" %></td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-eye"></i></button>
+                            <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                    <% end %>
+
+                </tbody>
+            </table>
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-end">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1">Trước</a>
+                    </li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">Tiếp</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Top Scores Tab -->
+    <div class="tab-pane fade" id="top-scores" role="tabpanel" aria-labelledby="top-tab">
+        <div class="table-container">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5>Thống kê các bài làm điểm cao nhất (50 bài)</h5>
+                <div class="d-flex">
+                    <select class="form-select form-select-sm me-2" style="width: 150px;">
+                        <option>Tất cả danh mục</option>
+                        <option>Toán học</option>
+                        <option>Tin học</option>
+                        <option>Tiếng Anh</option>
+                    </select>
+                    <select class="form-select form-select-sm" style="width: 150px;">
+                        <option>Thời gian gần đây</option>
+                        <option>Tuần này</option>
+                        <option>Tháng này</option>
+                        <option>Quý này</option>
+                    </select>
+                </div>
+            </div>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Tên người dùng</th>
+                        <th>Tên bài quiz</th>
+                        <th>Danh mục</th>
+                        <th>Thời gian hoàn thành</th>
+                        <th>Điểm số</th>
+                        <th>Thời gian làm</th>
+                        <th>Xếp loại</th>
+                    </tr>
+                </thead>
+                <tbody>
+                  <% @quiz_score.each_with_index do |quiz, index| %>
+            <tr>
+                <td><%= index + 1 %></td>
+                <td><%= quiz.user.name %></td>
+                <td><%= quiz.quiz.title %></td>
+                <td><%= quiz.category.name %></td>
+                <td><%= quiz.end_time.strftime('%d/%m/%Y %H:%M:%S') %></td>
+                <td><%= quiz.score %>/100</td>
+                <td><%= ((quiz.end_time - quiz.start_time) / 60).to_i %> phút</td>
+                <td>
+                <% if quiz.score >= 90 %>
+                    <span class="badge bg-primary">Xuất sắc</span>
+                <% elsif quiz.score >= 80 %>
+                    <span class="badge bg-success">Giỏi</span>
+                <% elsif quiz.score >= 50 %>
+                    <span class="badge bg-warning">Khá</span>
+                <% else %>
+                    <span class="badge bg-dark">chán</span>
+                
+                <% end %>
+                
+                </td>
+            </tr>
+            <% end %>
+
+                </tbody>
+            </table>
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-end">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1">Trước</a>
+                    </li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">Tiếp</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<!-- Thêm mã JavaScript để vẽ biểu đồ thống kê -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Đây là phần mã giả để mô phỏng việc xử lý và hiển thị dữ liệu
+    // Trong thực tế, dữ liệu sẽ được lấy từ backend
+    console.log('History management UI loaded successfully');
+});
+</script>

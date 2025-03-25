@@ -12,6 +12,11 @@
   </div>
 
   <div class="form-group mb-3">
+    <%= f.label :phone %>
+    <%= f.telephone_field :phone, class: "form-control", placeholder: "Nhập số điện thoại" %>
+  </div>
+
+  <div class="form-group mb-3">
     <%= f.label :password %>
     <%= f.password_field :password, class: "form-control" %>
   </div>

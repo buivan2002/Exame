@@ -37,9 +37,12 @@ class Admin::DashboardController < Admin::ApplicationController
     @top_scores = QuizResult.joins(:user).select('quiz_results.*, users.name').order('quiz_results.score DESC').limit(4)
 
     @category_data = Category.joins(:questions).group('categories.name').count('questions.id')
-  end
-  def abc
 
+    @recent_notifications = Notification.order(created_at: :desc).limit(5)
+  end
+
+  def all_score
+    @top_scores = QuizResult.includes(:user, quiz: :category).order(score: :desc).limit(100)
   end
 
   private

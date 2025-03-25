@@ -9,6 +9,6 @@ eagerLoadControllersFrom("controllers", application)
 // Lazy load controllers as they appear in the DOM (remember not to preload controllers in import map!)
 // import { lazyLoadControllersFrom } from "@hotwired/stimulus-loading"
 // lazyLoadControllersFrom("controllers", application)
-import TimerController from "./timer_controller";
+// import TimerController from "./timer_controller";
 
-application.register("timer", TimerController);
+// application.register("timer", TimerController);

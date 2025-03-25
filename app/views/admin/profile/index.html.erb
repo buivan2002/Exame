@@ -1,1 +1,40 @@
-<p>hello</p>
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">Thông tin quản trị viên</h5>
+          <%= link_to "Chỉnh sửa", class: "btn btn-sm btn-light" %>
+        </div>
+        <div class="card-body">
+          <div class="row mb-3">
+            <div class="col-sm-4 fw-bold">Tên người dùng:</div>
+            <div class="col-sm-8"><%= @admin.name %></div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-sm-4 fw-bold">Email:</div>
+            <div class="col-sm-8"><%= @admin.email %></div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-sm-4 fw-bold">Số điện thoại:</div>
+            <div class="col-sm-8"><%= @admin.phone || "Chưa cập nhật" %></div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-sm-4 fw-bold">Ngày tạo:</div>
+            <div class="col-sm-8"><%= @admin.created_at.strftime("%d-%m-%Y %H:%M") %></div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-sm-4 fw-bold">Trạng thái:</div>
+            <div class="col-sm-8">
+              <% if true %>
+                <span class="badge bg-success">Đang hoạt động</span>
+              <% else %>
+                <span class="badge bg-danger">Đã khóa</span>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

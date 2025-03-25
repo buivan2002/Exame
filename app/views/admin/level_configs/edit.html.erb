@@ -1,0 +1,38 @@
+<div class="container mt-4">
+  <h3>Chỉnh sửa cấu hình level</h3>
+
+  <%= form_with model: @level_config, url: admin_update_level_config_path(@level_config), method: :patch, local: true do |f| %>
+    <div class="mb-3">
+      <%= f.label :level, "Level", class: "form-label" %>
+      <%= f.number_field :level, class: "form-control" %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :name, "Tên Level", class: "form-label" %>
+      <%= f.text_field :name, class: "form-control" %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :required_points, "Point cần đạt", class: "form-label" %>
+      <%= f.number_field :required_points, class: "form-control" %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :quiz_reward, "Point thưởng mỗi quiz", class: "form-label" %>
+      <%= f.number_field :quiz_reward, class: "form-control" %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :login_reward, "Point thưởng đăng nhập", class: "form-label" %>
+      <%= f.number_field :login_reward, class: "form-control" %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :status, "Trạng thái", class: "form-label" %>
+      <%= f.select :status, [["Kích hoạt", true], ["Vô hiệu hóa", false]], {}, class: "form-select" %>
+    </div>
+
+    <%= f.submit "Cập nhật", class: "btn btn-primary" %>
+    <%= link_to "Quay lại", admin_points_path, class: "btn btn-secondary ms-2" %>
+  <% end %>
+</div>

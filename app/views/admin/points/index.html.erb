@@ -1,0 +1,375 @@
+<!-- POINTS MANAGEMENT SECTION -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5>Quản lý màn hình point</h5>
+                <div>
+                    <button class="btn btn-sm btn-primary">
+                        <i class="fas fa-cog"></i> Cài đặt hệ thống point
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="stats-card">
+            <i class="fas fa-star"></i>
+            <div class="stats-number"><%= @total_points %></div>
+            <div class="stats-title">Tổng point trong hệ thống</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stats-card">
+            <i class="fas fa-users"></i>
+            <div class="stats-number"><%= @users_with_points %></div>
+            <div class="stats-title">Người dùng có point</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stats-card">
+            <i class="fas fa-trophy"></i>
+            <div class="stats-number"><%= @total_points_last_30_days %></div>
+            <div class="stats-title">Point cấp trong 30 ngày</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stats-card">
+            <i class="fas fa-medal"></i>
+            <div class="stats-number"><%= @total_points_redeemed_last_30_days %></div>
+            <div class="stats-title">Point đổi trong 30 ngày</div>
+        </div>
+    </div>
+</div>
+
+<!-- Tabs Navigation -->
+<ul class="nav nav-tabs mb-3" id="pointsTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="history-tab" data-bs-toggle="tab" data-bs-target="#points-history" type="button" role="tab" aria-controls="points-history" aria-selected="true">
+            <i class="fas fa-history me-2"></i>Lịch sử point
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="award-tab" data-bs-toggle="tab" data-bs-target="#points-award" type="button" role="tab" aria-controls="points-award" aria-selected="false">
+            <i class="fas fa-gift me-2"></i>Cộng point theo level
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="exchange-tab" data-bs-toggle="tab" data-bs-target="#points-exchange" type="button" role="tab" aria-controls="points-exchange" aria-selected="false">
+            <i class="fas fa-exchange-alt me-2"></i>Đổi điểm point
+        </button>
+    </li>
+</ul>
+
+<!-- Tabs Content -->
+<div class="tab-content" id="pointsTabsContent">
+    <!-- Points History Tab -->
+    <div class="tab-pane fade show active" id="points-history" role="tabpanel" aria-labelledby="history-tab">
+        <div class="table-container">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5>Lịch sử point của user</h5>
+                <div class="d-flex">
+                    <input type="text" class="form-control form-control-sm me-2" placeholder="Tìm kiếm user...">
+                    <select class="form-select form-select-sm me-2" style="width: 150px;">
+                        <option>Tất cả hoạt động</option>
+                        <option>Nhận point</option>
+                        <option>Sử dụng point</option>
+                        <option>Điều chỉnh</option>
+                    </select>
+                    <button class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-filter"></i> Lọc
+                    </button>
+                </div>
+            </div>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên người dùng</th>
+                        <th>Hoạt động</th>
+                        <th>Điểm thay đổi</th>
+                        <th>Điểm hiện tại</th>
+                        <th>Level</th>
+                        <th>Ngày thực hiện</th>
+                        <th>Ghi chú</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% @point_histories.each do |ph| %>
+                    <tr>
+                        <td><%= ph.id %></td>
+                        <td><%= ph.user_name %></td>
+                        <td><%= ph.reason %></td>
+                        <td><%= ph.point %></td>
+                        <td><%= ph.total_point || "N/A" %></td>
+                        <td><%= ph.level || "N/A" %></td>
+                        <td><%= ph.created_at.strftime("%d-%m-%Y %H:%M") %></td>
+                        <td><%= ph.reason %></td>
+                    </tr>
+                    <% end %>
+                </tbody>
+            </table>
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-end">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1">Trước</a>
+                    </li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">Tiếp</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Points Award Tab -->
+    <div class="tab-pane fade" id="points-award" role="tabpanel" aria-labelledby="award-tab">
+        <div class="row">
+            <div class="col-md-7">
+                <div class="table-container">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5>Cấu hình cộng point theo level</h5>
+                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addLevelConfigModal">
+                            <i class="fas fa-plus"></i> Thêm cấu hình mới
+                        </button>
+                    </div>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Level</th>
+                                <th>Tên level</th>
+                                <th>Point cần đạt</th>
+                                <th>Point thưởng/quiz</th>
+                                <th>Point thưởng đăng nhập</th>
+                                <th>Trạng thái</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% @level_configs.each do |level| %>
+                                <tr>
+                                    <td><%= level.level %></td>
+                                    <td><%= level.name %></td>
+                                    <td><%= level.required_points %></td>
+                                    <td><%= level.quiz_reward %></td>
+                                    <td><%= level.login_reward %></td>
+                                    <td>
+                                        <% if level.status %>
+                                            <span class="badge bg-success">Kích hoạt</span>
+                                        <% else %>
+                                            <span class="badge bg-danger">Tắt</span>
+                                        <% end %>
+                                    </td>
+                                    <td>
+                                        <%= link_to admin_edit_level_config_path(level), class: "btn btn-sm btn-primary" do %>
+                                            <i class="fas fa-edit"></i>
+                                        <% end %>
+
+                                        <%= link_to admin_delete_level_config_path(level), data: { turbo_method: :delete, confirm: "Bạn có chắc muốn xóa?" }, class: "btn btn-sm btn-danger" do %>
+                                            <i class="fas fa-trash"></i>
+                                        <% end %>
+                                    </td>
+                                </tr>
+                            <% end %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Points Exchange Tab -->
+    <div class="tab-pane fade" id="points-exchange" role="tabpanel" aria-labelledby="exchange-tab">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="table-container">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5>Danh sách phần thưởng đổi điểm</h5>
+                        <button class="btn btn-sm btn-primary">
+                            <i class="fas fa-plus"></i> Thêm phần thưởng
+                        </button>
+                    </div>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Tên phần thưởng</th>
+                                <th>Mô tả</th>
+                                <th>Point yêu cầu</th>
+                                <th>Số lượng</th>
+                                <th>Đã đổi</th>
+                                <th>Trạng thái</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% @point_rewards.each do |reward| %>
+                                <tr>
+                                <td><%= reward.id %></td>
+                                <td><%= reward.name %></td>
+                                <td><%= reward.description %></td>
+                                <td><%= reward.required_points %></td>
+                                <td><%= reward.quantity %></td>
+                                <td><%= reward.redeemed %></td>
+                                <td>
+                                    <% if reward.status == "available" %>
+                                    <span class="badge bg-success">Có sẵn</span>
+                                    <% elsif reward.status == "out_of_stock" %>
+                                    <span class="badge bg-secondary">Hết hàng</span>
+                                    <% elsif reward.status == "almost_gone" %>
+                                    <span class="badge bg-warning">Sắp hết</span>
+                                    <% else %>
+                                    <span class="badge bg-dark"><%= reward.status %></span>
+                                    <% end %>
+                                </td>
+                                <td>
+                                    <%= link_to admin_edit_point_reward_path(reward), class: "btn btn-sm btn-outline-primary me-1" do %>
+                                        <i class="fas fa-edit"></i>
+                                    <% end %>
+                                    <%= link_to admin_delete_point_reward_path(reward), data: { turbo_method: :delete, turbo_confirm: "Bạn có chắc muốn xóa phần thưởng này?" }, class: "btn btn-sm btn-outline-danger" do %>
+                                        <i class="fas fa-trash"></i>
+                                    <% end %>
+                                </td>
+                                </tr>
+                            <% end %>
+                        </tbody>
+                    </table>
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-end">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1">Trước</a>
+                            </li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">Tiếp</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Lịch sử đổi điểm gần đây</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                        <% @point_histories.select { |ph| ph.point < 0 }.first(5).each do |ph| %>
+                            <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                            <div>
+                                <h6 class="mb-0"><%= ph.user_name %></h6>
+                                <small class="text-muted"><%= ph.reason %></small>
+                            </div>
+                            <span class="badge bg-primary rounded-pill"><%= ph.point %></span>
+                            </li>
+                        <% end %>
+                        </ul>
+                    </div>
+                    <div class="card-footer text-center">
+                        <%= link_to "Xem tất cả", admin_points_path, class: "text-decoration-none" %>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Thêm phần thưởng mới</h5>
+                    </div>
+                    <div class="card-body">
+                        <%= form_with model: PointReward.new, url: admin_add_point_reward_path, method: :post, local: true do |f| %>
+                            <div class="mb-3">
+                                <%= f.label :name, "Tên phần thưởng", class: "form-label" %>
+                                <%= f.text_field :name, class: "form-control", placeholder: "Nhập tên phần thưởng" %>
+                            </div>
+                            <div class="mb-3">
+                                <%= f.label :description, "Mô tả", class: "form-label" %>
+                                <%= f.text_area :description, class: "form-control", rows: 3, placeholder: "Mô tả chi tiết phần thưởng" %>
+                            </div>
+                            <div class="mb-3">
+                                <%= f.label :required_points, "Point yêu cầu", class: "form-label" %>
+                                <%= f.number_field :required_points, class: "form-control", placeholder: "Nhập số point" %>
+                            </div>
+                            <div class="mb-3">
+                                <%= f.label :quantity, "Số lượng", class: "form-label" %>
+                                <%= f.number_field :quantity, class: "form-control", placeholder: "Nhập số lượng" %>
+                            </div>
+                            <div class="mb-3">
+                                <%= f.label :status, "Trạng thái", class: "form-label" %>
+                                <%= f.select :status, [["Có sẵn", "available"], ["Ẩn", "hidden"], ["Hết hạn", "expired"]], {}, class: "form-select" %>
+                            </div>
+                            <div class="d-grid">
+                                <%= f.submit "Thêm phần thưởng", class: "btn btn-primary" %>
+                            </div>
+                        <% end %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Thêm vào cuối file, trước thẻ </body> -->
+
+<!-- Modal Thêm mới cấu hình level -->
+<div class="modal fade" id="addLevelConfigModal" tabindex="-1" aria-labelledby="addLevelConfigModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addLevelConfigModalLabel">Thêm cấu hình level mới</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="addLevelConfigForm" action="<%= admin_add_level_config_path %>" method="post">
+          <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+          <div class="mb-3">
+            <label class="form-label">Level</label>
+            <input type="number" class="form-control" name="level_config[level]" placeholder="Nhập level" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Tên level</label>
+            <input type="text" class="form-control" name="level_config[name]" placeholder="Nhập tên level" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Point cần đạt</label>
+            <input type="number" class="form-control" name="level_config[required_points]" placeholder="Nhập số point cần đạt" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Point thưởng mỗi quiz</label>
+            <input type="number" class="form-control" name="level_config[quiz_reward]" placeholder="Nhập point thưởng mỗi quiz" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Point thưởng đăng nhập</label>
+            <input type="number" class="form-control" name="level_config[login_reward]" placeholder="Nhập point thưởng đăng nhập" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Trạng thái</label>
+            <select class="form-select" name="level_config[status]">
+              <option value="true" selected>Kích hoạt</option>
+              <option value="false">Vô hiệu hóa</option>
+            </select>
+          </div>
+          <div class="modal-footer px-0 pb-0">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+            <button type="submit" class="btn btn-primary">Lưu cấu hình</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Thêm mã JavaScript cho quản lý point -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  console.log('Points management UI loaded successfully');
+});
+</script>
