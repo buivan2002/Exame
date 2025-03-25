@@ -13,7 +13,7 @@ class User < ApplicationRecord
   # Quan hệ 1-1
   has_one :point, dependent: :destroy
   has_one :leader_board, dependent: :destroy
-  has_one :quiz_settings, dependent: :destroy
+  has_one :quiz_settings
 
   # Quan hệ n-n (self-referential)
   has_many :follows, foreign_key: "follower_id", dependent: :destroy
@@ -23,6 +23,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable,
          :omniauthable, omniauth_providers: [:google_oauth2]
 
+  acts_as_paranoid
   def self.from_omniauth(access_token)
     where(provider: access_token.provider, uid: access_token.uid).first_or_create do |user|
       user.email = access_token.info.email

@@ -168,17 +168,7 @@
                                         <% end %>
                                     </td>
                                     <td>
-                                        <%= link_to "#", class: "btn btn-sm btn-primary", data: {
-                                                bs_toggle: "modal",
-                                                bs_target: "#editLevelConfigModal",
-                                                level_id: level.id,
-                                                level_level: level.level,
-                                                level_name: level.name,
-                                                level_required: level.required_points,
-                                                level_quiz: level.quiz_reward,
-                                                level_login: level.login_reward,
-                                                level_status: level.status
-                                                } do %>
+                                        <%= link_to admin_edit_level_config_path(level), class: "btn btn-sm btn-primary" do %>
                                             <i class="fas fa-edit"></i>
                                         <% end %>
 
@@ -240,11 +230,11 @@
                                     <% end %>
                                 </td>
                                 <td>
-                                    <%= link_to "#", class: "btn btn-sm btn-outline-primary me-1" do %>
-                                    <i class="fas fa-edit"></i>
+                                    <%= link_to admin_edit_point_reward_path(reward), class: "btn btn-sm btn-outline-primary me-1" do %>
+                                        <i class="fas fa-edit"></i>
                                     <% end %>
-                                    <%= link_to "#", method: :delete, data: { turbo_confirm: "Bạn có chắc muốn xóa phần thưởng này?" }, class: "btn btn-sm btn-outline-danger" do %>
-                                    <i class="fas fa-trash"></i>
+                                    <%= link_to admin_delete_point_reward_path(reward), data: { turbo_method: :delete, turbo_confirm: "Bạn có chắc muốn xóa phần thưởng này?" }, class: "btn btn-sm btn-outline-danger" do %>
+                                        <i class="fas fa-trash"></i>
                                     <% end %>
                                 </td>
                                 </tr>
@@ -284,7 +274,7 @@
                         </ul>
                     </div>
                     <div class="card-footer text-center">
-                        <%= link_to "Xem tất cả", "#", class: "text-decoration-none" %>
+                        <%= link_to "Xem tất cả", admin_points_path, class: "text-decoration-none" %>
                     </div>
                 </div>
 
@@ -293,35 +283,31 @@
                         <h5 class="mb-0">Thêm phần thưởng mới</h5>
                     </div>
                     <div class="card-body">
-                        <form>
+                        <%= form_with model: PointReward.new, url: admin_add_point_reward_path, method: :post, local: true do |f| %>
                             <div class="mb-3">
-                                <label class="form-label">Tên phần thưởng</label>
-                                <input type="text" class="form-control" placeholder="Nhập tên phần thưởng">
+                                <%= f.label :name, "Tên phần thưởng", class: "form-label" %>
+                                <%= f.text_field :name, class: "form-control", placeholder: "Nhập tên phần thưởng" %>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Mô tả</label>
-                                <textarea class="form-control" rows="3" placeholder="Mô tả chi tiết phần thưởng"></textarea>
+                                <%= f.label :description, "Mô tả", class: "form-label" %>
+                                <%= f.text_area :description, class: "form-control", rows: 3, placeholder: "Mô tả chi tiết phần thưởng" %>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Point yêu cầu</label>
-                                <input type="number" class="form-control" placeholder="Nhập số point">
+                                <%= f.label :required_points, "Point yêu cầu", class: "form-label" %>
+                                <%= f.number_field :required_points, class: "form-control", placeholder: "Nhập số point" %>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Số lượng</label>
-                                <input type="number" class="form-control" placeholder="Nhập số lượng">
+                                <%= f.label :quantity, "Số lượng", class: "form-label" %>
+                                <%= f.number_field :quantity, class: "form-control", placeholder: "Nhập số lượng" %>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Trạng thái</label>
-                                <select class="form-select">
-                                    <option selected>Có sẵn</option>
-                                    <option>Ẩn</option>
-                                    <option>Hết hạn</option>
-                                </select>
+                                <%= f.label :status, "Trạng thái", class: "form-label" %>
+                                <%= f.select :status, [["Có sẵn", "available"], ["Ẩn", "hidden"], ["Hết hạn", "expired"]], {}, class: "form-select" %>
                             </div>
                             <div class="d-grid">
-                                <button type="submit" class="btn btn-primary">Thêm phần thưởng</button>
+                                <%= f.submit "Thêm phần thưởng", class: "btn btn-primary" %>
                             </div>
-                        </form>
+                        <% end %>
                     </div>
                 </div>
             </div>
@@ -380,90 +366,10 @@
   </div>
 </div>
 
-<!-- Modal Chỉnh sửa cấu hình level -->
-<div class="modal fade" id="editLevelConfigModal" tabindex="-1" aria-labelledby="editLevelConfigModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="editLevelConfigModalLabel">Chỉnh sửa cấu hình level</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
-      </div>
-      <div class="modal-body">
-        <form id="editLevelConfigForm" action="<%= admin_update_level_config_path(@level_config) %>" method="post">
-          <!-- PATCH method -->
-          <input type="hidden" name="_method" value="patch">
-          <!-- CSRF token -->
-          <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
-
-          <div class="mb-3">
-            <label class="form-label">Level</label>
-            <input type="number" class="form-control" name="level_config[level]" value="<%= @level_config.level %>" required>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Tên level</label>
-            <input type="text" class="form-control" name="level_config[name]" value="<%= @level_config.name %>" required>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Point cần đạt</label>
-            <input type="number" class="form-control" name="level_config[required_points]" value="<%= @level_config.required_points %>" required>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Point thưởng mỗi quiz</label>
-            <input type="number" class="form-control" name="level_config[quiz_reward]" value="<%= @level_config.quiz_reward %>" required>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Point thưởng đăng nhập</label>
-            <input type="number" class="form-control" name="level_config[login_reward]" value="<%= @level_config.login_reward %>" required>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Trạng thái</label>
-            <select class="form-select" name="level_config[status]">
-              <option value="true" <%= @level_config.status ? 'selected' : '' %>>Kích hoạt</option>
-              <option value="false" <%= !@level_config.status ? 'selected' : '' %>>Vô hiệu hóa</option>
-            </select>
-          </div>
-
-          <div class="modal-footer px-0 pb-0">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-            <button type="submit" class="btn btn-primary">Cập nhật</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-
 
 <!-- Thêm mã JavaScript cho quản lý point -->
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-  const editModal = document.getElementById('editLevelConfigModal');
-  editModal.addEventListener('show.bs.modal', function (event) {
-    const button = event.relatedTarget;
-
-    const id = button.getAttribute('data-level-id');
-    const level = button.getAttribute('data-level-level');
-    const name = button.getAttribute('data-level-name');
-    const required = button.getAttribute('data-level-required');
-    const quiz = button.getAttribute('data-level-quiz');
-    const login = button.getAttribute('data-level-login');
-    const status = button.getAttribute('data-level-status');
-
-    // Gán giá trị vào input form
-    editModal.querySelector('form').action = `/admin/points/level_configs/${id}`;
-    editModal.querySelector('input[name="level_config[level]"]').value = level;
-    editModal.querySelector('input[name="level_config[name]"]').value = name;
-    editModal.querySelector('input[name="level_config[required_points]"]').value = required;
-    editModal.querySelector('input[name="level_config[quiz_reward]"]').value = quiz;
-    editModal.querySelector('input[name="level_config[login_reward]"]').value = login;
-    editModal.querySelector('select[name="level_config[status]"]').value = status === "true" ? "true" : "false";
-    console.log('Points management UI loaded successfully');
-  });
+  console.log('Points management UI loaded successfully');
 });
-
 </script>

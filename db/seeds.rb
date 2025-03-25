@@ -399,6 +399,46 @@ PointHistory.create!([
   }
 ])
 
+# Lấy sẵn danh sách users để gán user_id cho từng noti
+users = User.limit(5)
+
+Notification.create!(
+  user_id: users[0].id,
+  message: "Nguyễn Văn A đã đăng ký tài khoản mới",
+  notification_type: "user_signup",
+  status: false
+)
+
+Notification.create!(
+  user_id: users[1].id,
+  message: "Trần Thị B đã hoàn thành bài test 'Khoa học xã hội'",
+  notification_type: "quiz_finish",
+  status: false
+)
+
+Notification.create!(
+  user_id: users[2].id,
+  message: "Admin đã thêm 5 câu hỏi mới vào chủ đề 'Khoa học tự nhiên'",
+  notification_type: "admin_action",
+  status: false
+)
+
+Notification.create!(
+  user_id: users[3].id,
+  message: "Lê Văn C đã đạt điểm cao nhất trong chủ đề 'Khoa học tự nhiên'",
+  notification_type: "high_score",
+  status: false
+)
+
+Notification.create!(
+  user_id: users[4].id,
+  message: "Admin đã tạo chủ đề mới 'Lịch sử Việt Nam'",
+  notification_type: "new_topic",
+  status: false
+)
+
+puts "Tạo 5 bản ghi tùy chỉnh trong bảng Notifications."
+
 
 
 puts "Seed dữ liệu hoàn tất!"

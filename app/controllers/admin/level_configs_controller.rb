@@ -1,4 +1,8 @@
 class Admin::LevelConfigsController < Admin::ApplicationController
+  def edit
+    @level_config = LevelConfig.find(params[:id])
+  end
+
   def create
     @level_config = LevelConfig.new(level_config_params)
 
@@ -27,13 +31,13 @@ class Admin::LevelConfigsController < Admin::ApplicationController
       format.json { render json: {success: false, message: "Khong tim thay cau hinh"}, status: :not_found }
     end
   end
-  
+
   def update
     @level_config = LevelConfig.find(params[:id])
     if @level_config.update(level_config_params)
       redirect_to admin_points_path(anchor: "points-award"), notice: "Cập nhật thành công"
     else
-      redirect_to admin_points_path(anchor: "points-award"), alert: "Cập nhật thất bại"
+      redirect_to :edit, alert: "Cập nhật thất bại"
     end
   end
 

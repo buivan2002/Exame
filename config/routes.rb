@@ -30,22 +30,31 @@ Rails.application.routes.draw do
   namespace :admin do
     # root "dashboard#index"
     get "dashboard" => "dashboard#index"
-    # get "profile" => "profile#show"
+
+    get "dashboard/all_score" => "dashboard#all_score"
     resources :profile, ony: [:show, :edit, :update]
-    resources :users
+    resources :users do
+      post :reset_password, on: :member
+    end
     resources :questions
     resources :quizzes
     resources :categories
     resources :quiz_results
     resources :leader_boards
     resources :notifications
+    resources :points, only: [:index]
+
     get "histories" => "histories#index"
-    get "points" => "points#index"
     get "setting" => "setting#index"
 
     post "points/level_configs/add" => "level_configs#create", as: "add_level_config"
-    delete "points/level_configs/:id" => "level_configs#destroy", as: "delete_level_config"
     get "points/level_configs/:id/edit" => "level_configs#edit", as: "edit_level_config"
     patch "points/level_configs/:id" => "level_configs#update", as: "update_level_config"
+    delete "points/level_configs/:id" => "level_configs#destroy", as: "delete_level_config"
+
+    post "points/point_rewards/add" => "point_rewards#create", as: "add_point_reward"
+    get "points/point_rewards/:id/edit" => "point_rewards#edit", as: "edit_point_reward"
+    patch "points/point_rewards/:id" => "point_rewards#update", as: "update_point_reward"
+    delete "points/point_rewards/:id" => "point_rewards#destroy", as: "delete_point_reward"
   end
 end

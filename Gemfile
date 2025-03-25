@@ -38,3 +38,5 @@ end
 gem 'rails-ujs'
 gem 'kaminari'
 gem 'cocoon'
+
+gem "paranoia", "~> 2.6"

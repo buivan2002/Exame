@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_03_24_092821) do
+ActiveRecord::Schema[7.0].define(version: 2025_03_25_044656) do
   create_table "answers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "question_id", null: false
     t.text "body"
@@ -287,6 +287,9 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_24_092821) do
     t.datetime "remember_created_at"
     t.string "provider"
     t.string "uid"
+    t.string "phone"
+    t.datetime "deleted_at"
+    t.index ["deleted_at"], name: "index_users_on_deleted_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
