@@ -54,9 +54,6 @@ class Users::CategoriesController < ApplicationController
 
 end
 
-
-
-
   def submit_answer
     @category = Category.find(params[:id])
     @difficulty = params[:difficulty]

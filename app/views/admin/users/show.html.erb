@@ -1,0 +1,67 @@
+<div class="container mt-4">
+  <h2 class="mb-4"><i class="fas fa-user me-2"></i>Thông tin chi tiết người dùng</h2>
+
+  <div class="card">
+    <div class="card-body">
+      <table class="table table-bordered">
+        <tbody>
+          <tr>
+            <th>ID</th>
+            <td><%= @user.id %></td>
+          </tr>
+          <tr>
+            <th>Tên</th>
+            <td><%= @user.name %></td>
+          </tr>
+          <tr>
+            <th>Email</th>
+            <td><%= @user.email %></td>
+          </tr>
+          <tr>
+            <th>Số điện thoại</th>
+            <td><%= @user.phone %></td>
+          </tr>
+          <tr>
+            <th>Role</th>
+            <td><%= @user.role %></td>
+          </tr>
+          <tr>
+            <th>Last Login</th>
+            <td><%= @user.last_login_at&.strftime("%d-%m-%Y %H:%M") || "N/A" %></td>
+          </tr>
+          <tr>
+            <th>Avatar URL</th>
+            <td><%= @user.avatar_url.presence || "N/A" %></td>
+          </tr>
+          <tr>
+            <th>OAuth Provider</th>
+            <td><%= @user.oauth_provider.presence || "N/A" %></td>
+          </tr>
+          <tr>
+            <th>OAuth ID</th>
+            <td><%= @user.oauth_id.presence || "N/A" %></td>
+          </tr>
+          <tr>
+            <th>Provider</th>
+            <td><%= @user.provider.presence || "N/A" %></td>
+          </tr>
+          <tr>
+            <th>UID</th>
+            <td><%= @user.uid.presence || "N/A" %></td>
+          </tr>
+          <tr>
+            <th>Created At</th>
+            <td><%= @user.created_at.strftime("%d-%m-%Y %H:%M") %></td>
+          </tr>
+          <tr>
+            <th>Updated At</th>
+            <td><%= @user.updated_at.strftime("%d-%m-%Y %H:%M") %></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <%= link_to "Chỉnh sửa", edit_admin_user_path(@user), class: "btn btn-primary me-2" %>
+      <%= link_to "Quay lại danh sách", admin_users_path, class: "btn btn-secondary" %>
+    </div>
+  </div>
+</div>

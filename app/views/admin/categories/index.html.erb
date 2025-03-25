@@ -66,8 +66,7 @@
                         <i class="fas fa-edit"></i>
                       <% end %>
                       <%= link_to admin_category_path(category),
-                                  method: :delete,
-                                  data: { confirm: "Bạn có chắc muốn xóa chủ đề này?" },
+                                  data: { turbo_method: :delete, confirm: "Bạn có chắc muốn xóa chủ đề này?" },
                                   class: "btn btn-sm btn-danger",
                                   title: "Xóa" do %>
                         <i class="fas fa-trash"></i>

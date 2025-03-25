@@ -294,6 +294,151 @@ puts "Tạo 30 bản ghi trong bảng Statistics."
     required_quiz: 10
   )
 end
+
+#23. Tạo 5 bản ghi cho bảng LevelConfigs
+LevelConfig.create!([
+  { level: 1, name: "Tân binh", required_points: 0, quiz_reward: 10, login_reward: 5, status: true },
+  { level: 2, name: "Người học", required_points: 100, quiz_reward: 15, login_reward: 7, status: true },
+  { level: 3, name: "Học viên tích cực", required_points: 250, quiz_reward: 20, login_reward: 10, status: true },
+  { level: 4, name: "Chuyên gia", required_points: 500, quiz_reward: 25, login_reward: 12, status: true },
+  { level: 5, name: "Bậc thầy", required_points: 1000, quiz_reward: 30, login_reward: 15, status: true }
+])
+
 puts "Tạo 30 bản ghi trong bảng UnlockedLevels."
+
+PointReward.create!([
+  {
+    name: "Voucher giảm giá 10%",
+    description: "Áp dụng cho khóa học online",
+    required_points: 50,
+    quantity: 100,
+    redeemed: 35,
+    status: :available
+  },
+  {
+    name: "Voucher giảm giá 20%",
+    description: "Áp dụng cho khóa học online",
+    required_points: 100,
+    quantity: 50,
+    redeemed: 22,
+    status: :available
+  },
+  {
+    name: "Mở khóa 1 quiz cao cấp",
+    description: "Mở khóa quiz bất kỳ trong danh mục premium",
+    required_points: 150,
+    quantity: 200,
+    redeemed: 78,
+    status: :available
+  },
+  {
+    name: "Tài liệu học tập PDF",
+    description: "Bộ tài liệu học tập chuyên sâu",
+    required_points: 200,
+    quantity: 100,
+    redeemed: 45,
+    status: :available
+  },
+  {
+    name: "Voucher giảm giá 50%",
+    description: "Áp dụng cho một khóa học bất kỳ",
+    required_points: 500,
+    quantity: 20,
+    redeemed: 8,
+    status: :available
+  },
+  {
+    name: "Khóa học miễn phí",
+    description: "Một khóa học miễn phí bất kỳ",
+    required_points: 1000,
+    quantity: 10,
+    redeemed: 2,
+    status: :expired
+  }
+])
+
+# Lấy user mẫu (giả sử có user ID từ 1 đến 5)
+user_ids = User.pluck(:id)
+
+# Seed các bản ghi đổi điểm
+PointHistory.create!([
+  {
+    user_id: user_ids.sample,
+    point: -100,
+    reason: "Đổi thưởng: Voucher giảm giá 20%",
+    status: 1,
+    created_at: 3.days.ago
+  },
+  {
+    user_id: user_ids.sample,
+    point: -150,
+    reason: "Đổi thưởng: Mở khóa 1 quiz cao cấp",
+    status: 1,
+    created_at: 2.days.ago
+  },
+  {
+    user_id: user_ids.sample,
+    point: -200,
+    reason: "Đổi thưởng: Tài liệu học tập PDF",
+    status: 1,
+    created_at: 1.day.ago
+  },
+  {
+    user_id: user_ids.sample,
+    point: -50,
+    reason: "Đổi thưởng: Voucher giảm giá 10%",
+    status: 1,
+    created_at: 6.hours.ago
+  },
+  {
+    user_id: user_ids.sample,
+    point: -500,
+    reason: "Đổi thưởng: Voucher giảm giá 50%",
+    status: 1,
+    created_at: 2.hours.ago
+  }
+])
+
+# Lấy sẵn danh sách users để gán user_id cho từng noti
+users = User.limit(5)
+
+Notification.create!(
+  user_id: users[0].id,
+  message: "Nguyễn Văn A đã đăng ký tài khoản mới",
+  notification_type: "user_signup",
+  status: false
+)
+
+Notification.create!(
+  user_id: users[1].id,
+  message: "Trần Thị B đã hoàn thành bài test 'Khoa học xã hội'",
+  notification_type: "quiz_finish",
+  status: false
+)
+
+Notification.create!(
+  user_id: users[2].id,
+  message: "Admin đã thêm 5 câu hỏi mới vào chủ đề 'Khoa học tự nhiên'",
+  notification_type: "admin_action",
+  status: false
+)
+
+Notification.create!(
+  user_id: users[3].id,
+  message: "Lê Văn C đã đạt điểm cao nhất trong chủ đề 'Khoa học tự nhiên'",
+  notification_type: "high_score",
+  status: false
+)
+
+Notification.create!(
+  user_id: users[4].id,
+  message: "Admin đã tạo chủ đề mới 'Lịch sử Việt Nam'",
+  notification_type: "new_topic",
+  status: false
+)
+
+puts "Tạo 5 bản ghi tùy chỉnh trong bảng Notifications."
+
+
 
 puts "Seed dữ liệu hoàn tất!"

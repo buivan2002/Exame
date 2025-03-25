@@ -1,0 +1,45 @@
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">Chỉnh sửa phần thưởng</h5>
+          <%= link_to "← Trở lại", admin_points_path(anchor: 'points-exchange'), class: "btn btn-sm btn-outline-secondary" %>
+        </div>
+        <div class="card-body">
+          <%= form_with model: [:admin, @point_reward], url: admin_update_point_reward_path(@point_reward), method: :patch, local: true do |f| %>
+            <div class="mb-3">
+              <%= f.label :name, "Tên phần thưởng", class: "form-label" %>
+              <%= f.text_field :name, class: "form-control", required: true %>
+            </div>
+
+            <div class="mb-3">
+              <%= f.label :description, "Mô tả", class: "form-label" %>
+              <%= f.text_area :description, class: "form-control", rows: 3 %>
+            </div>
+
+            <div class="mb-3">
+              <%= f.label :required_points, "Point yêu cầu", class: "form-label" %>
+              <%= f.number_field :required_points, class: "form-control", required: true %>
+            </div>
+
+            <div class="mb-3">
+              <%= f.label :quantity, "Số lượng", class: "form-label" %>
+              <%= f.number_field :quantity, class: "form-control", required: true %>
+            </div>
+
+            <div class="mb-3">
+              <%= f.label :status, "Trạng thái", class: "form-label" %>
+              <%= f.select :status, [["Có sẵn", "available"], ["Ẩn", "hidden"], ["Hết hạn", "expired"], ["Sắp hết", "almost_gone"], ["Hết hàng", "out_of_stock"]], {}, class: "form-select" %>
+            </div>
+
+            <div class="d-flex justify-content-between">
+              <%= f.submit "Cập nhật phần thưởng", class: "btn btn-primary" %>
+              <%= link_to "Hủy", admin_points_path(anchor: 'points-exchange'), class: "btn btn-outline-secondary" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

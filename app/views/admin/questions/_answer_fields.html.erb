@@ -1,0 +1,34 @@
+<div class="nested-fields bg-light p-3 mb-3 rounded border">
+  <div class="row">
+    <div class="col-md-8 mb-3">
+      <div class="form-group">
+        <%= f.label :body, "Nội dung đáp án", class: "form-label fw-bold" %>
+        <%= f.text_area :body, rows: 2, class: "form-control", placeholder: "Nhập nội dung đáp án..." %>
+      </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+      <div class="form-group">
+        <%= f.label :is_correct, "Đáp án đúng?", class: "form-label fw-bold d-block mb-2" %>
+        <div class="form-check form-switch">
+          <%= f.check_box :is_correct, class: "form-check-input", role: "switch" %>
+          <label class="form-check-label" for="<%= f.object_name.gsub(/\[|\]/, '_') %>_is_correct">
+            <span class="text-success">Đúng</span> / <span class="text-danger">Sai</span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group mb-3">
+    <%= f.label :image_url, "URL Ảnh đáp án (nếu có)", class: "form-label fw-bold" %>
+    <div class="input-group">
+      <span class="input-group-text"><i class="bi bi-image"></i></span>
+      <%= f.text_field :image_url, class: "form-control", placeholder: "Nhập URL hình ảnh cho đáp án" %>
+    </div>
+  </div>
+
+  <div class="text-end">
+    <%= link_to_remove_association "Xóa đáp án", f, class: "btn btn-outline-danger btn-sm" %>
+  </div>
+</div>
