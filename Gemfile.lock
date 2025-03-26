@@ -362,7 +362,7 @@ DEPENDENCIES
   jbuilder
   jquery-rails (~> 4.4)
   kaminari
-  mysql2 (~> 0.5)
+  mysql2 (>= 0.5)
   omniauth
   omniauth-google-oauth2
   omniauth-rails_csrf_protection

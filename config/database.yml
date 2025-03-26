@@ -17,7 +17,6 @@ test:
 
 production:
   <<: *default
-  url: <%= ENV["MYSQL_URL"] %>
   host: <%= ENV["MYSQLHOST"] %>
   database: <%= ENV["MYSQL_DATABASE"] %>
   username: <%= ENV["MYSQLUSER"] %>
