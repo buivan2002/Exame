@@ -132,15 +132,15 @@
                                         </div>
                                     </div>
 
-                                    <div class="mb-3">
-                                        <label for="fontFamily" class="form-label">Font chữ</label>
-                                        <select class="form-select" id="fontFamily">
-                                            <option value="segoe" selected>Segoe UI</option>
-                                            <option value="roboto">Roboto</option>
-                                            <option value="poppins">Poppins</option>
-                                            <option value="opensans">Open Sans</option>
-                                        </select>
-                                    </div>
+                                 <label for="font-selector">Chọn font chữ:</label>
+                                <select id="font-selector" data-controller="font" data-action="change->font#changeFont" data-font-target="select">
+                                <option value="'Arial', sans-serif">Arial</option>
+                                <option value="'Times New Roman', serif">Times New Roman</option>
+                                <option value="'Courier New', monospace">Courier New</option>
+                                <option value="'Verdana', sans-serif">Verdana</option>
+                                <option value="'Roboto', sans-serif">Roboto</option>
+                                </select>
+
 
                                     <div class="mb-3">
                                         <label for="logoUpload" class="form-label">Logo hệ thống</label>

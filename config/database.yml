@@ -16,7 +16,7 @@ default: &default
   username: <%= ENV.fetch("DB_USER") { 'root' } %>
   password: <%= ENV.fetch("DB_PASS") { '123456789' } %>
   socket: /var/run/mysqld/mysqld.sock
-  host: 127.0.0.1
+  host: <%= ENV.fetch("DB_HOST") { 'db' } %>
 development:
   <<: *default
   database: intern_development 
@@ -50,6 +50,7 @@ test:
 #
 production:
   <<: *default
+  url: <%= ENV['DATABASE_URL'] %>
   database: intern_production
   username: intern
   password: <%= ENV["INTERN_DATABASE_PASSWORD"] %>

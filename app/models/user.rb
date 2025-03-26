@@ -25,11 +25,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable,
          :omniauthable, omniauth_providers: [:google_oauth2]
 
-<<<<<<< HEAD
          
-=======
-  acts_as_paranoid
->>>>>>> develop
   def self.from_omniauth(access_token)
     where(provider: access_token.provider, uid: access_token.uid).first_or_create do |user|
       user.email = access_token.info.email
