@@ -51,8 +51,8 @@ test:
 production:
   <<: *default
   url: <%= ENV["DATABASE_URL"] %>
-  host: <%= ENV["PGHOST"] %>
-  database: <%= ENV["PGDATABASE"] %>
-  username: <%= ENV["PGUSER"] %>
-  password: <%= ENV["PGPASSWORD"] %>
-  port: <%= ENV["PGPORT"] %>
+  host: <%= ENV["MYSQLHOST"] %>
+  database: <%= ENV["MYSQL_DATABASE"] %>
+  username: <%= ENV["MYSQLUSER"] %>
+  password: <%= ENV["MYSQLPASSWORD"] %>
+  port: <%= ENV["MYSQLPORT"] %>
